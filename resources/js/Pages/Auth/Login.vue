@@ -1,6 +1,6 @@
 <script setup>
-import Checkbox from '@/Components/laravelWelcome/Checkbox.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
+import Checkbox from '@/Components/laravelWelcome/Checkbox.vue';
 import InputError from '@/Components/laravelWelcome/InputError.vue';
 import InputLabel from '@/Components/laravelWelcome/InputLabel.vue';
 import PrimaryButton from '@/Components/laravelWelcome/PrimaryButton.vue';

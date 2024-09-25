@@ -1,0 +1,66 @@
+.navbar {
+    align-items: center;
+    background-color: rgba(10, 14, 61, 1); // Dark blue background
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+  
+    &__left {
+      align-items: center;
+      display: flex;
+  
+      // Icon for the navbar
+      & > .navbar__icon {
+        height: 2rem;
+        margin-right: 0.8rem; // Space between icon and title
+        width: 2rem;
+      }
+  
+      // Title for the navbar
+      & > .navbar__title {
+        color: rgba(255, 255, 255, 1); // White color for the title
+        font-size: 2rem;
+        font-weight: bold;
+      }
+    }
+  
+    &__right {
+      align-items: center;
+      display: flex;
+    }
+  
+    &__menu {
+      display: flex;
+      gap: 2rem; // Space between menu items
+      margin-right: 2rem; // Space between the menu and profile image
+  
+      li {
+        list-style: none;
+  
+        // Links in the navbar
+        a {
+          color: rgba(255, 255, 255, 0.8); // Light white color for links
+          font-family: Adobe-clean, seans-serif;
+          font-size: 1rem;
+          text-decoration: none;
+          transition: color 0.3s ease;
+  
+          &:hover {
+            color: rgba(255, 255, 255, 1); // Fully white on hover
+          }
+        }
+      }
+    }
+  
+    &__profile {
+      display: flex;
+      justify-content: flex-end;
+  
+      // Profile picture styling
+      &-image {
+        border-radius: 50%;
+        height: 2.4rem;
+        width: 2.4rem;
+      }
+    }
+  }

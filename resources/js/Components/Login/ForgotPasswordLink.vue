@@ -1,0 +1,1 @@
+<!-- Button for 'Forgot password / Wachtwoord vergeten' -->
