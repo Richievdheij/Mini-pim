@@ -1,0 +1,27 @@
+.checkbox {
+  &__body {
+    align-items: center;
+    color: #7b7b7b;
+    display: flex;
+    margin: 0 0 1.5rem 0;
+  }
+
+  &__input {
+    margin-right: 0.5rem;
+    transition: 0.3s;
+  }
+
+  &__label {
+    font-size: 1rem;
+  }
+
+  &--agreement {
+    color: #7b7b7b;
+  }
+
+  &__error {
+    color: rgba(255, 0, 0, 1); // Red for error message
+    font-size: 0.8rem;
+    margin: -1.4rem 0 0.2rem 0;
+  }
+}

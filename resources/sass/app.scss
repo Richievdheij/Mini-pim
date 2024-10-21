@@ -1,2 +1,18 @@
-@import "layout/blog-layout";
-@import "layout/blog-navbar";
+// PIM
+// Auth
+@import "auth/pim-confirm-password";
+@import "auth/pim-forgot-password";
+@import "auth/pim-login";
+
+// Components
+@import "components/pim-button";
+@import "components/pim-checkbox";
+@import "components/pim-input";
+
+// Dashboard
+@import "dashboard/pim-manager";
+
+// Layout
+@import "layout/pim-layout";
+@import "layout/pim-navbar";
+@import "layout/pim-sidebar";

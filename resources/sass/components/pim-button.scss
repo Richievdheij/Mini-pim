@@ -1,0 +1,27 @@
+.button {
+  &__body {
+    border: none;
+    border-radius: 2rem;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem;
+    transition: background-color 0.3s ease;
+    width: 30%;
+
+    &--submit {
+      background-color: rgba(242, 103, 34, 1);
+      color: rgba(255, 255, 255, 1);
+      &:hover {
+        background-color: rgba(200, 85, 28, 1);
+      }
+    }
+
+    &--delete {
+      background-color: rgb(255, 0, 0);
+      color: rgba(255, 255, 255, 1);
+      &:hover {
+        background-color: rgb(173, 15, 15);
+      }
+    }
+  }
+}

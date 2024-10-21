@@ -1,1 +1,0 @@
-<!-- For the input field (username, text). -->

@@ -1,0 +1,12 @@
+.login-link {
+  &__link {
+    color: rgba(255, 100, 0, 1); // Orange text color
+    font-size: 1rem; // Use rem for font size
+    text-decoration: none; // Remove underline
+    transition: text-decoration 0.3s ease; // Smooth transition for hover effect
+
+    &:hover {
+      text-decoration: underline; // Underline on hover
+    }
+  }
+}

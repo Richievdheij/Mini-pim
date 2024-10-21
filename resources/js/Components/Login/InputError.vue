@@ -1,1 +1,0 @@
-<!-- View validation errors -->

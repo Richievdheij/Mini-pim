@@ -1,1 +1,0 @@
-<!-- Add CAPTCHA for security -->
