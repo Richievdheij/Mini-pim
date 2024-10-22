@@ -27,7 +27,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Log in" />
+        <Head title="Mini-pim - Log in" />
         <LoginForm/>
     </GuestLayout>
 </template>
