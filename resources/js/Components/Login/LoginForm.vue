@@ -56,9 +56,9 @@ const submit = () => {
             <Button label="Inloggen" type="submit" />
           </div>
         </form>
+      </div>
           <div class="login-form__image-box">
-              <img src="/images/pim/5040007.jpg" alt="Login Image" class="login-form__image">
+              <img src="/images/pim/Test.jpg" alt="Login Image" class="login-form__image">
           </div>
       </div>
-    </div>
 </template>

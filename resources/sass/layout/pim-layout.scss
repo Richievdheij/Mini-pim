@@ -1,14 +1,17 @@
 .guest-layout {
     align-items: center;
-    background-color: rgb(10, 14, 61);
+    background-color: rgb(255, 255, 255);
     display: flex;
     justify-content: center;
     min-height: 100vh;
 
     // Head class for login-form component
     .login-form {
+        display: flex;
         max-width: 70rem;
         width: 100%;
+        box-shadow: 0 2rem 4rem rgba(0, 0, 0, 0.2);
+        border-radius: 2rem;
 
         &__content {
             display: flex;
@@ -16,9 +19,7 @@
         }
 
         &__box {
-            background-color: rgba(255, 255, 255, 1);
-            border-radius: 2rem 0 0 2rem;
-            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+            background-color: rgb(255, 255, 255);
             padding: 4rem;
             width: 50%; // Make sure it takes half the space
         }
@@ -26,23 +27,23 @@
         &__image-box {
             background-color: rgba(255, 255, 255, 1);
             border-radius: 0 2rem 2rem 0;
-            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
             width: 50%; // This box will take the other half
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
 
         &__image {
-            max-width: 100%;
-            border-radius: 0 2rem 2rem 0; // Apply rounded corners on the right
-            height: auto;
+            height: 100%;
+            object-fit: cover; /* Makes sure the image covers the entire container */
+            width: 100%;
+            filter: blur(0.1rem);
         }
 
         &__links {
             display: flex;
             justify-content: space-between; // Space between the links
-
         }
 
         &__title {
