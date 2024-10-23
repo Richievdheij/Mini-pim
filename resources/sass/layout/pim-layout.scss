@@ -7,14 +7,36 @@
 
     // Head class for login-form component
     .login-form {
-        max-width: 35rem;
+        max-width: 70rem;
         width: 100%;
+
+        &__content {
+            display: flex;
+            width: 100%;
+        }
 
         &__box {
             background-color: rgba(255, 255, 255, 1);
-            border-radius: 2rem;
+            border-radius: 2rem 0 0 2rem;
             box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
             padding: 4rem;
+            width: 50%; // Make sure it takes half the space
+        }
+
+        &__image-box {
+            background-color: rgba(255, 255, 255, 1);
+            border-radius: 0 2rem 2rem 0;
+            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+            width: 50%; // This box will take the other half
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &__image {
+            max-width: 100%;
+            border-radius: 0 2rem 2rem 0; // Apply rounded corners on the right
+            height: auto;
         }
 
         &__links {
@@ -25,7 +47,7 @@
 
         &__title {
             font-family: 'Roboto', sans-serif; // ADD A FONT HERE
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: bold;
             margin: -1rem 0 1rem 0;
         }

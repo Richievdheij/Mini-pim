@@ -11,11 +11,38 @@
             border: 0.1rem solid rgba(200, 200, 200, 1);
             font-size: 1rem;
             margin: 0 0 0.25rem 0;
-            transition: border-color 0.3s ease;
+            transition: 0.3s ease;
             width: 100%;
+
+            // Placeholder style and transition
+            &::placeholder {
+                color: rgb(0, 0, 0); // Placeholder color
+                opacity: 70%;
+                transition: opacity 0.3s ease;
+            }
+
+            // On hover state
+            &:hover {
+                color: rgb(0, 0, 0); // Placeholder color
+                opacity: 70%;
+                transition: 0.5s ease;
+            }
+
+            // Focus state and placeholder opacity change
             &:focus {
-                border-color: rgb(30, 75, 133);  // Focus state border color
+                border-color: rgb(86, 122, 197);  // Focus state border color
                 outline: none;
+
+                    &::placeholder {
+                        opacity: 30%;  // Hide placeholder on focus
+                    }
+                }
+
+            // Transitioning the text opacity when typing
+            &.has-value {
+                    &::placeholder {
+                        opacity: 0;  // Placeholder fades out when typing starts
+                    }
                 }
             }
         }
@@ -30,11 +57,11 @@
 
         // Head class for Input-error
         &--error {
-        p {
-          color: rgba(255, 0, 0, 1);  // Red color for the error message
-          font-size: 0.875rem;
-          margin: -1.275rem 0 0rem 0;
-          }
+            p {
+              color: rgba(255, 0, 0, 1);  // Red color for the error message
+              font-size: 0.875rem;
+              margin: -1.275rem 0 0rem 0;
+            }
         }
-      }
+    }
 }

@@ -48,6 +48,7 @@ const hasErrorMessage = computed(() => {
       :type="inputType"
       :placeholder="placeholder"
       class="input__field"
+      :class="{ 'has-value': modelValue }"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
     />
