@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/vue3';
 import Input from '@/Components/General/Input.vue';
 import Checkbox from '@/Components/General/Checkbox.vue';
 import Button from '@/Components/General/Button.vue';
-import ForgotPassword from '@/Components/Login/ForgotPassword.vue';
+import ForgotPassword from '@/Components/Auth/Login/ForgotPassword.vue';
 
 const form = useForm({
     email: '',
@@ -32,7 +32,7 @@ const submit = () => {
             <Input type="label" label="E-mailadres" />
             <Input type="field"
               input-type="text"
-              placeholder="Vul hier uw bestaande e-mailadres in"
+              placeholder="Vul hier uw e-mailadres in"
               v-model="form.email"
             />
             <Input type="error" :message="form.errors.email" />
@@ -54,11 +54,11 @@ const submit = () => {
             <ForgotPassword />
             </div>
             <Button label="Inloggen" type="submit" />
-          </div>
+            </div>
         </form>
       </div>
           <div class="login-form__image-box">
-              <img src="/images/pim/Test.jpg" alt="Login Image" class="login-form__image">
+              <img src="/images/pim/authenticationImage.png" alt="Login Image" class="login-form__image">
           </div>
       </div>
 </template>

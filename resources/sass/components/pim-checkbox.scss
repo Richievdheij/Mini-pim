@@ -1,27 +1,26 @@
 .checkbox {
-  &__body {
-    align-items: center;
-    color: #7b7b7b;
-    display: flex;
-    margin: 0 0 1.5rem 0;
-  }
+    &__body {
+        align-items: center;
+        color: #7b7b7b;
+        display: flex;
+    }
 
-  &__input {
-    margin-right: 0.5rem;
-    transition: 0.3s;
-  }
+    &__error {
+        color: rgba(255, 0, 0, 1); // Red for error message
+        font-size: 0.8rem;
+        margin: -1.4rem 0 0.2rem 0;
+    }
 
-  &__label {
-    font-size: 1rem;
-  }
+    &__input {
+        margin-right: 0.5rem;
+        transition: 0.3s;
+    }
 
-  &--agreement {
-    color: #7b7b7b;
-  }
+    &__label {
+        font-size: 1rem;
+    }
 
-  &__error {
-    color: rgba(255, 0, 0, 1); // Red for error message
-    font-size: 0.8rem;
-    margin: -1.4rem 0 0.2rem 0;
-  }
+    &--agreement {
+        color: #7b7b7b;
+    }
 }
