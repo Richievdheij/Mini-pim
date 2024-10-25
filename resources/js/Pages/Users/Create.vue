@@ -2,21 +2,20 @@
 import { useForm } from '@inertiajs/vue3';
 import { usePage } from '@inertiajs/vue3';
 
-// Grab user, roles, and user's current roles passed to the page
+// Grab roles passed to the page
 const { props } = usePage();
 const roles = props.roles;
-const userRoles = props.userRoles;
 
-// Initialize form with user data and selected roles
+// Initialize form
 const form = useForm({
-    name: props.user.name,
-    email: props.user.email,
+    name: '',
+    email: '',
     password: '',
-    roles: userRoles, // Set the initially selected roles
+    roles: [], // This will hold the selected roles
 });
 
 function submit() {
-    form.put(`/users/${props.user.id}`); // Submit the form
+    form.post('/users'); // Submit the form
 }
 </script>
 
@@ -28,7 +27,7 @@ function submit() {
         <label for="email">Email:</label>
         <input type="email" v-model="form.email" />
 
-        <label for="password">Password (Leave blank to keep current):</label>
+        <label for="password">Password:</label>
         <input type="password" v-model="form.password" />
 
         <label for="roles">Assign Roles:</label>
@@ -38,7 +37,7 @@ function submit() {
             </option>
         </select>
 
-        <button type="submit">Update</button>
+        <button type="submit">Create</button>
     </form>
 </template>
 
