@@ -47,7 +47,6 @@
             border-bottom: 0.3rem solid rgb(86, 122, 197);
         }
 
-
         &__links {
             display: flex;
             justify-content: space-between; // Space between the links
@@ -62,9 +61,9 @@
         }
 
         &__title {
-            font-family: 'Roboto', sans-serif; // ADD A FONT HERE
+            font-family: 'Poppins', sans-serif; // ADD A TITLE FONT
             font-size: 3rem;
-            font-weight: bold;
+            font-weight: 600;
         }
     }
 
@@ -117,9 +116,9 @@
         }
 
         &__title {
-            font-family: 'Roboto', sans-serif; // ADD A FONT HERE
+            font-family: 'Poppins', sans-serif; // ADD A TITLE FONT
             font-size: 3rem;
-            font-weight: bold;
+            font-weight: 600;
             margin: 0 0 1rem 0;
         }
 
@@ -178,9 +177,9 @@
         }
 
         &__title {
-            font-family: 'Roboto', sans-serif; // ADD A FONT HERE
+            font-family: 'Poppins', sans-serif; // ADD A TITLE FONT
             font-size: 3rem;
-            font-weight: bold;
+            font-weight: 600;
             margin: 0 0 1rem 0;
         }
 

@@ -4,9 +4,15 @@
 </script>
 
 <template>
-    <!-- <NavBar /> -->
     <div class="authenticated-layout">
-
-        <slot />
+        <header class="authenticated-layout__header">
+            <!-- <NavBar /> -->
+        </header>
+        <aside class="authenticated-layout__sidebar">
+            <!-- <Sidebar /> -->
+        </aside>
+        <main class="authenticated-layout__content">
+            <slot />
+        </main>
     </div>
 </template>

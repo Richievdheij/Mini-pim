@@ -1,8 +1,8 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-import Input from '@/Components/General/Input.vue';
+import ForgotPasswordFormInput from '@/Components/Auth/ForgotPassword/ForgotPasswordFormInput.vue';
 import Button from '@/Components/General/Button.vue';
-import GoBackLogin from "@/Components/Auth/GoBackLogin.vue";
+import GoBackLoginLink from "@/Components/Auth/GoBackLoginLink.vue";
 
 const form = useForm({
     email: '',
@@ -22,19 +22,14 @@ const submit = () => {
             <img src="/images/pim/mini-pim-logo.png" alt="logo" class="forgot-password-form__logo">
             <h1 class="forgot-password-form__title">WACHTWOORD VERGETEN</h1>
             <form class="forgot-password-form__form" @submit.prevent="submit">
-                <div>
-                    <Input type="label" label="E-mailadres" />
-                    <Input type="field"
-                           input-type="text"
-                           placeholder="Vul hier uw e-mailadres in"
-                           v-model="form.email"
-                    />
-                    <Input type="error" :message="form.errors.email" />
-                    <Button label="Wachtwoord resetten" type="submit" />
+                <ForgotPasswordFormInput
+                    :email="form.email"
+                    :emailError="form.errors.email"
+                />
+                <Button label="Wachtwoord resetten" type="submit" />
 
-                    <div class="forgot-password-form__links">
-                        <GoBackLogin />
-                    </div>
+                <div class="forgot-password-form__links">
+                    <GoBackLoginLink />
                 </div>
             </form>
         </div>

@@ -1,8 +1,8 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-import Input from '@/Components/General/Input.vue';
+import ConfirmPasswordFormInput from '@/Components/Auth/ConfirmPassword/ConfirmPasswordFormInput.vue';
 import Button from '@/Components/General/Button.vue';
-import GoBackLogin from "@/Components/Auth/GoBackLogin.vue";
+import GoBackLoginLink from "@/Components/Auth/GoBackLoginLink.vue";
 
 const form = useForm({
     password: '',
@@ -23,28 +23,16 @@ const submit = () => {
             <img src="/images/pim/mini-pim-logo.png" alt="logo" class="confirm-password-form__logo">
             <h1 class="confirm-password-form__title">WACHTWOORD BEVESTIGEN</h1>
             <form class="confirm-password-form__form" @submit.prevent="submit">
-                <div>
-                    <Input type="label" label="Nieuw Wachtwoord" />
-                    <Input type="field"
-                           input-type="password"
-                           placeholder="Vul hier uw nieuwe wachtwoord in"
-                           v-model="form.password"
-                    />
-                    <Input type="error" :message="form.errors.password" />
+                <ConfirmPasswordFormInput
+                    :password="form.password"
+                    :passwordError="form.errors.password"
+                    :passwordConfirmation="form.password_confirmation"
+                    :passwordConfirmationError="form.errors.password_confirmation"
+                />
+                <Button label="Wachtwoord bevestigen" type="submit" />
 
-                    <Input type="label" label="Bevestig Wachtwoord" />
-                    <Input type="field"
-                           input-type="password"
-                           placeholder="Bevestig uw nieuwe wachtwoord"
-                           v-model="form.password_confirmation"
-                    />
-                    <Input type="error" :message="form.errors.password_confirmation" />
-
-                    <Button label="Wachtwoord bevestigen" type="submit" />
-
-                    <div class="confirm-password-form__links">
-                        <GoBackLogin />
-                    </div>
+                <div class="confirm-password-form__links">
+                    <GoBackLoginLink />
                 </div>
             </form>
         </div>
