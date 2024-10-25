@@ -3,7 +3,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 // Auth
-//@import "auth/pim-confirm-password";
 @import "auth/pim-forgot-password";
 
 // Components
@@ -12,10 +11,10 @@
 @import "components/pim-input";
 
 // Dashboard
-@import "dashboard/pim-manager";
+@import "dashboard/pim-dashboard";
 
 // Layout
 @import "layout/pim-footer";
 @import "layout/pim-layout";
 @import "layout/pim-navbar";
-//@import "layout/pim-sidebar";
+@import "layout/pim-sidebar";

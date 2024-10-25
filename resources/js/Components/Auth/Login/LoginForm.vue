@@ -11,10 +11,11 @@ const form = useForm({
     remember: false,
 });
 
+// Function to handle form submission
 const submit = () => {
     form.post(route('login'), {
         onFinish: () => form.reset('password'),
-        data: { // Ensure to include remember token in the post request
+        data: {
             remember: form.remember,
         },
     });
@@ -33,6 +34,8 @@ const submit = () => {
                     :emailError="form.errors.email"
                     :password="form.password"
                     :passwordError="form.errors.password"
+                    @update:email="form.email = $event"
+                    @update:password="form.password = $event"
                 />
                 <div class="login-form__links">
                     <Checkbox

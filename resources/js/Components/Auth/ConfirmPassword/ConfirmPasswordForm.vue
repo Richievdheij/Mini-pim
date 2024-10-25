@@ -9,6 +9,7 @@ const form = useForm({
     password_confirmation: '',
 });
 
+// Function to handle form submission
 const submit = () => {
     form.post(route('password.confirm'), {
         onFinish: () => form.reset(),
@@ -28,11 +29,13 @@ const submit = () => {
                     :passwordError="form.errors.password"
                     :passwordConfirmation="form.password_confirmation"
                     :passwordConfirmationError="form.errors.password_confirmation"
+                    @update:password="form.password = $event"
+                    @update:passwordConfirmation="form.password_confirmation = $event"
                 />
-                <Button label="Wachtwoord bevestigen" type="submit" />
+                <Button label="Wachtwoord bevestigen" type="submit"/>
 
                 <div class="confirm-password-form__links">
-                    <GoBackLoginLink />
+                    <GoBackLoginLink/>
                 </div>
             </form>
         </div>

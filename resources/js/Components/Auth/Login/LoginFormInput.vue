@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, toRefs } from 'vue';
+import { defineProps, toRefs, ref, watch } from 'vue';
 import Input from '@/Components/General/Input.vue';
 
 const props = defineProps({
@@ -9,7 +9,20 @@ const props = defineProps({
     passwordError: String,
 });
 
-const { email, emailError, password, passwordError } = toRefs(props);
+// Create local state for email and password
+const localEmail = ref(props.email);
+const localPassword = ref(props.password);
+
+// Emit changes to the parent
+const emit = defineEmits(['update:email', 'update:password']);
+
+// Watch for changes in props to sync with local state
+watch(() => props.email, (newEmail) => {
+    localEmail.value = newEmail;
+});
+watch(() => props.password, (newPassword) => {
+    localPassword.value = newPassword;
+});
 </script>
 
 <template>
@@ -18,9 +31,10 @@ const { email, emailError, password, passwordError } = toRefs(props);
         <div class="login-form-inputs__group">
             <Input type="label" label="E-mailadres" />
             <Input type="field"
-                input-type="text"
-                placeholder="Vul hier uw e-mailadres in"
-                v-model="email"
+                   input-type="text"
+                   placeholder="Vul hier uw e-mailadres in"
+                   v-model="localEmail"
+                   @input="emit('update:email', localEmail)"
             />
             <!-- Error input -->
             <Input type="error" :message="emailError" />
@@ -30,9 +44,10 @@ const { email, emailError, password, passwordError } = toRefs(props);
         <div class="login-form-inputs__group">
             <Input type="label" label="Wachtwoord" />
             <Input type="field"
-                input-type="password"
-                placeholder="Wachtwoord"
-                v-model="password"
+                   input-type="password"
+                   placeholder="Wachtwoord"
+                   v-model="localPassword"
+                   @input="emit('update:password', localPassword)"
             />
             <!-- Error input -->
             <Input type="error" :message="passwordError" />
