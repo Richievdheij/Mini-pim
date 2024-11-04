@@ -1,6 +1,6 @@
 <script setup>
 // import NavBar from '@/Components/Layout/NavBar.vue';
-// import Sidebar from '@/Components/Layout/Sidebar.vue';
+import Sidebar from '@/Components/Layout/Sidebar.vue';
 </script>
 
 <template>
@@ -9,7 +9,7 @@
             <!-- <NavBar /> -->
         </header>
         <aside class="authenticated-layout__sidebar">
-            <!-- <Sidebar /> -->
+             <Sidebar />
         </aside>
         <main class="authenticated-layout__content">
             <slot />

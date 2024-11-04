@@ -1,10 +1,10 @@
 <script setup>
-import DangerButton from '@/Components/DangerButton.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import Modal from '@/Components/Modal.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
+import DangerButton from '@/Components/laravelWelcome/DangerButton.vue';
+import InputError from '@/Components/laravelWelcome/InputError.vue';
+import InputLabel from '@/Components//laravelWelcome/InputLabel.vue';
+import Modal from '@/Components/laravelWelcome/Modal.vue';
+import SecondaryButton from '@/Components/laravelWelcome/SecondaryButton.vue';
+import TextInput from '@/Components//laravelWelcome/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { nextTick, ref } from 'vue';
 

@@ -190,3 +190,13 @@
         }
     }
 }
+
+.authenticated-layout {
+    display: flex; // Ensure layout is flex for sidebar and content alignment
+    height: 100vh; // Full viewport height
+}
+
+.authenticated-layout__content {
+    flex-grow: 1; // Allow content to grow
+    padding: 2rem; // Content padding
+}

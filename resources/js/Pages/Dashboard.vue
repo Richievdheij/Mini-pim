@@ -1,8 +1,8 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import DropdownLink from '@/Components/laravelWelcome/DropdownLink.vue';
 import { Head, usePage } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
-import DropdownLink from '@/Components/laravelWelcome/DropdownLink.vue';
 
 // Get the user and roles from Inertia's props
 const { props } = usePage();
@@ -14,7 +14,6 @@ const form = useForm({});
 
 // Logout function
 function logout() {
-    console.log('Logout clicked');
     form.post(route('logout'));
 }
 
@@ -23,39 +22,47 @@ const hasAdminRole = roles.some(role => role.name === 'admin');
 </script>
 
 <template>
-    <Head title="Dashboard" />
-
     <AuthenticatedLayout>
-        <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>
-        </template>
+        <Head title="Mini-pim | Dashboard" />
 
-        <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">
-                        <h1>Welcome to the Dashboard!</h1>
-                        <p>You are logged in as: <strong>{{ user.name }}</strong></p>
+        <div class="dashboard">
 
-                        <h2>Your Roles:</h2>
-                        <ul>
-                            <li v-for="role in roles" :key="role.id">{{ role.name }}</li>
-                        </ul>
+            <!-- Main content area for dashboard on the right -->
+            <div class="dashboard__content">
+                <h2 class="dashboard__header">Dashboard</h2>
 
-                        <!-- Conditionally show admin dashboard link -->
-                        <div v-if="hasAdminRole">
-                            <p>You have access to the Admin Dashboard!</p>
-                            <inertia-link href="/admin/dashboard">Go to Admin Dashboard</inertia-link>
-                        </div>
+                <!-- Buttons inside the dashboard content area -->
+                <div class="dashboard__buttons">
+                    <DropdownLink :href="route('logout')" method="post" as="button" class="dashboard__buttons--button">
+                        Log Out
+                    </DropdownLink>
+                    <DropdownLink :href="route('profile.edit')" class="dashboard__buttons--button">
+                        Profile
+                    </DropdownLink>
+                </div>
 
-                        <div v-else>
-                            <p>You do not have access to the Admin Dashboard.</p>
-                        </div>
+                <div class="dashboard__main-content">
+                    <h1 class="dashboard__welcome">Welcome to the Dashboard!</h1>
+                    <p class="dashboard__user-info">
+                        You are logged in as: <strong>{{ user.name }}</strong>
+                    </p>
 
-                        <!-- Logout Button -->
-                        <DropdownLink :href="route('logout')" method="post" as="button" class="dashboard-buttons__button">
-                            Log Out
-                        </DropdownLink>
+                    <h2 class="dashboard__roles-title">Your Roles:</h2>
+                    <ul class="dashboard__roles-list">
+                        <li v-for="role in roles" :key="role.id" class="dashboard__role-item">
+                            {{ role.name }}
+                        </li>
+                    </ul>
+
+                    <!-- Conditionally show admin dashboard link -->
+                    <div v-if="hasAdminRole" class="dashboard__admin-access">
+                        <p>You have access to the Admin Dashboard!</p>
+                        <inertia-link href="/admin/dashboard" class="dashboard__admin-link">Go to Admin Dashboard
+                        </inertia-link>
+                    </div>
+
+                    <div v-else class="dashboard__no-access">
+                        <p>You do not have access to the Admin Dashboard.</p>
                     </div>
                 </div>
             </div>
