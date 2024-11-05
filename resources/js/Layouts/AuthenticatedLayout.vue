@@ -6,7 +6,7 @@ import Sidebar from '@/Components/Layout/Sidebar.vue';
 <template>
     <div class="authenticated-layout">
         <header class="authenticated-layout__header">
-            <!-- <NavBar /> -->
+        <!-- <NavBar />-->
         </header>
         <aside class="authenticated-layout__sidebar">
              <Sidebar />
