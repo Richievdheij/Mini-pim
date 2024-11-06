@@ -63,8 +63,16 @@ class PimController extends Controller
      */
     public function showUsers()
     {
-        $users = User::with('roles')->get(); // Eager-load the roles
-        return Inertia::render('Users/Index', ['users' => $users]);
+        $users = User::with('roles')->get(); // Eager-load roles
+        $roles = Role::all(); // Ensure this fetches all roles from the DB
+        $currentUser = auth()->user();
+        $currentUserRole = $currentUser->roles->pluck('name')->first(); // Assume single role
+
+        return Inertia::render('Users/Index', [
+            'users' => $users,
+            'roles' => $roles,
+            'currentUserRole' => $currentUserRole,
+        ]);
     }
 
     /**

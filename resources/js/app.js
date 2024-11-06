@@ -10,6 +10,9 @@ import { InertiaProgress } from '@inertiajs/progress';
 // Import FontAwesome CSS
 import '@fortawesome/fontawesome-free/css/all.css';
 
+
+
+
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 // Initialize and configure the Inertia.js app
