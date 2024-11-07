@@ -1,5 +1,5 @@
 .sidebar {
-    background-color: rgba(60, 60, 60, 1);
+    background-color: #0C0C20;
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -13,10 +13,14 @@
 
         .sidebar__button {
             justify-content: center;
-            padding: 0.75rem 0; // Ensures icon-only centering
         }
 
-        .sidebar__title,
+        .sidebar__title {
+            padding: 0.75rem 1rem;
+            opacity: 0;
+            max-width: 0;
+            transition: opacity 0.3s ease;
+        }
         .sidebar__button span {
             opacity: 0;
             max-width: 0;
@@ -50,7 +54,6 @@
         color: rgba(255, 255, 255, 0.8);
         cursor: pointer;
         display: flex;
-        gap: 1rem;
         padding: 0.75rem 1rem;
         text-align: left;
         width: 100%;
@@ -96,12 +99,12 @@
     }
 
     &__profile {
-        margin-top: auto;
+        margin: auto 0 0 0;
 
         &-divider {
             background-color: rgba(200, 200, 200, 0.3);
             height: 0.06rem;
-            margin: 0.5rem 0;
+
         }
 
         &-image {
@@ -109,13 +112,21 @@
             border-radius: 50%;
             height: 2.5rem;
             width: 2.5rem;
-            margin: 1rem 0.7rem;
+            margin: 1rem 0.74rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        &-icon {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.8);
         }
 
         &-info {
             display: flex;
             flex-direction: column;
-            padding-left: 0.5rem;
+            padding: 0 0 1rem 1rem;
             transition: opacity 0.3s ease;
 
             .sidebar--collapsed & {
@@ -180,3 +191,4 @@
         margin-right: 0.5rem;
     }
 }
+

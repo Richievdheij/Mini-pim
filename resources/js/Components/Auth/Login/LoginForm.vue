@@ -15,9 +15,6 @@ const form = useForm({
 const submit = () => {
     form.post(route('login'), {
         onFinish: () => form.reset('password'),
-        data: {
-            remember: form.remember,
-        },
     });
 };
 </script>
@@ -27,7 +24,7 @@ const submit = () => {
         <div class="login-form__box">
             <!-- Add logo in back-end -->
             <img src="/images/pim/mini-pim-logo.png" alt="logo" class="login-form__logo">
-            <h1 class="login-form__title">INLOGGEN</h1>
+            <h1 class="login-form__title">LOGIN</h1>
             <form class="login-form__form" @submit.prevent="submit">
                 <LoginFormInput
                     :email="form.email"
@@ -39,13 +36,13 @@ const submit = () => {
                 />
                 <div class="login-form__links">
                     <Checkbox
-                        label="Onthoud mij"
+                        label="Remember me"
                         v-model="form.remember"
                         extra-class="checkbox--agreement"
                     />
                     <ForgotPasswordLink />
                 </div>
-                <Button label="Inloggen" type="submit" />
+                <Button label="Login" type="submit" />
             </form>
         </div>
         <div class="login-form__image-box">

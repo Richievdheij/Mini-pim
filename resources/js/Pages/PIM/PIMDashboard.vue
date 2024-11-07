@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import {Head} from "@inertiajs/vue3";
+import { Head } from "@inertiajs/vue3";
 </script>
 
 <template>
@@ -9,7 +9,7 @@ import {Head} from "@inertiajs/vue3";
 
         <div class="pim-dashboard">
             <main class="pim-dashboard__content">
-                <h1>PIM Dashboard</h1>
+                <h1>PIM</h1>
                 <!-- PIM dashboard content goes here -->
             </main>
         </div>

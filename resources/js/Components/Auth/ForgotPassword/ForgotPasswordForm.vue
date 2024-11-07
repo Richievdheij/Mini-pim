@@ -21,14 +21,14 @@ const submit = () => {
         <div class="forgot-password-form__box">
             <!-- Add logo in back-end -->
             <img src="/images/pim/mini-pim-logo.png" alt="logo" class="forgot-password-form__logo">
-            <h1 class="forgot-password-form__title">WACHTWOORD VERGETEN</h1>
+            <h1 class="forgot-password-form__title">FORGOT<br>PASSWORD</h1>
             <form class="forgot-password-form__form" @submit.prevent="submit">
                 <ForgotPasswordFormInput
                     :email="form.email"
                     :emailError="form.errors.email"
                     @update:email="form.email = $event"
                 />
-                <Button label="Wachtwoord resetten" type="submit"/>
+                <Button label="Reset password" type="submit"/>
 
                 <div class="forgot-password-form__links">
                     <GoBackLoginLink/>

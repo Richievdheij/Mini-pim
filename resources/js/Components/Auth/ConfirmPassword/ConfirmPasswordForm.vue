@@ -22,7 +22,7 @@ const submit = () => {
         <div class="confirm-password-form__box">
             <!-- Add logo in back-end -->
             <img src="/images/pim/mini-pim-logo.png" alt="logo" class="confirm-password-form__logo">
-            <h1 class="confirm-password-form__title">WACHTWOORD BEVESTIGEN</h1>
+            <h1 class="confirm-password-form__title">CONFIRM PASSWORD</h1>
             <form class="confirm-password-form__form" @submit.prevent="submit">
                 <ConfirmPasswordFormInput
                     :password="form.password"
@@ -32,7 +32,7 @@ const submit = () => {
                     @update:password="form.password = $event"
                     @update:passwordConfirmation="form.password_confirmation = $event"
                 />
-                <Button label="Wachtwoord bevestigen" type="submit"/>
+                <Button label="Confirm password" type="submit"/>
 
                 <div class="confirm-password-form__links">
                     <GoBackLoginLink/>

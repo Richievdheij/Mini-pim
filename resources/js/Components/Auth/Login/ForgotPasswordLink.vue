@@ -5,6 +5,6 @@ import { Link } from '@inertiajs/vue3';
 <template>
   <div class="forgot-password">
     <i class="forgot-password__icon fas fa-lock"></i>
-    <Link :href="route('password.request')" class="forgot-password__link">Wachtwoord vergeten</Link>
+    <Link :href="route('password.request')" class="forgot-password__link">Forgot your password?</Link>
   </div>
 </template>

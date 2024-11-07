@@ -29,10 +29,10 @@ watch(() => props.password, (newPassword) => {
     <div class="login-form-inputs">
         <!-- Email Input Group -->
         <div class="login-form-inputs__group">
-            <Input type="label" label="E-mailadres" />
+            <Input type="label" label="Email address" />
             <Input type="field"
                    input-type="text"
-                   placeholder="Vul hier uw e-mailadres in"
+                   placeholder="Enter your email address here"
                    v-model="localEmail"
                    @input="emit('update:email', localEmail)"
             />
@@ -42,10 +42,10 @@ watch(() => props.password, (newPassword) => {
 
         <!-- Password Input Group -->
         <div class="login-form-inputs__group">
-            <Input type="label" label="Wachtwoord" />
+            <Input type="label" label="Password" />
             <Input type="field"
                    input-type="password"
-                   placeholder="Wachtwoord"
+                   placeholder="Password"
                    v-model="localPassword"
                    @input="emit('update:password', localPassword)"
             />

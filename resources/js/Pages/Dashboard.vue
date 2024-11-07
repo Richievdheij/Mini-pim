@@ -57,8 +57,8 @@ const hasAdminRole = roles.some(role => role.name === 'admin');
                     <!-- Conditionally show admin dashboard link -->
                     <div v-if="hasAdminRole" class="dashboard__admin-access">
                         <p>You have access to the Admin Dashboard!</p>
-                        <inertia-link href="/admin/dashboard" class="dashboard__admin-link">Go to Admin Dashboard
-                        </inertia-link>
+                        <button href="/admin/dashboard" class="dashboard__admin-link">Go to Admin Dashboard
+                        </button>
                     </div>
 
                     <div v-else class="dashboard__no-access">
