@@ -9,6 +9,7 @@
 @import "components/pim-button";
 @import "components/pim-checkbox";
 @import "components/pim-input";
+@import "components/pim-modal";
 
 // Dashboard
 @import "dashboard/pim-dashboard";
@@ -18,3 +19,6 @@
 @import "layout/pim-layout";
 @import "layout/pim-navbar";
 @import "layout/pim-sidebar";
+
+// Profile
+@import "profile/pim-profile";

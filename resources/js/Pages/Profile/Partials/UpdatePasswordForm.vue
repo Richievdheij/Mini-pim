@@ -1,10 +1,8 @@
 <script setup>
-import InputError from '@/Components/laravelWelcome/InputError.vue';
-import InputLabel from '@/Components/laravelWelcome/InputLabel.vue';
-import PrimaryButton from '@/Components/laravelWelcome/PrimaryButton.vue';
-import TextInput from '@/Components//laravelWelcome/TextInput.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import Input from '@/Components/General/Input.vue';
+import Button from '@/Components/General/Button.vue';
 
 const passwordInput = ref(null);
 const currentPasswordInput = ref(null);
@@ -34,72 +32,47 @@ const updatePassword = () => {
 </script>
 
 <template>
-    <section>
-        <header>
-            <h2 class="text-lg font-medium text-gray-900">Update Password</h2>
+    <div class="update-password-form">
+        <h2 class="update-password-form__title">Update Password</h2>
+        <p class="update-password-form__description">
+            Ensure your account is using a long, random password to stay secure.
+        </p>
 
-            <p class="mt-1 text-sm text-gray-600">
-                Ensure your account is using a long, random password to stay secure.
-            </p>
-        </header>
+        <!-- Update Password Form -->
+        <form class="update-password-form__form" @submit.prevent="updatePassword">
+            <Input type="password" label="Current Password" />
+            <Input type="field"
+               input-type="password"
+               placeholder="Current Password"
+               v-model="form.current_password"
+               ref="currentPasswordInput"
+            />
+            <!-- Error input -->
+            <Input type="error" :message="form.errors.current_password" />
 
-        <form @submit.prevent="updatePassword" class="mt-6 space-y-6">
-            <div>
-                <InputLabel for="current_password" value="Current Password" />
+            <!-- New Password Input Group -->
+            <Input type="password" label="New Password" />
+            <Input type="field"
+                input-type="password"
+                placeholder="Enter your new password"
+                v-model="form.password"
+                ref="passwordInput"
+            />
+            <!-- Error input -->
+            <Input type="error" :message="form.errors.password" />
 
-                <TextInput
-                    id="current_password"
-                    ref="currentPasswordInput"
-                    v-model="form.current_password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    autocomplete="current-password"
-                />
+            <!-- Confirm Password Input Group -->
+            <Input label="Confirm Password" type="password" />
+            <Input type="field"
+                input-type="password"
+                placeholder="Confirm your password"
+                v-model="form.password_confirmation"
+            />
+            <!-- Error input -->
+            <Input type="error" :message="form.errors.password_confirmation" />
 
-                <InputError :message="form.errors.current_password" class="mt-2" />
-            </div>
-
-            <div>
-                <InputLabel for="password" value="New Password" />
-
-                <TextInput
-                    id="password"
-                    ref="passwordInput"
-                    v-model="form.password"
-                    type="password"
-                    class="mt-1 block w-full"
-                    autocomplete="new-password"
-                />
-
-                <InputError :message="form.errors.password" class="mt-2" />
-            </div>
-
-            <div>
-                <InputLabel for="password_confirmation" value="Confirm Password" />
-
-                <TextInput
-                    id="password_confirmation"
-                    v-model="form.password_confirmation"
-                    type="password"
-                    class="mt-1 block w-full"
-                    autocomplete="new-password"
-                />
-
-                <InputError :message="form.errors.password_confirmation" class="mt-2" />
-            </div>
-
-            <div class="flex items-center gap-4">
-                <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
-
-                <Transition
-                    enter-active-class="transition ease-in-out"
-                    enter-from-class="opacity-0"
-                    leave-active-class="transition ease-in-out"
-                    leave-to-class="opacity-0"
-                >
-                    <p v-if="form.recentlySuccessful" class="text-sm text-gray-600">Saved.</p>
-                </Transition>
-            </div>
+            <!-- Submit Button -->
+            <Button label="Save" type="submit" :disabled="form.processing"/>
         </form>
-    </section>
+    </div>
 </template>

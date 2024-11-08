@@ -11,7 +11,7 @@ import { Link } from '@inertiajs/vue3';
             <footer class="guest-layout__footer-links">
                 <Link href="#" class="guest-layout__footer-link">Privacy Policy</Link>
                 <span class="guest-layout__footer-separator">|</span>
-                <Link href="#" class="guest-layout__footer-link">Cookie Statement</Link>
+                <Link href="#" class="guest-layout__footer-link">Cookies</Link>
                 <span class="guest-layout__footer-separator">|</span>
                 <Link href="#" class="guest-layout__footer-link">Terms and conditions</Link>
                 <span class="guest-layout__footer-separator">|</span>
