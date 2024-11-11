@@ -1,7 +1,7 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
 import ConfirmPasswordFormInput from '@/Components/Auth/ConfirmPassword/ConfirmPasswordFormInput.vue';
-import Button from '@/Components/General/Button.vue';
+import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 import GoBackLoginLink from "@/Components/Auth/GoBackLoginLink.vue";
 
 const form = useForm({
@@ -32,7 +32,7 @@ const submit = () => {
                     @update:password="form.password = $event"
                     @update:passwordConfirmation="form.password_confirmation = $event"
                 />
-                <Button label="Confirm password" type="submit"/>
+                <PrimaryButton label="Confirm password" type="submit"/>
 
                 <div class="confirm-password-form__links">
                     <GoBackLoginLink/>

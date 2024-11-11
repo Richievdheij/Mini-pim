@@ -2,7 +2,7 @@
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import Input from '@/Components/General/Input.vue';
-import Button from '@/Components/General/Button.vue';
+import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 
 const passwordInput = ref(null);
 const currentPasswordInput = ref(null);
@@ -72,7 +72,7 @@ const updatePassword = () => {
             <Input type="error" :message="form.errors.password_confirmation" />
 
             <!-- Submit Button -->
-            <Button label="Save" type="submit" :disabled="form.processing"/>
+            <PrimaryButton label="Save" type="submit" :disabled="form.processing"/>
         </form>
     </div>
 </template>

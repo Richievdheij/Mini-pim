@@ -1,8 +1,10 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-import { nextTick, ref } from 'vue';
+import { ref } from 'vue';
 import Input from '@/Components/General/Input.vue';
-import Button from '@/Components/General/Button.vue';
+import PrimaryButton from '@/Components/General/PrimaryButton.vue';
+import SecondaryButton from "@/Components/General/SecondaryButton.vue";
+import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 import Modal from '@/Components/laravelWelcome/Modal.vue';
 
 const confirmingUserDeletion = ref(false);
@@ -14,17 +16,19 @@ const form = useForm({
 
 const confirmUserDeletion = () => {
     confirmingUserDeletion.value = true;
-    nextTick(() => passwordInput.value.focus());
+
 };
 
 const deleteUser = () => {
     form.delete(route('profile.destroy'), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
-        onError: () => passwordInput.value.focus(),
-        onFinish: () => form.reset(),
+        onFinish: () => {
+            form.reset(); // Reset the form after submission
+        }
     });
 };
+
 
 const closeModal = () => {
     confirmingUserDeletion.value = false;
@@ -41,7 +45,7 @@ const closeModal = () => {
         </p>
 
         <!-- Delete Account Button -->
-        <Button label="Delete Account" @click="confirmUserDeletion" />
+        <PrimaryButton label="Delete Account" type="delete" @click="confirmUserDeletion" />
 
         <!-- Delete Account Modal -->
         <Modal :show="confirmingUserDeletion" @close="closeModal">
@@ -65,8 +69,8 @@ const closeModal = () => {
 
                 <!-- Delete Account Actions -->
                 <div class="delete-user-form__actions">
-                    <Button label="Cancel" @click="closeModal" variant="secondary" />
-                    <Button label="Delete Account" @click="deleteUser" :disabled="form.processing" />
+                    <TertiaryButton label="Cancel" @click="closeModal" />
+                    <SecondaryButton label="Delete Account" @click="deleteUser" :disabled="form.processing" type="delete" />
                 </div>
             </div>
         </Modal>

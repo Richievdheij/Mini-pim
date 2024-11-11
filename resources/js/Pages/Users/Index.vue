@@ -1,6 +1,6 @@
 <script setup>
 import { Link, router } from '@inertiajs/vue3'; // Import the Link and router components
-import Button from '@/Components/General/Button.vue'; // Import your custom button component
+import Button from '@/Components/General/PrimaryButton.vue'; // Import your custom button component
 
 defineProps({
     users: Array,

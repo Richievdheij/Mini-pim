@@ -2,7 +2,7 @@
 import { useForm } from '@inertiajs/vue3';
 import LoginFormInput from '@/Components/Auth/Login/LoginFormInput.vue';
 import Checkbox from '@/Components/General/Checkbox.vue';
-import Button from '@/Components/General/Button.vue';
+import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 import ForgotPasswordLink from '@/Components/Auth/Login/ForgotPasswordLink.vue';
 
 const form = useForm({
@@ -42,7 +42,7 @@ const submit = () => {
                     />
                     <ForgotPasswordLink />
                 </div>
-                <Button label="Login" type="submit" />
+                <PrimaryButton label="Login" type="submit" />
             </form>
         </div>
         <div class="login-form__image-box">

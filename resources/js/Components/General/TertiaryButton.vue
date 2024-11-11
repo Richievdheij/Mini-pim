@@ -1,0 +1,31 @@
+<script setup>
+import { defineProps, computed } from 'vue';
+
+const props = defineProps({
+    label: String,
+    type: {
+        type: String,
+        default: 'tertiary'
+    }
+});
+
+const buttonType = computed(() => {
+    let type = 'button button__body button__body--tertiary';
+
+    if (props.type === 'submit') {
+        type += ' button__body--submit';
+    }
+    if (props.type === 'delete') {
+        type += ' button__body--delete';
+    }
+    if (props.type === 'cancel') {
+        type += ' button__body--cancel';
+    }
+
+    return type;
+});
+</script>
+
+<template>
+    <button :class="buttonType" type="submit">{{ label }}</button>
+</template>

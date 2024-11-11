@@ -1,7 +1,7 @@
 <script setup>
-import {useForm} from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import ForgotPasswordFormInput from '@/Components/Auth/ForgotPassword/ForgotPasswordFormInput.vue';
-import Button from '@/Components/General/Button.vue';
+import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 import GoBackLoginLink from "@/Components/Auth/GoBackLoginLink.vue";
 
 const form = useForm({
@@ -28,7 +28,7 @@ const submit = () => {
                     :emailError="form.errors.email"
                     @update:email="form.email = $event"
                 />
-                <Button label="Reset password" type="submit"/>
+                <PrimaryButton label="Reset password" type="submit"/>
 
                 <div class="forgot-password-form__links">
                     <GoBackLoginLink/>

@@ -7,7 +7,7 @@ const props = defineProps({
   message: String,       // Error message for InputError
   type: {
     type: String,
-    required: true,      // Can be 'error', 'field', or 'label'
+    required: true,      // Can be 'error', 'field', 'label or 'status'
   },
   modelValue: String,    // v-model value from parent component (form data)
 });
@@ -27,13 +27,12 @@ const inputClass = computed(() => {
   if (props.type === 'label') {
     type += ' input__body--label';
   }
+if (props.type === 'status') {
+    type += ' input__body--status';
+}
   return type;
 });
 
-const hasErrorMessage = computed(() => {
-    return !!props.message
-    }
-)
 </script>
 <template>
   <div :class="inputClass">
@@ -52,9 +51,15 @@ const hasErrorMessage = computed(() => {
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
     />
+
     <!-- If type is 'error', display the error message -->
     <div v-if="type === 'error'" class="input__error">
       <p>{{ message }}</p>
     </div>
+
+    <!-- If type is 'status', display the status message -->
+      <div v-if="type === 'status'" class="input__status">
+          <p>{{ message }}</p>
+      </div>
   </div>
 </template>

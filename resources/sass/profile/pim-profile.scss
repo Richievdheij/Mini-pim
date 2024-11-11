@@ -23,11 +23,11 @@
 .update-profile-information-form {
     margin: 0 0 1rem 0;
     padding: 1rem;
-    border:  solid .06rem rgba(0, 0, 0, .1);
+    border:  solid .06rem rgba(0, 0, 0, .2);
     box-shadow: 0 0 .2rem rgba(0, 0, 0, .20);
 
     &__form {
-        width: 50%;
+        width: 40%;
     }
 
     &__title {
@@ -52,6 +52,7 @@
     &__actions {
         display: flex;
         justify-content: flex-end;
+        gap: 1rem;
     }
 }
 
