@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, toRefs, ref, watch } from 'vue';
+import { defineProps, ref, watch } from 'vue';
 import Input from '@/Components/General/Input.vue';
 
 const props = defineProps({
@@ -29,25 +29,25 @@ watch(() => props.passwordConfirmation, (newPasswordConfirmation) => {
 <template>
     <div class="confirm-password-inputs">
         <!-- Password Input Group -->
-        <Input type="label" label="New password" />
-        <Input type="field"
-               input-type="password"
-               placeholder="Enter your new password here"
-               v-model="localPassword"
-               @input="emit('update:password', localPassword)"
+        <Input
+            type="field"
+            label="New password"
+            input-type="password"
+            placeholder="Enter your new password here"
+            v-model="localPassword"
+            :error="passwordError"
+            @input="emit('update:password', localPassword)"
         />
-        <!-- Input error -->
-        <Input type="error" :message="passwordError" />
 
         <!-- Password Confirmation Input Group -->
-        <Input type="label" label="Confirm password" />
-        <Input type="field"
-               input-type="password"
-               placeholder="Confirm your new password"
-               v-model="localPasswordConfirmation"
-               @input="emit('update:passwordConfirmation', localPasswordConfirmation)"
+        <Input
+            type="field"
+            label="Confirm password"
+            input-type="password"
+            placeholder="Confirm your new password"
+            v-model="localPasswordConfirmation"
+            :error="passwordConfirmationError"
+            @input="emit('update:passwordConfirmation', localPasswordConfirmation)"
         />
-        <!-- Input error -->
-        <Input type="error" :message="passwordConfirmationError" />
     </div>
 </template>

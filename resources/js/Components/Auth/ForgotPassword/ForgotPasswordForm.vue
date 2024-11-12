@@ -23,13 +23,19 @@ const submit = () => {
             <img src="/images/pim/mini-pim-logo.png" alt="logo" class="forgot-password-form__logo">
             <h1 class="forgot-password-form__title">FORGOT<br>PASSWORD</h1>
             <form class="forgot-password-form__form" @submit.prevent="submit">
+                <!-- Email Input Group -->
                 <ForgotPasswordFormInput
                     :email="form.email"
                     :emailError="form.errors.email"
                     @update:email="form.email = $event"
                 />
-                <PrimaryButton label="Reset password" type="submit"/>
+                <!-- Reset password -->
+                <PrimaryButton
+                    label="Reset password"
+                    type="submit"
+                />
 
+                <!-- Go back to login -->
                 <div class="forgot-password-form__links">
                     <GoBackLoginLink/>
                 </div>

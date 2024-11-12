@@ -1,26 +1,12 @@
 <script setup>
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import ForgotPasswordForm from "@/Components/Auth/ForgotPassword/ForgotPasswordForm.vue";
-import { Head, useForm } from '@inertiajs/vue3';
-
-defineProps({
-    status: {
-        type: String,
-    },
-});
-
-const form = useForm({
-    email: '',
-});
-
-const submit = () => {
-    form.post(route('password.email'));
-};
+import { Head } from '@inertiajs/vue3';
 </script>
 
 <template>
     <GuestLayout>
-        <Head title="Mini-pim | Wachtwoord vergeten" />
+        <Head title="Mini-pim | Forgot password" />
         <ForgotPasswordForm/>
     </GuestLayout>
 </template>

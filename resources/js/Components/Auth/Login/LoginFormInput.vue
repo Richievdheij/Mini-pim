@@ -29,28 +29,28 @@ watch(() => props.password, (newPassword) => {
     <div class="login-form-inputs">
         <!-- Email Input Group -->
         <div class="login-form-inputs__group">
-            <Input type="label" label="Email address" />
-            <Input type="field"
-                   input-type="text"
-                   placeholder="Enter your email address here"
-                   v-model="localEmail"
-                   @input="emit('update:email', localEmail)"
+            <Input
+                type="field"
+                label="Email address"
+                input-type="text"
+                placeholder="Enter your email address here"
+                :error="emailError"
+                v-model="localEmail"
+                @input="emit('update:email', localEmail)"
             />
-            <!-- Error input -->
-            <Input type="error" :message="emailError" />
         </div>
 
         <!-- Password Input Group -->
         <div class="login-form-inputs__group">
-            <Input type="label" label="Password" />
-            <Input type="field"
-                   input-type="password"
-                   placeholder="Password"
-                   v-model="localPassword"
-                   @input="emit('update:password', localPassword)"
+            <Input
+                type="field"
+                label="Password"
+                input-type="password"
+                placeholder="Password"
+                :error="passwordError"
+                v-model="localPassword"
+                @input="emit('update:password', localPassword)"
             />
-            <!-- Error input -->
-            <Input type="error" :message="passwordError" />
         </div>
     </div>
 </template>

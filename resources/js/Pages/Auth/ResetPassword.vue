@@ -33,7 +33,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Reset Password" />
+        <Head title="Mini-pim | Reset Password" />
 
         <form @submit.prevent="submit">
             <div>

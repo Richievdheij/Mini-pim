@@ -22,14 +22,14 @@ watch(() => props.email, (newEmail) => {
 <template>
     <div class="forgot-password-inputs">
         <!-- Email Input Group -->
-        <Input type="label" label="Email address" />
-        <Input type="field"
-               input-type="text"
-               placeholder="Enter your email address here"
-               v-model="localEmail"
-               @input="emit('update:email', localEmail)"
+        <Input
+            type="field"
+            label="Email address"
+            input-type="text"
+            placeholder="Enter your email address here"
+            :error="emailError"
+            v-model="localEmail"
+            @input="emit('update:email', localEmail)"
         />
-        <!-- Error input -->
-        <Input type="error" :message="emailError" />
     </div>
 </template>

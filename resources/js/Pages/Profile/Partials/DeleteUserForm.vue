@@ -54,8 +54,9 @@ const closeModal = () => {
                 <p class="delete-user-form__description">Enter your password to confirm deletion.</p>
 
                 <!-- Password Input Group -->
-                <Input type="password" label="Password" />
-                <Input type="field"
+                <Input
+                    type="field"
+                    label="Password"
                     id="password"
                     input-type="password"
                     placeholder="Enter your Password"
@@ -64,13 +65,19 @@ const closeModal = () => {
                     :error="form.errors.password"
                     @keyup.enter="deleteUser"
                 />
-                <!-- Error input -->
-                <Input type="error" :message="form.errors.password" />
 
                 <!-- Delete Account Actions -->
                 <div class="delete-user-form__actions">
-                    <TertiaryButton label="Cancel" @click="closeModal" />
-                    <SecondaryButton label="Delete Account" @click="deleteUser" :disabled="form.processing" type="delete" />
+                    <TertiaryButton
+                        label="Cancel"
+                        @click="closeModal"
+                    />
+                    <SecondaryButton
+                        label="Delete Account"
+                        @click="deleteUser"
+                        :disabled="form.processing"
+                        type="delete"
+                    />
                 </div>
             </div>
         </Modal>

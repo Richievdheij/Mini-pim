@@ -1,6 +1,6 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import {useForm} from '@inertiajs/vue3';
+import {ref, computed} from 'vue';
 import Input from '@/Components/General/Input.vue';
 import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 
@@ -11,6 +11,11 @@ const form = useForm({
     current_password: '',
     password: '',
     password_confirmation: '',
+});
+
+// Computed property to check if passwords match
+const passwordMatchSuccess = computed(() => {
+    return form.password === form.password_confirmation && form.password_confirmation !== '';
 });
 
 const updatePassword = () => {
@@ -40,36 +45,37 @@ const updatePassword = () => {
 
         <!-- Update Password Form -->
         <form class="update-password-form__form" @submit.prevent="updatePassword">
-            <Input type="password" label="Current Password" />
-            <Input type="field"
-               input-type="password"
-               placeholder="Current Password"
-               v-model="form.current_password"
-               ref="currentPasswordInput"
+            <Input
+                type="field"
+                label="Current Password"
+                input-type="password"
+                placeholder="Current Password"
+                v-model="form.current_password"
+                ref="currentPasswordInput"
+                :error="form.errors.current_password"
             />
-            <!-- Error input -->
-            <Input type="error" :message="form.errors.current_password" />
 
             <!-- New Password Input Group -->
-            <Input type="password" label="New Password" />
-            <Input type="field"
+            <Input
+                type="field"
+                label="New Password"
                 input-type="password"
                 placeholder="Enter your new password"
                 v-model="form.password"
                 ref="passwordInput"
+                :error="form.errors.password"
             />
-            <!-- Error input -->
-            <Input type="error" :message="form.errors.password" />
 
-            <!-- Confirm Password Input Group -->
-            <Input label="Confirm Password" type="password" />
-            <Input type="field"
+            <!-- Confirm Password Input Group with Success Message -->
+            <Input
+                type="field"
+                label="Confirm Password"
                 input-type="password"
                 placeholder="Confirm your password"
                 v-model="form.password_confirmation"
+                :error="form.errors.password_confirmation"
+                :success="passwordMatchSuccess ? 'Passwords match!' : ''"
             />
-            <!-- Error input -->
-            <Input type="error" :message="form.errors.password_confirmation" />
 
             <!-- Submit Button -->
             <PrimaryButton label="Save" type="submit" :disabled="form.processing"/>

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import PrimaryButton from '@/Components/General/PrimaryButton.vue';
+import PrimaryButton from '@/Components/laravelWelcome/PrimaryButton.vue';
 import { useForm } from '@inertiajs/vue3';
 
 const props = defineProps({

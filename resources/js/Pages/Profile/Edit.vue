@@ -5,15 +5,6 @@ import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import { Head } from '@inertiajs/vue3';
 
-defineProps({
-    mustVerifyEmail: {
-        type: Boolean,
-    },
-    status: {
-        type: String,
-    },
-});
-
 </script>
 
 <template>
@@ -26,9 +17,7 @@ defineProps({
             </div>
 
             <div class="profile__section">
-                <UpdateProfileInformationForm
-                    :must-verify-email="mustVerifyEmail"
-                    :status="status" />
+                <UpdateProfileInformationForm />
                 <UpdatePasswordForm />
                 <DeleteUserForm />
             </div>

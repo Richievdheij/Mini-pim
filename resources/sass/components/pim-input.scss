@@ -1,65 +1,53 @@
-// Head class for input component
 .input {
     &__body {
         display: flex;
         flex-direction: column;
 
-        // Head class for Input--field
         &--field {
-          margin: 0 0 1.4rem 0;
-        input {
-            border: 0.1rem solid rgba(200, 200, 200, 1);
-            font-size: 1rem;
-            transition: 0.3s ease;
-            width: 100%;
+            margin: 0 0 1.4rem 0;
 
-            // Placeholder style and transition
-            &::placeholder {
-                color: rgb(0, 0, 0); // Placeholder color
-                opacity: 70%;
-                transition: opacity 0.3s ease;
-            }
+            .input__field {
+                border: 0.1rem solid rgba(200, 200, 200, 1);
+                font-size: 1rem;
+                transition: 0.3s ease;
+                width: 100%;
 
-            // On hover state
-            &:hover {
-                color: rgb(0, 0, 0); // Placeholder color
-                opacity: 70%;
-                transition: 0.5s ease;
-            }
+                &::placeholder {
+                    color: rgba(0, 0, 0, 0.7);
+                    transition: opacity 0.3s ease;
+                }
 
-            // Focus state and placeholder opacity change
-            &:focus {
-                border-color: rgb(86, 122, 197);  // Focus state border color
-                outline: none;
+                &:hover {
+                    color: rgba(0, 0, 0, 0.7);
+                    
+                }
+
+                &:focus {
+                    border-color: rgb(86, 122, 197);
+                    outline: none;
 
                     &::placeholder {
-                        opacity: 30%;  // Hide placeholder on focus
+                        opacity: 0.3;
                     }
                 }
 
-            // Transitioning the text opacity when typing
-            &.has-value {
+                &.has-value {
                     &::placeholder {
-                        opacity: 0;  // Placeholder fades out when typing starts
+                        opacity: 0;
                     }
                 }
             }
         }
 
-        // Head class for Input-label
-        &--label {
-        label {
-          color: rgba(0, 0, 0, 0.8);  // Label color
-          font-size: 1rem;  // Label font size
-            }
-        }
-
-        // Head class for Input-error
         &--error {
-            p {
-              color: rgba(255, 0, 0, 1);  // Red color for the error message
-              font-size: 0.875rem;
-              margin: -1.275rem 0 0rem 0;
+            .input__error-container {
+                height: 0; // Fixed space for error message
+            }
+
+            .input__error {
+                height: 0;
+                color: rgba(255, 0, 0, 1);
+                font-size: 0.875rem;
             }
         }
     }

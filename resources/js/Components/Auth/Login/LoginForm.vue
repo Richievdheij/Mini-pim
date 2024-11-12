@@ -42,7 +42,10 @@ const submit = () => {
                     />
                     <ForgotPasswordLink />
                 </div>
-                <PrimaryButton label="Login" type="submit" />
+                <PrimaryButton
+                    label="Login"
+                    type="submit"
+                />
             </form>
         </div>
         <div class="login-form__image-box">

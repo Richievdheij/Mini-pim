@@ -24,6 +24,7 @@ const submit = () => {
             <img src="/images/pim/mini-pim-logo.png" alt="logo" class="confirm-password-form__logo">
             <h1 class="confirm-password-form__title">CONFIRM PASSWORD</h1>
             <form class="confirm-password-form__form" @submit.prevent="submit">
+                <!-- Password Input Group -->
                 <ConfirmPasswordFormInput
                     :password="form.password"
                     :passwordError="form.errors.password"
@@ -32,8 +33,13 @@ const submit = () => {
                     @update:password="form.password = $event"
                     @update:passwordConfirmation="form.password_confirmation = $event"
                 />
-                <PrimaryButton label="Confirm password" type="submit"/>
+                <!-- Confirm password -->
+                <PrimaryButton
+                    label="Confirm password"
+                    type="submit"
+                />
 
+                <!-- Go back to login -->
                 <div class="confirm-password-form__links">
                     <GoBackLoginLink/>
                 </div>
