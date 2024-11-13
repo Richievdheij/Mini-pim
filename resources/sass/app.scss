@@ -21,5 +21,21 @@
 @import "layout/pim-navbar";
 @import "layout/pim-sidebar";
 
+// Manager
+// -- General
+// // -- Profiles
+@import "manager/general/profiles/pim-profiles.scss";
+// // -- User rights
+@import "manager/general/user-rights/pim-user-rights.scss";
+// // -- Users
+@import "manager/general/users/pim-users.scss";
+// -- Manage
+// // -- Logs
+@import "manager/manage/logs/pim-logs.scss";
+// // -- Settings
+@import "manager/manage/settings/pim-settings.scss";
+
+// PIM
+
 // Profile
 @import "profile/pim-profile";
