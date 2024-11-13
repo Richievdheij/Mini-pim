@@ -3,47 +3,46 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PimController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 // Authenticated user routes (requires user to be logged in)
-    Route::middleware('auth')->group(function () {
-    // General dashboard for authenticated users
+Route::middleware('auth')->group(function () {
+
+    // General Dashboard for Authenticated Users
     Route::get('/dashboard', [PimController::class, 'index'])->name('dashboard');
 
-    // Route for profile management
+    // User Profile Settings (for the logged-in user's settings)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Routes for managing users (CRUD)
-    Route::get('/users', [PimController::class, 'showUsers'])->name('users.index'); // Show list of users
-    Route::get('/users/create', [PimController::class, 'createUser'])->name('users.create'); // Show form to create user
-    Route::post('/users', [PimController::class, 'storeUser'])->name('users.store'); // Store new user
-    Route::get('/users/{user}/edit', [PimController::class, 'editUser'])->name('users.edit'); // Show form to edit user
-    Route::put('/users/{user}', [PimController::class, 'updateUser'])->name('users.update'); // Update user
-    Route::delete('/users/{user}', [PimController::class, 'destroyUser'])->name('users.destroy'); // Delete user
+    // User Management (CRUD) - For managing users within the system
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [PimController::class, 'showUsers'])->name('index');
+        Route::get('/create', [PimController::class, 'createUser'])->name('create');
+        Route ::post('/', [PimController::class, 'storeUser'])->name('store');
+        Route::get('/{user}/edit', [PimController::class, 'editUser'])->name('edit');
+        Route::put('/{user}', [PimController::class, 'updateUser'])->name('update');
+        Route::delete('/{user}', [PimController::class, 'destroyUser'])->name('destroy');
+    });
+
+    // Profile Management
+    Route::prefix('admin/profiles')->name('profiles.')->group(function () {
+        // Profile CRUD routes
+        Route::get('/', [ProfileController::class, 'index'])->name('index'); // Lists profiles
+        Route::get('/create', [ProfileController::class, 'create'])->name('create'); // Form to create a profile
+        Route::post('/', [ProfileController::class, 'store'])->name('store'); // Stores new profile
+        Route::get('/{profile}/edit', [ProfileController::class, 'edit'])->name('edit'); // Edit a profile
+        Route::put('/{profile}', [ProfileController::class, 'update'])->name('update'); // Update profile
+        Route::delete('/{profile}', [ProfileController::class, 'destroy'])->name('destroy'); // Delete profile
+    });
+
+    // Permission Management within profiles
+    Route::prefix('admin/profiles')->group(function () {
+        Route::get('/manage-permissions', [PimController::class, 'managePermissions'])->name('profiles.manage-permissions'); // Page to manage permissions for profiles
+        Route::post('/toggle-permission', [PimController::class, 'togglePermission'])->name('profiles.toggle-permission'); // Action to toggle a permission
+    });
 });
 
-// Admin-only routes
-Route::middleware('auth')->group(function () {
-    Route::get('/admin/dashboard', function () {
-        if (auth()->user()->roles->contains('name', 'admin')) {
-            return Inertia::render('Admin/Dashboard');
-        } else {
-            abort(403, 'Unauthorized.');
-        }
-    })->name('admin.dashboard');
-
-    Route::get('/admin/manage-users', function () {
-        if (auth()->user()->roles->contains('name', 'admin')) {
-            $users = \App\Models\User::all();
-            return Inertia::render('Admin/ManageUsers', compact('users'));
-        } else {
-            abort(403, 'Unauthorized.');
-        }
-    })->name('admin.manageUsers');
-});
-
-// Auth routes
+// Auth routes (for user authentication)
 require __DIR__.'/auth.php';

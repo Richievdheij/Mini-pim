@@ -4,14 +4,14 @@ import { usePage } from '@inertiajs/vue3';
 
 // Grab roles passed to the page
 const { props } = usePage();
-const roles = props.roles;
+const profiles = props.profiles; // Make sure this matches the key used in the controller
 
 // Initialize form
 const form = useForm({
     name: '',
     email: '',
     password: '',
-    roles: [], // This will hold the selected roles
+    profiles: [], // This will hold the selected profiles
 });
 
 function submit() {
@@ -30,10 +30,10 @@ function submit() {
         <label for="password">Password:</label>
         <input type="password" v-model="form.password" />
 
-        <label for="roles">Assign Roles:</label>
-        <select v-model="form.roles" multiple>
-            <option v-for="role in roles" :value="role.id" :key="role.id">
-                {{ role.name }}
+        <label for="profiles">Assign Profiles:</label>
+        <select v-model="form.profiles" multiple>
+            <option v-for="profile in profiles" :value="profile.id" :key="profile.id">
+                {{ profile.name }}
             </option>
         </select>
 
