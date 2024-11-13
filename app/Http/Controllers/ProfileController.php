@@ -2,62 +2,121 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Http\RedirectResponse;
+use App\Models\Profile;
+use App\Models\Permission;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Redirect;
 
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Display a list of profiles with permissions.
      */
-    public function edit(Request $request): Response
+    public function index(): Response
     {
-        return Inertia::render('Profile/Edit', [
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
-            'status' => session('status'),
+        // Fetch all profiles with their permissions
+        $profiles = Profile::with('permissions')->get();
+        $permissions = Permission::all(); // Fetch all available permissions
+
+        return Inertia::render('Admin/ManageProfiles', [
+            'profiles' => $profiles,
+            'permissions' => $permissions,
         ]);
     }
 
     /**
-     * Update the user's profile information.
+     * Show the form for creating a new profile.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function create(): Response
     {
-        $request->user()->fill($request->validated());
+        $this->authorizeAction('create_profiles');
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $permissions = Permission::all();
+        return Inertia::render('Admin/CreateProfile', [
+            'permissions' => $permissions,
+        ]);
+    }
+
+    /**
+     * Store a newly created profile in storage.
+     */
+    public function store(Request $request)
+    {
+        $this->authorizeAction('create_profiles');
+
+        $request->validate([
+            'name' => 'required|string|unique:profiles',
+            'permissions' => 'array|exists:permissions,id',
+        ]);
+
+        $profile = Profile::create(['name' => $request->name]);
+
+        if ($request->has('permissions')) {
+            $profile->permissions()->sync($request->permissions);
         }
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit');
+        return redirect()->route('profiles.index')->with('success', 'Profile created successfully.');
     }
 
     /**
-     * Delete the user's account.
+     * Show the form for editing an existing profile.
      */
-    public function destroy(Request $request): RedirectResponse
+    public function edit(Profile $profile): Response
     {
+        $this->authorizeAction('edit_profiles');
+
+        $permissions = Permission::all();
+        return Inertia::render('Admin/EditProfile', [
+            'profile' => $profile,
+            'permissions' => $permissions,
+            'assignedPermissions' => $profile->permissions->pluck('id')->toArray(),
+        ]);
+    }
+
+    /**
+     * Update the specified profile in storage.
+     */
+    public function update(Request $request, Profile $profile)
+    {
+        $this->authorizeAction('edit_profiles');
+
         $request->validate([
-            'password' => ['required', 'current_password'],
+            'name' => 'required|string|unique:profiles,name,' . $profile->id,
+            'permissions' => 'array|exists:permissions,id',
         ]);
 
-        $user = $request->user();
+        $profile->update(['name' => $request->name]);
+        $profile->permissions()->sync($request->permissions);
 
-        Auth::logout();
+        return redirect()->route('profiles.index')->with('success', 'Profile updated successfully.');
+    }
 
-        $user->delete();
+    /**
+     * Remove the specified profile from storage.
+     */
+    public function destroy(Profile $profile)
+    {
+        $this->authorizeAction('delete_profiles');
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $profile->delete();
 
-        return Redirect::to('/');
+        return redirect()->route('profiles.index')->with('success', 'Profile deleted successfully.');
+    }
+
+    /**
+     * Helper function to authorize an action based on a given permission.
+     *
+     * @param string $permission
+     * @return void
+     */
+    private function authorizeAction(string $permission): void
+    {
+        $user = auth()->user();
+
+        if (!$user || !$user->hasPermission($permission)) {
+            abort(403, 'Unauthorized action.');
+        }
     }
 }

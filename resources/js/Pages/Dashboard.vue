@@ -4,22 +4,21 @@ import { Head, usePage } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
 import DropdownLink from '@/Components/laravelWelcome/DropdownLink.vue';
 
-// Get the user and roles from Inertia's props
+// Haal de `user` op uit de props van Inertia
 const { props } = usePage();
-const user = props.user;
-const roles = props.roles;
+const user = props.user || { name: "Guest" }; // Standaardwaarde voor user
 
-// Use form for logout functionality
+// Gebruik een formulier voor de logout functionaliteit
 const form = useForm({});
 
-// Logout function
+// Logout functie
 function logout() {
     console.log('Logout clicked');
     form.post(route('logout'));
 }
 
-// Check if the user has the 'admin' role
-const hasAdminRole = roles.some(role => role.name === 'admin');
+// Controleer of de gebruiker de 'manage_permissions' permissie heeft
+const hasAdminAccess = user.permissions && user.permissions.includes('manage_permissions');
 </script>
 
 <template>
@@ -37,13 +36,8 @@ const hasAdminRole = roles.some(role => role.name === 'admin');
                         <h1>Welcome to the Dashboard!</h1>
                         <p>You are logged in as: <strong>{{ user.name }}</strong></p>
 
-                        <h2>Your Roles:</h2>
-                        <ul>
-                            <li v-for="role in roles" :key="role.id">{{ role.name }}</li>
-                        </ul>
-
-                        <!-- Conditionally show admin dashboard link -->
-                        <div v-if="hasAdminRole">
+                        <!-- Voorwaardelijke weergave voor Admin-toegang -->
+                        <div v-if="hasAdminAccess">
                             <p>You have access to the Admin Dashboard!</p>
                             <inertia-link href="/admin/dashboard">Go to Admin Dashboard</inertia-link>
                         </div>
@@ -52,7 +46,7 @@ const hasAdminRole = roles.some(role => role.name === 'admin');
                             <p>You do not have access to the Admin Dashboard.</p>
                         </div>
 
-                        <!-- Logout Button -->
+                        <!-- Logout knop -->
                         <DropdownLink :href="route('logout')" method="post" as="button" class="dashboard-buttons__button">
                             Log Out
                         </DropdownLink>

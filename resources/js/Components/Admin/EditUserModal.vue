@@ -1,22 +1,22 @@
 <script setup>
 import { useForm, usePage } from '@inertiajs/vue3';
 import { watch } from 'vue';
-import Button from '@/Components/General/Button.vue'; // Import the custom button component
+import Button from '@/Components/General/Button.vue';
 
-// Define props to accept `user`, `roles`, `isOpen`, and handle the modal close event
+// Define props
 const props = defineProps({
     user: Object,
-    roles: Array,
+    profiles: Array, // Update to use profiles if permissions are assigned to profiles
     isOpen: Boolean,
 });
 const emit = defineEmits(['close']);
 
-// Initialize the form with the user's data and roles
+// Initialize the form with the user's data and profiles
 const form = useForm({
     name: props.user ? props.user.name : '',
     email: props.user ? props.user.email : '',
     password: '',
-    roles: props.user ? props.user.roles.map(role => role.id) : [], // Map user roles to their IDs
+    profiles: props.user ? props.user.profiles.map(profile => profile.id) : [], // Map user profiles to IDs
 });
 
 // Watch for changes in the `user` prop to update form data when the modal opens
@@ -26,7 +26,7 @@ watch(
         if (newUser) {
             form.name = newUser.name;
             form.email = newUser.email;
-            form.roles = newUser.roles.map(role => role.id);
+            form.profiles = newUser.profiles.map(profile => profile.id);
         }
     },
     { immediate: true }
@@ -41,7 +41,7 @@ function closeModal() {
 function submit() {
     form.put(`/users/${props.user.id}`, {
         onSuccess: () => {
-            closeModal(); // Close the modal on successful form submission
+            closeModal();
         },
     });
 }
@@ -68,18 +68,17 @@ function submit() {
                 </div>
 
                 <div class="form-group">
-                    <label for="roles">Assign Roles:</label>
-                    <select v-model="form.roles" multiple class="form-input">
-                        <option v-for="role in roles" :value="role.id" :key="role.id">
-                            {{ role.name }}
+                    <label for="profiles">Assign Profiles:</label>
+                    <select v-model="form.profiles" multiple class="form-input">
+                        <option v-for="profile in profiles" :value="profile.id" :key="profile.id">
+                            {{ profile.name }}
                         </option>
                     </select>
                 </div>
 
                 <div class="modal-actions">
                     <Button label="Update" type="submit" class="bg-green-500 text-white px-4 py-2 rounded"/>
-                    <Button label="Cancel" type="button" @click="closeModal"
-                            class="bg-gray-500 text-white px-4 py-2 rounded ml-2"/>
+                    <Button label="Cancel" type="button" @click="closeModal" class="bg-gray-500 text-white px-4 py-2 rounded ml-2"/>
                 </div>
             </form>
         </div>

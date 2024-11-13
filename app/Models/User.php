@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
 
@@ -50,13 +51,29 @@ class User extends Authenticatable
     ];
 
     /**
-     * The roles that belong to the user.
+     * The profiles that belong to the user.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function roles(): BelongsToMany
+    public function profiles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
+        return $this->belongsToMany(Profile::class, 'user_profile');
+    }
+
+    /**
+     * Check if the user has a specific permission.
+     *
+     * @param string $permissionName
+     * @return bool
+     */
+    public function hasPermission($permissionName)
+    {
+        foreach ($this->profiles as $profile) {
+            if ($profile->permissions->contains('name', $permissionName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
