@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
-import Button from '@/Components/General/Button.vue';
+import Button from '@/Components/General/PrimaryButton.vue';
 import EditUserModal from '@/Components/Admin/EditUserModal.vue';
 
 defineProps({
