@@ -1,5 +1,5 @@
 <script setup>
-import { useForm, usePage } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import { watch } from 'vue';
 import Button from '@/Components/General/PrimaryButton.vue';
 
