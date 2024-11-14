@@ -1,6 +1,6 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
-import { usePage } from '@inertiajs/vue3';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import { useForm, usePage, Head } from "@inertiajs/vue3";
 
 // Grab roles passed to the page
 const { props } = usePage();
@@ -20,27 +20,27 @@ function submit() {
 </script>
 
 <template>
-    <form @submit.prevent="submit">
-        <label for="name">Name:</label>
-        <input type="text" v-model="form.name" />
+    <AuthenticatedLayout>
+        <Head title="Mini-pim | Create users" />
 
-        <label for="email">Email:</label>
-        <input type="email" v-model="form.email" />
+            <form @submit.prevent="submit">
+                <label for="name">Name:</label>
+                <input type="text" v-model="form.name" />
 
-        <label for="password">Password:</label>
-        <input type="password" v-model="form.password" />
+                <label for="email">Email:</label>
+                <input type="email" v-model="form.email" />
 
-        <label for="profiles">Assign Profiles:</label>
-        <select v-model="form.profiles" multiple>
-            <option v-for="profile in profiles" :value="profile.id" :key="profile.id">
-                {{ profile.name }}
-            </option>
-        </select>
+                <label for="password">Password:</label>
+                <input type="password" v-model="form.password" />
 
-        <button type="submit">Create</button>
-    </form>
+                <label for="profiles">Assign Profiles:</label>
+                <select v-model="form.profiles" multiple>
+                    <option v-for="profile in profiles" :value="profile.id" :key="profile.id">
+                        {{ profile.name }}
+                    </option>
+                </select>
+                <button type="submit">Create</button>
+            </form>
+    </AuthenticatedLayout>
 </template>
 
-<style scoped>
-
-</style>

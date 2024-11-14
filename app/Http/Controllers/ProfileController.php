@@ -68,7 +68,7 @@ class ProfileController extends Controller
         $this->authorizeAction('edit_profiles');
 
         $permissions = Permission::all();
-        return Inertia::render('Admin/EditProfile', [
+        return Inertia::render('Profile/Edit', [
             'profile' => $profile,
             'permissions' => $permissions,
             'assignedPermissions' => $profile->permissions->pluck('id')->toArray(),
