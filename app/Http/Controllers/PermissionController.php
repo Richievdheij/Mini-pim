@@ -16,7 +16,7 @@ class PermissionController extends Controller
         $profiles = Profile::with('permissions')->get();
         $permissions = Permission::all();
 
-        return Inertia::render('Admin/ManagePermissions', [
+        return Inertia::render('User-rights/managePermissions', [
             'profiles' => $profiles,
             'permissions' => $permissions,
         ]);
@@ -42,25 +42,24 @@ class PermissionController extends Controller
         return response()->json(['status' => 'success']);
     }
 
-    // Show the form to create a new profile with permissions
+    /**
+     * Create Profile method
+     * */
     public function createProfile(): Response
     {
-        return Inertia::render('Admin/CreateProfile');
+        return Inertia::render('Profiles/Create');
     }
 
-    // Store a new profile and assign permissions
     public function storeProfile(Request $request)
     {
         $request->validate([
             'name' => 'required|string|unique:profiles,name',
-            'permissions' => 'array',
         ]);
 
-        $profile = Profile::create(['name' => $request->name]);
-        if ($request->has('permissions')) {
-            $profile->permissions()->sync($request->permissions);
-        }
+        Profile::create([
+            'name' => $request->name,
+        ]);
 
-        return redirect()->route('permissions.index');
+        return redirect()->route('profiles.index');
     }
 }

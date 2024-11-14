@@ -1,7 +1,11 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
-defineProps({ profiles: Array, permissions: Array})
+defineProps({
+    profiles: Array,
+    permissions: Array
+});
 
 // Check if a profile has a specific permission
 function hasPermission(profile, permission) {
@@ -9,12 +13,15 @@ function hasPermission(profile, permission) {
 }
 
 // Toggle permission for a profile
-const form = useForm({ profile_id: null, permission_id: null });
+const form = useForm({
+    profile_id: null,
+    permission_id: null
+});
 function togglePermission(profileId, permissionId) {
     form.profile_id = profileId;
     form.permission_id = permissionId;
 
-    form.post(route('profiles.toggle-permission'), {
+    form.post(route('user-rights.index'), {
         onSuccess: () => {
             form.reset('profile_id', 'permission_id');
         },
@@ -23,6 +30,7 @@ function togglePermission(profileId, permissionId) {
 </script>
 
 <template>
+    <AuthenticatedLayout>
     <div class="manage-permissions">
         <h1>Manage Permissions</h1>
         <table class="permissions-table">
@@ -52,5 +60,6 @@ function togglePermission(profileId, permissionId) {
             </tbody>
         </table>
     </div>
+    </AuthenticatedLayout>
 </template>
 

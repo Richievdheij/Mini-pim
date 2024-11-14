@@ -1,0 +1,16 @@
+.users {
+    &__title {
+        font-weight: bold;
+        font-size: 2rem;
+        height: 2.56rem;
+        display: flex;
+        justify-content: flex-start;
+        align-content: center;
+        flex-wrap: wrap;
+    }
+    &__section {
+        border: solid 0.06rem rgba(0, 0, 0, 0.02);
+        box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.05);
+        padding: 1rem 1rem 1rem;
+    }
+}

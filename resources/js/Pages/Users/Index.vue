@@ -1,78 +1,80 @@
 <script setup>
 import { ref } from 'vue';
-import { Link, router } from '@inertiajs/vue3';
+import {Head, Link, router} from '@inertiajs/vue3';
 import Button from '@/Components/General/PrimaryButton.vue';
 import EditUserModal from '@/Components/Admin/EditUserModal.vue';
+import DeleteUserModal from '@/Components/Admin/DeleteUserModal.vue';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import PrimaryButton from "@/Components/General/PrimaryButton.vue";
 
 defineProps({
     users: Array,
-    profiles: Array, // Add profiles here if it’s passed as a prop
+    profiles: Array,
     canEditUser: Boolean,
     canDeleteUser: Boolean,
     canCreateUser: Boolean,
 });
 
-const isModalOpen = ref(false);
+const isEditModalOpen = ref(false);
+const isDeleteModalOpen = ref(false);
 const selectedUser = ref(null);
-const selectedUserProfiles = ref([]); // To hold the profiles of the selected user
 
-function openEditModal(user) {
+function openModal(modalType, user) {
     selectedUser.value = user;
-    selectedUserProfiles.value = user.profiles.map(profile => profile.id); // Extract profile IDs
-    isModalOpen.value = true;
+    modalType === 'edit' ? (isEditModalOpen.value = true) : (isDeleteModalOpen.value = true);
 }
 
-function closeEditModal() {
-    isModalOpen.value = false;
+function closeModal(modalType) {
     selectedUser.value = null;
-    selectedUserProfiles.value = [];
-}
-
-function deleteUser(id) {
-    if (confirm('Are you sure you want to delete this user?')) {
-        router.delete(route('users.destroy', id));
-    }
+    modalType === 'edit' ? (isEditModalOpen.value = false) : (isDeleteModalOpen.value = false);
 }
 </script>
 
 <template>
-    <div class="user-list">
-        <h1 class="user-list__title">User List</h1>
-        <table class="user-list__table">
-            <thead>
-            <tr class="user-list__table-header">
-                <th class="user-list__table-header-cell">Name</th>
-                <th class="user-list__table-header-cell">Email</th>
-                <th class="user-list__table-header-cell">Profiles</th>
-                <th v-if="canEditUser || canDeleteUser" class="user-list__table-header-cell">Actions</th>
-            </tr>
-            </thead>
-            <tbody class="user-list__table-body">
-            <tr v-for="user in users" :key="user.id" class="user-list__table-body-row">
-                <td class="user-list__table-body-cell user-list__table-cell--name">{{ user.name }}</td>
-                <td class="user-list__table-body-cell user-list__table-cell--email">{{ user.email }}</td>
-                <td class="user-list__table-body-cell user-list__table-cell--profiles">
-                    <ul>
-                        <li v-for="profile in user.profiles" :key="profile.id">{{ profile.name }}</li>
-                    </ul>
-                </td>
-                <td v-if="canEditUser || canDeleteUser" class="user-list__table-body-cell user-list__table-cell--actions">
-                    <Button v-if="canEditUser" label="Edit" @click="openEditModal(user)" type="submit" class="bg-A6ABD0-500 text-white px-4 py-2 rounded mr-2"/>
-                    <form v-if="canDeleteUser" :action="route('users.destroy', user.id)" method="POST" @submit.prevent="deleteUser(user.id)" class="inline">
-                        <input type="hidden" name="_method" value="DELETE">
-                        <Button label="Delete" type="delete" class="bg-2859A6-500 text-white px-4 py-2 rounded"/>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <div v-if="canCreateUser" class="user-list__create-button">
-            <Link :href="route('users.create')">
-                <Button label="Create New User" type="submit" class="bg-blue-500 text-white px-4 py-2 rounded"/>
-            </Link>
-        </div>
+    <Head title="Users" />
+    <AuthenticatedLayout>
+        <div class="users">
+            <div class="users__header">
+                <h1 class="users__title">Users</h1>
+            </div>
 
-        <!-- Edit Modal -->
-        <EditUserModal :user="selectedUser" :profiles="profiles"  :userProfiles="selectedUserProfiles" :isOpen="isModalOpen" @close="closeEditModal"/>
-    </div>
+            <div class="users__section">
+
+                <div v-if="canCreateUser" class="users__create-button">
+                    <Link :href="route('users.create')">
+                        <PrimaryButton label="Create New User" type=""/>
+                    </Link>
+                </div>
+
+                <table class="users__table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Profiles</th>
+                        <th v-if="canEditUser || canDeleteUser">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="user in users" :key="user.id">
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            <ul>
+                                <li v-for="profile in user.profiles" :key="profile.id">{{ profile.name }}</li>
+                            </ul>
+                        </td>
+                        <td v-if="canEditUser || canDeleteUser">
+                            <Button v-if="canEditUser" label="Edit" @click="openModal('edit', user)" />
+                            <Button v-if="canDeleteUser" label="Delete" @click="openModal('delete', user)" />
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <EditUserModal :user="selectedUser" :profiles="profiles" :isOpen="isEditModalOpen" @close="closeModal('edit')" />
+            <DeleteUserModal :user="selectedUser" :isOpen="isDeleteModalOpen" @close="closeModal('delete')" />
+        </div>
+    </AuthenticatedLayout>
 </template>

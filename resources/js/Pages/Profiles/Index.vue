@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 defineProps({ profiles: Array });
 
@@ -20,6 +21,7 @@ function deleteProfile(profileId) {
 </script>
 
 <template>
+    <AuthenticatedLayout>
     <div class="manage-profiles">
         <h1>Manage Profiles</h1>
 
@@ -50,6 +52,7 @@ function deleteProfile(profileId) {
             </tbody>
         </table>
     </div>
+    </AuthenticatedLayout>
 </template>
 
 <style scoped>

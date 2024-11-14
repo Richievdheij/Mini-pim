@@ -23,7 +23,7 @@ function logout() {
         </h3>
         <div class="sidebar__divider"></div>
         <div class="sidebar__button-container" v-if="isAccountExpanded">
-            <a :href="route('profile.edit')" class="sidebar__button">
+            <a :href="route('account.edit')" class="sidebar__button">
                 <i class="sidebar__icon fas fa-user"></i>
                 <span>Account settings</span>
             </a>

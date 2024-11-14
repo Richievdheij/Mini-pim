@@ -1,14 +1,14 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import DeleteUserForm from './Partials/DeleteUserForm.vue';
-import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
-import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
+import DeleteAccountForm from '@/Pages/Account/Partials/DeleteAccountForm.vue';
+import UpdatePasswordForm from '@/Pages/Account/Partials/UpdatePasswordForm.vue';
+import UpdateProfileInformationForm from '@/Pages/Account/Partials/UpdateProfileInformationForm.vue';
 import { Head } from '@inertiajs/vue3';
 
 </script>
 
 <template>
-    <Head title="Profile" />
+    <Head title="Account settings" />
 
     <AuthenticatedLayout>
         <div class="profile">
@@ -19,7 +19,7 @@ import { Head } from '@inertiajs/vue3';
             <div class="profile__section">
                 <UpdateProfileInformationForm />
                 <UpdatePasswordForm />
-                <DeleteUserForm />
+                <DeleteAccountForm />
             </div>
         </div>
     </AuthenticatedLayout>

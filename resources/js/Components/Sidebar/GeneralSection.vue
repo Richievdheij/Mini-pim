@@ -22,7 +22,7 @@ const emit = defineEmits(['toggle-section']);
                 <i class="sidebar__icon fas fa-user-circle"></i>
                 <span>Profiles</span>
             </Link>
-            <Link class="sidebar__button" :href="route('profiles.manage-permissions')">
+            <Link class="sidebar__button" :href="route('user-rights.index')">
                 <i class="sidebar__icon fas fa-user-shield"></i>
                 <span>User rights</span>
             </Link>

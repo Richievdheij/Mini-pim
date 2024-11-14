@@ -9,7 +9,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Redirect;
 
-class ProfileController extends Controller
+class ProfilesController extends Controller
 {
     /**
      * Display a list of profiles with permissions.
@@ -20,7 +20,7 @@ class ProfileController extends Controller
         $profiles = Profile::with('permissions')->get();
         $permissions = Permission::all(); // Fetch all available permissions
 
-        return Inertia::render('Admin/ManageProfiles', [
+        return Inertia::render('Profiles/Index', [
             'profiles' => $profiles,
             'permissions' => $permissions,
         ]);
@@ -34,7 +34,7 @@ class ProfileController extends Controller
         $this->authorizeAction('create_profiles');
 
         $permissions = Permission::all();
-        return Inertia::render('Admin/CreateProfile', [
+        return Inertia::render('Profiles/CreateProfiles', [
             'permissions' => $permissions,
         ]);
     }
@@ -68,7 +68,7 @@ class ProfileController extends Controller
         $this->authorizeAction('edit_profiles');
 
         $permissions = Permission::all();
-        return Inertia::render('Profile/Edit', [
+        return Inertia::render('Profiles/EditProfiles', [
             'profile' => $profile,
             'permissions' => $permissions,
             'assignedPermissions' => $profile->permissions->pluck('id')->toArray(),
