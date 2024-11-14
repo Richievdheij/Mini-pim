@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue';
+import { Link } from '@inertiajs/vue3';
 
 const props = defineProps(['isGeneralExpanded', 'isSidebarExpanded']);
 const emit = defineEmits(['toggle-section']);
@@ -13,18 +14,18 @@ const emit = defineEmits(['toggle-section']);
         </h3>
         <div class="sidebar__divider"></div>
         <div class="sidebar__button-container" v-if="isGeneralExpanded">
-            <button class="sidebar__button">
+            <Link class="sidebar__button" :href="route('users.index')">
                 <i class="sidebar__icon fas fa-users"></i>
                 <span>Users</span>
-            </button>
-            <button class="sidebar__button">
+            </Link>
+            <Link class="sidebar__button" :href="route('profiles.index')">
                 <i class="sidebar__icon fas fa-user-circle"></i>
                 <span>Profiles</span>
-            </button>
-            <button class="sidebar__button">
+            </Link>
+            <Link class="sidebar__button" :href="route('profiles.manage-permissions')">
                 <i class="sidebar__icon fas fa-user-shield"></i>
                 <span>User rights</span>
-            </button>
+            </Link>
         </div>
     </div>
 </template>
