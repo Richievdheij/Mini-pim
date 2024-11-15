@@ -1,0 +1,29 @@
+.modal {
+    &__content {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        max-width: 30rem;
+        width: 100%;
+    }
+
+    &__title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    &__form-label {
+        display: block;
+        font-weight: bold;
+    }
+
+    &__form-input {
+        width: 100%;
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+    }
+}

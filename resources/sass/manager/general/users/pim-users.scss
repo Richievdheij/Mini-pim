@@ -1,16 +1,32 @@
 .users {
+    &__header {
+        margin-bottom: 1rem;
+    }
+
     &__title {
-        font-weight: bold;
         font-size: 2rem;
-        height: 2.56rem;
+        font-weight: bold;
+    }
+
+    &__section {
+        border: 0.06rem solid rgba(0, 0, 0, 0.02);
+        box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.05);
+        padding: 1rem;
+    }
+
+    &__table {
+        width: 100%;
+        border-collapse: collapse;
+        th, td {
+            padding: 0.75rem;
+            border-bottom: 0.06rem solid rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    // Added styles from Index.vue
+    &__search-bar {
+        margin-bottom: 1rem;
         display: flex;
         justify-content: flex-start;
-        align-content: center;
-        flex-wrap: wrap;
-    }
-    &__section {
-        border: solid 0.06rem rgba(0, 0, 0, 0.02);
-        box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.05);
-        padding: 1rem 1rem 1rem;
     }
 }

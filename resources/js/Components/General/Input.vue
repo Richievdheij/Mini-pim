@@ -1,5 +1,6 @@
 <script setup>
 import { defineProps, computed } from 'vue';
+
 const props = defineProps({
     label: String,
     placeholder: String,
@@ -9,13 +10,19 @@ const props = defineProps({
         type: String,
         required: true,
     },
-    modelValue: String,
+    options: {
+        type: Array,
+        default: () => [],
+    },
+    modelValue: [String, Array],
     error: String,
-    success: String, // New prop for success message
+    success: String,
+    multiple: Boolean,
 });
 
 const emit = defineEmits(['update:modelValue']);
 
+// Compute the input class based on the type and status
 const inputClass = computed(() => {
     let type = 'input input__body';
     if (props.error) {
@@ -30,6 +37,9 @@ const inputClass = computed(() => {
     if (props.label === 'label') {
         type += ' input__body--label';
     }
+    if (props.type === 'select') {
+        type += ' input__body--select';
+    }
 
     return type;
 });
@@ -41,7 +51,25 @@ const inputClass = computed(() => {
             {{ label }}
         </label>
 
+        <!-- Input or Select Field -->
+        <select
+            v-if="type === 'select'"
+            class="input__select"
+            :multiple="multiple"
+            :value="modelValue"
+            @change="$emit('update:modelValue', Array.from($event.target.selectedOptions, option => option.value))"
+        >
+            <option
+                v-for="option in options"
+                :key="option.id || option"
+                :value="option.id || option"
+            >
+                {{ option.name || option }}
+            </option>
+        </select>
+
         <input
+            v-else
             :type="inputType"
             :placeholder="placeholder"
             class="input__field"

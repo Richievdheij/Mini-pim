@@ -1,3 +1,9 @@
+* {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
 // PIM
 // Font
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
@@ -11,6 +17,11 @@
 @import "components/pim-checkbox";
 @import "components/pim-input";
 @import "components/pim-modal";
+@import "components/pim-searchbar";
+// -- Modals
+@import "components/modals/pim-user-create-modal";
+@import "components/modals/pim-user-delete-modal";
+@import "components/modals/pim-user-edit-modal";
 
 // Dashboard
 @import "dashboard/pim-dashboard";
