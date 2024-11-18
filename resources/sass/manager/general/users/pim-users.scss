@@ -3,6 +3,10 @@
         margin-bottom: 1rem;
     }
 
+    &__table-head {
+        text-align: left;
+    }
+
     &__title {
         font-size: 2rem;
         font-weight: bold;
@@ -14,19 +18,49 @@
         padding: 1rem;
     }
 
+    &__top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 0 1rem 0;
+
+        .users__create-button {
+            margin-right: 1rem;
+        }
+
+        .users__search-bar {
+            flex-grow: 1;
+            display: flex;
+        }
+    }
+
     &__table {
         width: 100%;
         border-collapse: collapse;
         th, td {
-            padding: 0.75rem;
+            padding: 0.25rem;
             border-bottom: 0.06rem solid rgba(0, 0, 0, 0.1);
         }
-    }
 
-    // Added styles from Index.vue
-    &__search-bar {
-        margin-bottom: 1rem;
-        display: flex;
-        justify-content: flex-start;
+        &__table-header {
+            background-color: rgba(0, 0, 0, 0.05);  // Darker background for header
+            text-align: left;
+            font-weight: bold;
+            padding: 0.5rem;
+        }
+
+        &__table-row {
+            transition: background-color 0.3s ease;
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.03);  // Hover effect for rows
+            }
+        }
+
+        &__table-profile {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
     }
 }

@@ -6,7 +6,8 @@ const props = defineProps({
     type: {
         type: String,
         default: 'primary'
-    }
+    },
+    icon: String,
 });
 
 const buttonType = computed(() => {
@@ -27,5 +28,9 @@ const buttonType = computed(() => {
 </script>
 
 <template>
-    <button :class="buttonType" type="submit">{{ label }}</button>
+    <button :class="buttonType" type="submit">
+        <!-- Add icon if provided -->
+        <i v-if="icon" :class="icon"></i>
+        {{ label }}
+    </button>
 </template>

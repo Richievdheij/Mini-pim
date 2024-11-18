@@ -3,8 +3,8 @@
         display: flex;
         flex-direction: column;
 
-        &--select,
-        &--field {
+        &--field,
+        &--select {
             margin: 0 0 1.4rem 0;
 
             .input__field,
@@ -21,7 +21,6 @@
 
                 &:hover {
                     color: rgba(0, 0, 0, 0.7);
-
                 }
 
                 &:focus {
@@ -47,7 +46,6 @@
             }
 
             .input__error {
-                height: 0;
                 color: rgba(255, 0, 0, 1);
                 font-size: 0.875rem;
             }

@@ -5,7 +5,6 @@ import Input from '@/Components/General/Input.vue';
 import SecondaryButton from '@/Components/General/SecondaryButton.vue';
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
-// Props and emits
 const props = defineProps({
     user: Object,
     profiles: Array,
@@ -13,7 +12,6 @@ const props = defineProps({
 });
 const emit = defineEmits(['close']);
 
-// Form setup
 const form = useForm({
     name: '',
     email: '',
@@ -21,7 +19,6 @@ const form = useForm({
     profiles: [],
 });
 
-// Watch for when the modal is opened
 watch(
     () => props.isOpen,
     (isOpen) => {
@@ -34,15 +31,15 @@ watch(
     }
 );
 
-// Close modal function
 function closeModal() {
     emit('close');
     form.reset();
+    form.clearErrors();
 }
 
-// Submit function to handle form submission
 function submit() {
     form.put(`/users/${props.user.id}`, {
+        preserveScroll: true,
         onSuccess: () => {
             closeModal();
         },
@@ -51,10 +48,11 @@ function submit() {
 </script>
 
 <template>
-    <div v-if="isOpen" class="modal">
-        <div class="modal__content">
-            <h2 class="modal__title">Edit User</h2>
-            <form @submit.prevent="submit" class="modal__form">
+    <div v-if="isOpen" class="edit-user-modal">
+        <div class="edit-user-modal__overlay"></div>
+        <div class="edit-user-modal__content">
+            <h2 class="edit-user-modal__title">Edit User</h2>
+            <form @submit.prevent="submit" class="edit-user-modal__form">
                 <Input
                     label="Name"
                     inputType="text"
@@ -65,6 +63,7 @@ function submit() {
                 />
                 <Input
                     label="Email"
+                    id="email"
                     inputType="email"
                     placeholder="Enter email address"
                     type="field"
@@ -73,23 +72,24 @@ function submit() {
                 />
                 <Input
                     label="Password"
+                    id="password"
                     inputType="password"
                     placeholder="Leave blank to keep current password"
                     type="field"
                     v-model="form.password"
                     :error="form.errors.password"
                 />
-                <!-- Assign Profiles Select Input -->
                 <Input
                     label="Assign Profiles"
-                    inputType="select"
+                    id="profiles"
                     type="select"
+                    inputType="select"
+                    placeholder="Select profiles"
                     v-model="form.profiles"
                     :options="profiles"
                     :error="form.errors.profiles"
-                    multiple
                 />
-                <div class="modal__actions">
+                <div class="edit-user-modal__actions">
                     <TertiaryButton
                         label="Cancel"
                         type="cancel"

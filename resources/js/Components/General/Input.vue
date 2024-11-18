@@ -2,22 +2,23 @@
 import { defineProps, computed } from 'vue';
 
 const props = defineProps({
-    label: String,
-    placeholder: String,
+    error: String,
     inputType: String,
+    label: String,
     message: String,
-    type: {
-        type: String,
-        required: true,
-    },
+    modelValue: [String, Array],
+    multiple: Boolean,
     options: {
         type: Array,
         default: () => [],
     },
-    modelValue: [String, Array],
-    error: String,
+    placeholder: String,
     success: String,
-    multiple: Boolean,
+    type: {
+        type: String,
+        required: true,
+    },
+    icon: String,
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -34,11 +35,11 @@ const inputClass = computed(() => {
     if (props.type === 'field') {
         type += ' input__body--field';
     }
-    if (props.label === 'label') {
-        type += ' input__body--label';
-    }
     if (props.type === 'select') {
         type += ' input__body--select';
+    }
+    if (props.type === 'search') {
+        type += ' input__body--search';
     }
 
     return type;
@@ -51,7 +52,7 @@ const inputClass = computed(() => {
             {{ label }}
         </label>
 
-        <!-- Input or Select Field -->
+        <!-- Select Field -->
         <select
             v-if="type === 'select'"
             class="input__select"
@@ -68,8 +69,19 @@ const inputClass = computed(() => {
             </option>
         </select>
 
+        <!-- Search Field -->
         <input
-            v-else
+            v-if="type === 'search'"
+            :type="inputType"
+            :placeholder="placeholder"
+            class="input__search"
+            :value="modelValue"
+            @input="$emit('update:modelValue', $event.target.value)"
+        />
+
+        <!-- Field Input -->
+        <input
+            v-if="type === 'field'"
             :type="inputType"
             :placeholder="placeholder"
             class="input__field"
