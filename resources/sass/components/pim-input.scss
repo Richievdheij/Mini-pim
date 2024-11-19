@@ -41,13 +41,10 @@
         }
 
         &--error {
-            .input__error-container {
-                height: 0; // Fixed space for error message
-            }
-
             .input__error {
                 color: rgba(255, 0, 0, 1);
                 font-size: 0.875rem;
+                height: 0; // Fixed space for error message
             }
         }
     }

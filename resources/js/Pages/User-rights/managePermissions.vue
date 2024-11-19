@@ -17,6 +17,7 @@ const form = useForm({
     profile_id: null,
     permission_id: null
 });
+
 function togglePermission(profileId, permissionId) {
     form.profile_id = profileId;
     form.permission_id = permissionId;
@@ -31,35 +32,53 @@ function togglePermission(profileId, permissionId) {
 
 <template>
     <AuthenticatedLayout>
-    <div class="manage-permissions">
-        <h1>Manage Permissions</h1>
-        <table class="permissions-table">
-            <thead>
-            <tr>
-                <th>Right</th>
-                <th v-for="profile in profiles" :key="profile.id">
-                    {{ profile.name }}
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="permission in permissions" :key="permission.id">
-                <td>{{ permission.name }}</td>
-                <td
-                    v-for="profile in profiles"
-                    :key="profile.id"
-                    class="permission-toggle"
-                >
-                    <input
-                        type="checkbox"
-                        :checked="hasPermission(profile, permission)"
-                        @change="togglePermission(profile.id, permission.id)"
-                    />
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+        <div class="user-rights">
+            <!-- Header -->
+            <div class="user-rights__header">
+                <h1 class="user-rights__title">Manage Permissions</h1>
+            </div>
+
+            <!-- Section -->
+            <div class="user-rights__section">
+                <table class="user-rights__table">
+                    <thead class="user-rights__table-header">
+                    <tr class="user-rights__row">
+                        <th class="user-rights__column">Right</th>
+                        <th
+                            v-for="profile in profiles"
+                            :key="profile.id"
+                            class="user-rights__column"
+                        >
+                            {{ profile.name }}
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="user-rights__table-body">
+                    <tr
+                        v-for="permission in permissions"
+                        :key="permission.id"
+                        class="user-rights__row"
+                    >
+                        <td class="user-rights__cell">{{ permission.name }}</td>
+                        <td
+                            v-for="profile in profiles"
+                            :key="profile.id"
+                            class="user-rights__cell user-rights__toggle"
+                        >
+                            <label class="user-rights__switch">
+                                <input
+                                    type="checkbox"
+                                    class="user-rights__checkbox"
+                                    :checked="hasPermission(profile, permission)"
+                                    @change="togglePermission(profile.id, permission.id)"
+                                />
+                                <span class="user-rights__slider"></span>
+                            </label>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </AuthenticatedLayout>
 </template>
-

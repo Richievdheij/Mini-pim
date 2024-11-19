@@ -1,21 +1,18 @@
 .users {
-    &__header {
-        margin-bottom: 1rem;
-    }
-
-    &__table-head {
-        text-align: left;
-    }
-
     &__title {
         font-size: 2rem;
         font-weight: bold;
+        height: 2.56rem;
+        display: flex;
+        justify-content: flex-start;
+        align-content: center;
+        flex-wrap: wrap;
     }
 
     &__section {
         border: 0.06rem solid rgba(0, 0, 0, 0.02);
         box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.05);
-        padding: 1rem;
+        padding: 1rem 1rem 1rem;
     }
 
     &__top-bar {
@@ -25,7 +22,7 @@
         margin: 0 0 1rem 0;
 
         .users__create-button {
-            margin-right: 1rem;
+            margin: 0 1rem 0 0;
         }
 
         .users__search-bar {
@@ -37,6 +34,7 @@
     &__table {
         width: 100%;
         border-collapse: collapse;
+        text-align: left;
         th, td {
             padding: 0.25rem;
             border-bottom: 0.06rem solid rgba(0, 0, 0, 0.1);

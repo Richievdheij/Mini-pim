@@ -1,6 +1,6 @@
 .edit-user-modal,
 .delete-user-modal,
-.create-user.modal,{
+.create-user-modal {
     position: fixed;
     inset: 0;
     z-index: 50;
@@ -26,7 +26,6 @@
     &__title {
         font-size: 1.5rem;
         font-weight: bold;
-
     }
 
     &__description {

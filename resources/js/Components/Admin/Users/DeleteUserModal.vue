@@ -47,7 +47,7 @@ function deleteUser() {
 
 <template>
     <div v-if="isOpen" class="delete-user-modal">
-        <div class="edit-user-modal__overlay"></div>
+        <div class="delete-user-modal__overlay"></div>
         <div class="delete-user-modal__content">
             <h2 class="delete-user-modal__title">Delete User</h2>
             <p class="delete-user-modal__description">

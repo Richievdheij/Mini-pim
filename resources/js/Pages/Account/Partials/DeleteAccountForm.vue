@@ -45,7 +45,11 @@ const closeModal = () => {
         </p>
 
         <!-- Delete Account Button -->
-        <PrimaryButton label="Delete Account" type="delete" @click="confirmUserDeletion" />
+        <PrimaryButton
+            label="Delete Account"
+            type="delete"
+            @click="confirmUserDeletion"
+        />
 
         <!-- Delete Account Modal -->
         <Modal :show="confirmingUserDeletion" @close="closeModal">

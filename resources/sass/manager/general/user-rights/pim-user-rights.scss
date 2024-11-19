@@ -1,0 +1,85 @@
+.user-rights {
+    &__cell,
+    &__column {
+        border: 0.06rem solid rgba(128, 128, 128, 0.2);
+        color: rgba(128, 128, 128, 1);
+        padding: 0.5rem;
+        text-align: center;
+    }
+
+    &__row:nth-child(even) {
+        background-color: rgba(128, 128, 128, 0.05);
+    }
+
+    &__section {
+        border: 0.06rem solid rgba(0, 0, 0, 0.02);
+        box-shadow: 0 0 0.2rem rgba(0, 0, 0, 0.05);
+        padding: 1rem 1rem 1rem;
+    }
+
+    &__slider {
+        background-color: rgba(128, 128, 128, 1);
+        border-radius: 1rem;
+        bottom: 0;
+        cursor: pointer;
+        display: inline-block;
+        height: 1.2rem;
+        position: relative;
+        transition: background-color 0.3s;
+        width: 2.4rem;
+
+        &::before {
+            background-color: rgba(233, 232, 239, 1);
+            border-radius: 50%;
+            content: '';
+            height: 0.8rem;
+            left: 0.2rem;
+            position: absolute;
+            top: 0.2rem;
+            transform: translateX(0);
+            transition: transform 0.3s;
+            width: 0.8rem;
+        }
+    }
+
+    &__checkbox {
+        height: 0;
+        opacity: 0;
+        width: 0;
+    }
+
+    &__checkbox:checked + &__slider {
+        background-color: rgba(86, 122, 197, 1);
+
+        &::before {
+            transform: translateX(1.2rem);
+        }
+    }
+
+    &__checkbox:checked + &__slider:hover {
+        background-color: rgba(40, 89, 166, 1);
+    }
+
+    &__table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    &__table-body {
+        background-color: rgba(233, 232, 239, 1);
+    }
+
+    &__table-header {
+        background-color: rgba(86, 122, 197, 0.2);
+    }
+
+    &__title {
+        font-size: 2rem;
+        font-weight: bold;
+        height: 2.56rem;
+        display: flex;
+        justify-content: flex-start;
+        align-content: center;
+        flex-wrap: wrap;
+    }
+}
