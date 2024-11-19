@@ -7,6 +7,7 @@
 //@import "auth/pim-verify-email";
 
 // Components
+@import 'components/pim-notification';
 @import "components/pim-button";
 @import "components/pim-checkbox";
 @import "components/pim-input";
@@ -39,3 +40,4 @@
 
 // Profile
 @import "profile/pim-profile";
+

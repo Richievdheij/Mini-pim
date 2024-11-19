@@ -21,9 +21,16 @@ class NewPasswordController extends Controller
      */
     public function create(Request $request): Response
     {
-        return Inertia::render('Auth/ResetPassword', [
-            'email' => $request->email,
-            'token' => $request->route('token'),
+        // Log the email and token to ensure they are retrieved correctly
+        \Log::info('Reset Password Props:', [
+            'email' => $request->query('email'), // Retrieves email from the query string
+            'token' => $request->route('token'), // Retrieves token from the URL
+        ]);
+
+        // Pass the email and token to the Vue component
+        return Inertia::render('Auth/ConfirmPassword', [
+            'email' => $request->query('email'), // Make sure the email is coming from the query
+            'token' => $request->route('token'), // Make sure the token is coming from the route
         ]);
     }
 
@@ -32,38 +39,28 @@ class NewPasswordController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
-            'token' => 'required',
             'email' => 'required|email',
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => 'required|confirmed|min:8',
+            'token' => 'required',
         ]);
 
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) use ($request) {
+            function ($user, $password) {
                 $user->forceFill([
-                    'password' => Hash::make($request->password),
-                    'remember_token' => Str::random(60),
+                    'password' => bcrypt($password),
                 ])->save();
-
-                event(new PasswordReset($user));
             }
         );
 
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
-        if ($status == Password::PASSWORD_RESET) {
-            return redirect()->route('login')->with('status', __($status));
-        }
-
-        throw ValidationException::withMessages([
-            'email' => [trans($status)],
-        ]);
+        return $status === Password::PASSWORD_RESET
+            ? response()->json(['message' => __('Password reset successfully.')])
+            : response()->json(['message' => __('Password reset failed.')], 400);
     }
+
+
+
 }

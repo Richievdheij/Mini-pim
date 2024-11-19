@@ -1,7 +1,8 @@
 <script setup>
-import { defineProps, ref, watch } from 'vue';
+import { defineProps, ref, watch, defineEmits } from 'vue';
 import Input from '@/Components/General/Input.vue';
 
+// Props
 const props = defineProps({
     password: String,
     passwordError: String,
@@ -9,26 +10,33 @@ const props = defineProps({
     passwordConfirmationError: String,
 });
 
-// Create local states for password and password confirmation
-const localPassword = ref(props.password);
-const localPasswordConfirmation = ref(props.passwordConfirmation);
+// Local states
+const localPassword = ref(props.password || '');
+const localPasswordConfirmation = ref(props.passwordConfirmation || '');
 
-// Emit changes back to the parent component
+// Emit events
 const emit = defineEmits(['update:password', 'update:passwordConfirmation']);
 
-// Watch for changes in props to sync with local states
+// Watch for prop changes
 watch(() => props.password, (newPassword) => {
     localPassword.value = newPassword;
 });
-
 watch(() => props.passwordConfirmation, (newPasswordConfirmation) => {
     localPasswordConfirmation.value = newPasswordConfirmation;
+});
+
+// Emit local changes
+watch(localPassword, (newVal) => {
+    emit('update:password', newVal);
+});
+watch(localPasswordConfirmation, (newVal) => {
+    emit('update:passwordConfirmation', newVal);
 });
 </script>
 
 <template>
     <div class="confirm-password-inputs">
-        <!-- Password Input Group -->
+        <!-- Password Input -->
         <Input
             type="field"
             label="New password"
@@ -36,10 +44,9 @@ watch(() => props.passwordConfirmation, (newPasswordConfirmation) => {
             placeholder="Enter your new password here"
             v-model="localPassword"
             :error="passwordError"
-            @input="emit('update:password', localPassword)"
         />
 
-        <!-- Password Confirmation Input Group -->
+        <!-- Password Confirmation Input -->
         <Input
             type="field"
             label="Confirm password"
@@ -47,7 +54,6 @@ watch(() => props.passwordConfirmation, (newPasswordConfirmation) => {
             placeholder="Confirm your new password"
             v-model="localPasswordConfirmation"
             :error="passwordConfirmationError"
-            @input="emit('update:passwordConfirmation', localPasswordConfirmation)"
         />
     </div>
 </template>

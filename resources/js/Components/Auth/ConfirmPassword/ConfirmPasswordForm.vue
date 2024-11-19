@@ -4,15 +4,30 @@ import ConfirmPasswordFormInput from '@/Components/Auth/ConfirmPassword/ConfirmP
 import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 import GoBackLoginLink from "@/Components/Auth/GoBackLoginLink.vue";
 
+// Props for email and token
+const props = defineProps({
+    email: {
+        type: String,
+        required: true,
+    },
+    token: {
+        type: String,
+        required: true,
+    },
+});
+
+// Initialize the form
 const form = useForm({
+    email: props.email,
+    token: props.token,
     password: '',
     password_confirmation: '',
 });
 
-// Function to handle form submission
+// Handle form submission
 const submit = () => {
-    form.post(route('password.confirm'), {
-        onFinish: () => form.reset(),
+    form.post(route('password.store'), {
+        onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };
 </script>
@@ -20,11 +35,13 @@ const submit = () => {
 <template>
     <div class="confirm-password-form">
         <div class="confirm-password-form__box">
-            <!-- Add logo in back-end -->
-            <img src="/images/pim/mini-pim-logo.png" alt="logo" class="confirm-password-form__logo">
-            <h1 class="confirm-password-form__title">CONFIRM PASSWORD</h1>
+            <!-- Logo -->
+            <img src="/images/pim/mini-pim-logo.png" alt="logo" class="confirm-password-form__logo" />
+            <h1 class="confirm-password-form__title">RESET PASSWORD</h1>
+
+            <!-- Form -->
             <form class="confirm-password-form__form" @submit.prevent="submit">
-                <!-- Password Input Group -->
+                <!-- New Password Input Group -->
                 <ConfirmPasswordFormInput
                     :password="form.password"
                     :passwordError="form.errors.password"
@@ -33,20 +50,25 @@ const submit = () => {
                     @update:password="form.password = $event"
                     @update:passwordConfirmation="form.password_confirmation = $event"
                 />
-                <!-- Confirm password -->
+
+                <!-- Reset Password Button -->
                 <PrimaryButton
-                    label="Confirm password"
+                    label="Reset Password"
+                    :class="{ 'opacity-25': form.processing }"
+                    :disabled="form.processing"
                     type="submit"
                 />
 
                 <!-- Go back to login -->
                 <div class="confirm-password-form__links">
-                    <GoBackLoginLink/>
+                    <GoBackLoginLink />
                 </div>
             </form>
         </div>
+
+        <!-- Image Box -->
         <div class="confirm-password-form__image-box">
-            <img src="/images/pim/authenticationImage.png" alt="Confirm Password Image" class="confirm-password-form__image">
+            <img src="/images/pim/authenticationImage.png" alt="Confirm Password Image" class="confirm-password-form__image" />
         </div>
     </div>
 </template>
