@@ -5,7 +5,6 @@ use App\Http\Controllers\ProfilesController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PimController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 // Authenticated user routes (requires user to be logged in)
 Route::middleware('auth')->group(function () {
@@ -47,5 +46,5 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// Auth routes (for user authentication)
+// Auth routes (for user authentication) - Place all password reset and guest routes in `auth.php`
 require __DIR__.'/auth.php';
