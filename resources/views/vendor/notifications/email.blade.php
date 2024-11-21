@@ -4,114 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Password Reset</title>
-    <style>
-        /* Base email styling */
-        .email {
-            background-color: #edf2f7;
-            font-family: Arial, sans-serif;
-            padding: 2rem 0;
-            text-align: center;
-        }
-
-        .email__container {
-            background-color: #ffffff;
-            border: 1px solid #eaeaea;
-            border-radius: 0.5rem;
-            margin: 0 auto;
-            max-width: 600px;
-            padding: 2rem;
-            text-align: left;
-        }
-
-        /* Header styles */
-        .email__header {
-            margin-bottom: 1.5rem;
-        }
-
-        .email__logo {
-            display: block;
-            margin: 0 auto 1rem;
-            max-width: 100px;
-        }
-
-        /* Greeting styles */
-        .email__greeting {
-            color: #333;
-            font-size: 1.25rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-        }
-
-        /* Body text */
-        .email__body-text {
-            color: #555;
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Button styles */
-        .email__button-container {
-            text-align: center;
-            margin: 2.5rem 0;
-        }
-
-        .email__button {
-            background-color: #567AC5;
-            border: none;
-            border-radius: 0.5rem;
-            color: #ffffff;
-            cursor: pointer;
-            display: inline-block;
-            font-size: 1rem;
-            font-weight: bold;
-            padding: 0.75rem 2rem;
-            text-align: center;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-
-        .email__button:hover {
-            background-color: #2859A6;
-        }
-
-        /* Footer styles */
-        .email__footer {
-            color: #888;
-            font-size: 0.875rem;
-            margin-top: 2rem;
-            text-align: center;
-        }
-
-        .email__footer-link {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .email__footer-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Separator line */
-        .email__separator {
-            border-top: 1px solid #eaeaea;
-            margin: 1.5rem 0;
-        }
-
-        /* Subcopy styles */
-        .email__subcopy {
-            color: #666;
-            font-size: 0.875rem;
-            margin-top: 1.5rem;
-            text-align: center;
-            word-wrap: break-word;
-        }
-
-        .email__subcopy-link {
-            color: #007bff;
-            text-decoration: none;
-            word-break: break-all;
-        }
-    </style>
+    @vite(['resources/sass/auth/pim-email.scss'])
 </head>
 <body>
 <div class="email">
@@ -136,7 +29,7 @@
             If you did not request a password reset, no further action is required.
         </p>
 
-        <p class="email__body-text">Regards,<br>{{ config('app.name') }}</p>
+        <p class="email__body-text">Regards,<br>Mini-PIM's Team</p>
 
         <div class="email__separator"></div>
 
@@ -151,9 +44,8 @@
         </div>
     </div>
 
-    <div class="email__footer">
-        &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
-    </div>
+    {{-- Include the footer component--}}
+    {{-- @include('components.footer')--}}
 </div>
 </body>
 </html>

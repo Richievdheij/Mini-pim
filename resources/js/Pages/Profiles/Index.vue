@@ -1,99 +1,133 @@
 <script setup>
-import { ref } from 'vue';
-import { Link, router } from '@inertiajs/vue3';
+import { ref, computed } from "vue";
+import { Head } from "@inertiajs/vue3";
+import CreateProfileModal from "@/Components/Admin/Profiles/CreateProfileModal.vue";
+import EditProfileModal from "@/Components/Admin/Profiles/EditProfileModal.vue";
+import DeleteProfileModal from "@/Components/Admin/Profiles/DeleteProfileModal.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import PrimaryButton from "@/Components/General/PrimaryButton.vue";
+import Input from "@/Components/General/Input.vue";
 
-defineProps({ profiles: Array });
+const props = defineProps({
+    profiles: Array,
+    canEditProfile: Boolean,
+    canDeleteProfile: Boolean,
+    canCreateProfile: Boolean,
+});
 
-function deleteProfile(profileId) {
-    if (confirm('Are you sure you want to delete this profile?')) {
-        // Use the router.delete method to call the delete route
-        router.delete(route('profiles.destroy', profileId), {
-            onSuccess: () => {
-                alert('Profile deleted successfully');
-            },
-            onError: (errors) => {
-                console.error('Failed to delete profile:', errors);
-            }
-        });
+const isEditModalOpen = ref(false);
+const isDeleteModalOpen = ref(false);
+const isCreateModalOpen = ref(false);
+const selectedProfile = ref(null);
+const searchQuery = ref("");
+
+function openModal(modalType, profile = null) {
+    selectedProfile.value = profile;
+
+    if (modalType === "edit") {
+        isEditModalOpen.value = true;
+    } else if (modalType === "delete") {
+        isDeleteModalOpen.value = true;
+    } else if (modalType === "create") {
+        isCreateModalOpen.value = true;
     }
 }
+
+function closeModal(modalType) {
+    selectedProfile.value = null;
+
+    if (modalType === "edit") {
+        isEditModalOpen.value = false;
+    } else if (modalType === "delete") {
+        isDeleteModalOpen.value = false;
+    } else if (modalType === "create") {
+        isCreateModalOpen.value = false;
+    }
+}
+
+const filteredProfiles = computed(() =>
+    (props.profiles || []).filter((profile) =>
+        profile.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    )
+);
 </script>
 
 <template>
+    <Head title="Mini-Pim | Profiles"/>
+
     <AuthenticatedLayout>
-    <div class="manage-profiles">
-        <h1>Manage Profiles</h1>
+        <div class="profiles">
+            <div class="profiles__header">
+                <h1 class="profiles__title">Profiles</h1>
+            </div>
 
-        <!-- Button to navigate to the profile creation page -->
-        <div class="create-profile-button">
-            <Link :href="route('profiles.create')" class="button">Create New Profile</Link>
+            <div class="profiles__section">
+                <div class="profiles__top-bar">
+                    <div class="profiles__create-button" v-if="props.canCreateProfile">
+                        <PrimaryButton
+                            v-if="props.canCreateProfile"
+                            label="Create New Profile"
+                            type="cancel"
+                            icon="fas fa-plus"
+                            @click="openModal('create')"
+                        />
+                    </div>
+                    <div class="profiles__search-bar">
+                        <Input
+                            type="search"
+                            id="search"
+                            placeholder="Search..."
+                            v-model="searchQuery"
+                            icon="fas fa-search"
+                        />
+                    </div>
+                </div>
+
+                <table class="profiles__table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th v-if="props.canEditProfile || props.canDeleteProfile">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="profile in filteredProfiles" :key="profile.id">
+                        <td>{{ profile.name }}</td>
+                        <td>
+                            <PrimaryButton
+                                v-if="props.canEditProfile"
+                                label="Edit"
+                                type="submit"
+                                icon="fas fa-edit"
+                                @click="openModal('edit', profile)"
+                            />
+                            <PrimaryButton
+                                v-if="props.canDeleteProfile"
+                                label="Delete"
+                                type="delete"
+                                icon="fas fa-trash"
+                                @click="openModal('delete', profile)"
+                            />
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <CreateProfileModal
+                :isOpen="isCreateModalOpen"
+                @close="closeModal('create')"
+            />
+            <EditProfileModal
+                :profile="selectedProfile"
+                :isOpen="isEditModalOpen"
+                @close="closeModal('edit')"
+            />
+            <DeleteProfileModal
+                :profile="selectedProfile"
+                :isOpen="isDeleteModalOpen"
+                @close="closeModal('delete')"
+            />
         </div>
-
-        <!-- Profiles Table -->
-        <table class="profiles-table">
-            <thead>
-            <tr>
-                <th>Profile Name</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="profile in profiles" :key="profile.id">
-                <td>{{ profile.name }}</td>
-                <td>
-                    <!-- Edit Button -->
-                    <Link :href="route('profiles.edit', profile.id)" class="button edit">Edit</Link>
-
-                    <!-- Delete Button -->
-                    <button @click="deleteProfile(profile.id)" class="button delete">Delete</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
     </AuthenticatedLayout>
 </template>
-
-<style scoped>
-.manage-profiles {
-    padding: 1.5rem;
-}
-
-.create-profile-button {
-    margin-bottom: 1rem;
-}
-
-.button {
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
-    border: none;
-    color: black;
-    cursor: pointer;
-    margin-right: 0.5rem;
-    text-decoration: none;
-}
-
-.edit {
-    background-color: #4CAF50;
-}
-
-.delete {
-    background-color: #f44336;
-}
-
-.profiles-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.profiles-table th, .profiles-table td {
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    text-align: left;
-}
-
-.profiles-table th {
-    background-color: #f4f4f4;
-}
-</style>

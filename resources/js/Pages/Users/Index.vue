@@ -55,7 +55,8 @@ const filteredUsers = computed(() => {
 </script>
 
 <template>
-    <Head title="Users"/>
+    <Head title="Mini-Pim | Users"/>
+
     <AuthenticatedLayout>
         <div class="users">
             <div class="users__header">
@@ -89,7 +90,7 @@ const filteredUsers = computed(() => {
 
                 <table class="users__table">
                     <thead>
-                    <tr>
+                    <tr class="users__table-header">
                         <th>Name</th>
                         <th>Email</th>
                         <th>Profiles</th>

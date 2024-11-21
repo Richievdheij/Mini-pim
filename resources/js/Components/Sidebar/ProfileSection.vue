@@ -14,7 +14,6 @@ const props = defineProps(['isSidebarExpanded']);
             <div class="sidebar__profile-info">
                 <span class="sidebar__profile-name" v-if="isSidebarExpanded">test</span>
                 <span class="sidebar__profile-rank" v-if="isSidebarExpanded">test</span>
-                <span class="sidebar__profile-status" v-if="isSidebarExpanded">test</span>
             </div>
         </div>
     </div>

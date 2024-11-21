@@ -1,7 +1,6 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-import { watch } from 'vue';
-import Input from '@/Components/General/Input.vue';
+import { watch, defineProps, defineEmits } from 'vue';
 import SecondaryButton from '@/Components/General/SecondaryButton.vue';
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
@@ -61,7 +60,7 @@ function deleteUser() {
                         @click="closeModal"
                     />
                     <SecondaryButton
-                        label="Delete User"
+                        label="Delete"
                         type="delete"
                         :disabled="form.processing"
                     />
