@@ -14,7 +14,10 @@ use Inertia\Response;
 class AccountController extends Controller
 {
     /**
-     * Display the user's profile form.
+     * Show the account edit form.
+     *
+     * @param Request $request
+     * @return Response
      */
     public function edit(Request $request): Response
     {
@@ -25,12 +28,16 @@ class AccountController extends Controller
     }
 
     /**
-     * Update the user's profile information.
+     * Update the account information.
+     *
+     * @param ProfileUpdateRequest $request
+     * @return RedirectResponse
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
 
+        // Reset email verification if email is changed
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
@@ -42,6 +49,9 @@ class AccountController extends Controller
 
     /**
      * Delete the user's account.
+     *
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -51,13 +61,12 @@ class AccountController extends Controller
 
         $user = $request->user();
 
+        // Log out, delete user, and clear session
         Auth::logout();
-
         $user->delete();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return Redirect::to('/login')->with('status', 'Your account has been deleted successfully.');
     }
 }

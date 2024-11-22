@@ -19,7 +19,7 @@ const passwordMatchSuccess = computed(() => {
 });
 
 const updatePassword = () => {
-    form.put(route('password.update'), {
+    form.post(route('password.update'), {
         preserveScroll: true,
         onSuccess: () => form.reset(),
         onError: () => {
@@ -74,7 +74,6 @@ const updatePassword = () => {
                 placeholder="Confirm your password"
                 v-model="form.password_confirmation"
                 :error="form.errors.password_confirmation"
-                :success="passwordMatchSuccess ? 'Passwords match!' : ''"
             />
 
             <!-- Submit Button -->

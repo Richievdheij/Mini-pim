@@ -21,6 +21,7 @@ class PermissionController extends Controller
     {
         // Fetch all profiles with their associated permissions
         $profiles = Profile::with('permissions')->get();
+
         // Fetch all permissions
         $permissions = Permission::all();
 

@@ -13,7 +13,6 @@ const props = defineProps({
         default: () => [],
     },
     placeholder: String,
-    success: String,
     type: {
         type: String,
         required: true,
@@ -93,7 +92,6 @@ const inputClass = computed(() => {
         <!-- Error or Success Message Container -->
         <div class="input__message-container">
             <p class="input__error" v-if="error">{{ error }}</p>
-            <p class="input__success" v-if="success">{{ success }}</p>
         </div>
     </div>
 </template>
