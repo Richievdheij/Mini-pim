@@ -6,6 +6,7 @@ import EditProfileModal from "@/Components/Admin/Profiles/EditProfileModal.vue";
 import DeleteProfileModal from "@/Components/Admin/Profiles/DeleteProfileModal.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/General/PrimaryButton.vue";
+import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import Input from "@/Components/General/Input.vue";
 
 const props = defineProps({
@@ -57,12 +58,15 @@ const filteredProfiles = computed(() =>
 
     <AuthenticatedLayout>
         <div class="profiles">
+            <!-- Header -->
             <div class="profiles__header">
                 <h1 class="profiles__title">Profiles</h1>
             </div>
 
+            <!-- Section -->
             <div class="profiles__section">
                 <div class="profiles__top-bar">
+                    <!-- Create Profiles Button -->
                     <div class="profiles__create-button" v-if="props.canCreateProfile">
                         <PrimaryButton
                             v-if="props.canCreateProfile"
@@ -72,6 +76,8 @@ const filteredProfiles = computed(() =>
                             @click="openModal('create')"
                         />
                     </div>
+
+                    <!-- Search Bar -->
                     <div class="profiles__search-bar">
                         <Input
                             type="search"
@@ -85,29 +91,33 @@ const filteredProfiles = computed(() =>
 
                 <table class="profiles__table">
                     <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th v-if="props.canEditProfile || props.canDeleteProfile">Actions</th>
+                    <tr class="profiles__table-header">
+                        <th class="profiles__table-header-cell">Name</th>
+                        <th v-if="props.canEditProfile || props.canDeleteProfile" class="profiles__table-header-cell">
+                            Actions
+                        </th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr v-for="profile in filteredProfiles" :key="profile.id">
-                        <td>{{ profile.name }}</td>
-                        <td>
-                            <PrimaryButton
-                                v-if="props.canEditProfile"
-                                label="Edit"
-                                type="submit"
-                                icon="fas fa-edit"
-                                @click="openModal('edit', profile)"
-                            />
-                            <PrimaryButton
-                                v-if="props.canDeleteProfile"
-                                label="Delete"
-                                type="delete"
-                                icon="fas fa-trash"
-                                @click="openModal('delete', profile)"
-                            />
+                    <tbody class="profiles__table-body">
+                    <tr v-for="profile in filteredProfiles" :key="profile.id" class="profiles__table-row">
+                        <td class="profiles__table-cell">{{ profile.name }}</td>
+                        <td class="profiles__table-cell" v-if="props.canEditProfile || props.canDeleteProfile">
+                            <div class="users__table-actions">
+                                <SecondaryButton
+                                    v-if="props.canEditProfile"
+                                    label="Edit"
+                                    type="submit"
+                                    icon="fas fa-edit"
+                                    @click="openModal('edit', profile)"
+                                />
+                                <SecondaryButton
+                                    v-if="props.canDeleteProfile"
+                                    label="Delete"
+                                    type="delete"
+                                    icon="fas fa-trash"
+                                    @click="openModal('delete', profile)"
+                                />
+                            </div>
                         </td>
                     </tr>
                     </tbody>

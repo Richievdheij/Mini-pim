@@ -7,6 +7,8 @@ import DeleteUserModal from "@/Components/Admin/Users/DeleteUserModal.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/General/PrimaryButton.vue";
 import Input from "@/Components/General/Input.vue";
+import TertiaryButton from "@/Components/General/TertiaryButton.vue";
+import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 
 const props = defineProps({
     users: Array,
@@ -22,6 +24,7 @@ const isCreateModalOpen = ref(false);
 const selectedUser = ref(null);
 const searchQuery = ref("");
 
+// Open modal for create/edit/delete
 function openModal(modalType, user = null) {
     selectedUser.value = user;
 
@@ -34,6 +37,7 @@ function openModal(modalType, user = null) {
     }
 }
 
+// Close modal for create/edit/delete
 function closeModal(modalType) {
     selectedUser.value = null;
 
@@ -46,12 +50,18 @@ function closeModal(modalType) {
     }
 }
 
+// Filter users based on search query
 const filteredUsers = computed(() => {
     return (props.users || []).filter((user) =>
         user.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
         user.email.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
 });
+
+// Add computed property to check if the profile is the current one
+const isCurrentProfile = (profileId, userProfiles) => {
+    return userProfiles.some(profile => profile.id === profileId);
+};
 </script>
 
 <template>
@@ -59,16 +69,17 @@ const filteredUsers = computed(() => {
 
     <AuthenticatedLayout>
         <div class="users">
+            <!-- Header -->
             <div class="users__header">
                 <h1 class="users__title">Users</h1>
             </div>
 
+            <!-- Section -->
             <div class="users__section">
                 <div class="users__top-bar">
                     <!-- Create User Button -->
                     <div class="users__create-button" v-if="props.canCreateUser">
                         <PrimaryButton
-                            v-if="props.canCreateUser"
                             label="Create New User"
                             type="cancel"
                             icon="fas fa-plus"
@@ -91,44 +102,46 @@ const filteredUsers = computed(() => {
                 <table class="users__table">
                     <thead>
                     <tr class="users__table-header">
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Profiles</th>
-                        <th v-if="props.canEditUser || props.canDeleteUser">Actions</th>
+                        <th class="users__table-header-cell">Name</th>
+                        <th class="users__table-header-cell">Email</th>
+                        <th class="users__table-header-cell">Profiles</th>
+                        <th v-if="props.canEditUser || props.canDeleteUser" class="users__table-header-cell">
+                            Actions
+                        </th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr
-                        v-for="user in filteredUsers"
-                        :key="user.id"
-                    >
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>
-                            <ul>
+                    <tbody class="users__table-body">
+                    <tr v-for="user in filteredUsers" :key="user.id" class="users__table-row">
+                        <td class="users__table-cell">{{ user.name }}</td>
+                        <td class="users__table-cell">{{ user.email }}</td>
+                        <td class="users__table-cell">
+                            <ul class="users__table-profile">
                                 <li
                                     v-for="profile in user.profiles"
                                     :key="profile.id"
+                                    :class="['users__table-profile-item', { 'users__table-profile-item--current': isCurrentProfile(profile.id, user.profiles) }]"
                                 >
                                     {{ profile.name }}
                                 </li>
                             </ul>
                         </td>
-                        <td>
-                            <PrimaryButton
-                                v-if="props.canEditUser"
-                                type="submit"
-                                label="Edit"
-                                @click="openModal('edit', user)"
-                                icon="fas fa-edit"
-                            />
-                            <PrimaryButton
-                                v-if="props.canDeleteUser"
-                                type="delete"
-                                label="Delete"
-                                @click="openModal('delete', user)"
-                                icon="fas fa-trash"
-                            />
+                        <td v-if="props.canEditUser || props.canDeleteUser" class="users__table-cell">
+                            <div class="users__table-actions">
+                                <SecondaryButton
+                                    v-if="props.canEditUser"
+                                    type="submit"
+                                    label="Edit"
+                                    @click="openModal('edit', user)"
+                                    icon="fas fa-edit"
+                                />
+                                <SecondaryButton
+                                    v-if="props.canDeleteUser"
+                                    type="delete"
+                                    label="Delete"
+                                    @click="openModal('delete', user)"
+                                    icon="fas fa-trash"
+                                />
+                            </div>
                         </td>
                     </tr>
                     </tbody>
