@@ -15,7 +15,7 @@ class PasswordController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
-        // Validate password fields (current password, new password, and confirmation)
+        // Validate the current password, new password, and confirmation
         $validated = $request->validate([
             'current_password' => ['required', 'current_password'],
             'password' => ['required', 'confirmed', Password::defaults()],
@@ -26,6 +26,7 @@ class PasswordController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return back(); // Redirect back after the password update
+        // Redirect back after updating the password
+        return back();
     }
 }

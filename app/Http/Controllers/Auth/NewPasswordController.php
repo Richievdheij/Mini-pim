@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rules;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rules\Password as PasswordRules;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -21,16 +20,16 @@ class NewPasswordController extends Controller
      */
     public function create(Request $request): Response
     {
-        // Log the email and token to ensure they are retrieved correctly
+        // Log email and token for debugging purposes
         \Log::info('Reset Password Props:', [
-            'email' => $request->query('email'), // Retrieves email from the query string
-            'token' => $request->route('token'), // Retrieves token from the URL
+            'email' => $request->query('email'),
+            'token' => $request->route('token'),
         ]);
 
-        // Pass the email and token to the Vue component
+        // Render the reset password view with email and token passed to the frontend
         return Inertia::render('Auth/ConfirmPassword', [
-            'email' => $request->query('email'), // Make sure the email is coming from the query
-            'token' => $request->route('token'), // Make sure the token is coming from the route
+            'email' => $request->query('email'),
+            'token' => $request->route('token'),
         ]);
     }
 
@@ -39,28 +38,49 @@ class NewPasswordController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
+        // Validate input fields with custom rules for password strength and confirmation
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required|confirmed|min:8',
-            'token' => 'required',
+            'password' => [
+                'required',
+                'confirmed', // Ensure password matches confirmation field
+                PasswordRules::min(8)
+                    ->mixedCase() // At least one uppercase and one lowercase character
+                    ->letters() // At least one letter
+                    ->numbers() // At least one number
+                    ->symbols(), // At least one special character
+                function ($attribute, $value, $fail) use ($request) {
+                    // Custom validation to ensure the new password is not the same as the current one
+                    $user = User::where('email', $request->email)->first();
+                    if ($user && Hash::check($value, $user->password)) {
+                        $fail(__('The new password cannot be the same as your current password.'));
+                    }
+                },
+            ],
+            'token' => 'required', // Ensure a valid token is provided
         ]);
 
+        // Attempt to reset the password using the provided details
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user, $password) {
+                // Update the user's password in the database
                 $user->forceFill([
                     'password' => bcrypt($password),
                 ])->save();
+
+                // Trigger the PasswordReset event
+                event(new PasswordReset($user));
             }
         );
 
-        return $status === Password::PASSWORD_RESET
-            ? response()->json(['message' => __('Password reset successfully.')])
-            : response()->json(['message' => __('Password reset failed.')], 400);
+        // Redirect user based on the outcome of the password reset process
+        if ($status === Password::PASSWORD_RESET) {
+            return redirect()->route('login')->with('status', __('Your password has been reset successfully. Please log in with your new password.'));
+        } else {
+            return redirect()->back()->withErrors(['email' => __('Password reset failed. Please try again.')]);
+        }
     }
-
-
-
 }

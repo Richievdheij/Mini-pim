@@ -18,6 +18,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): Response
     {
+        // Render the login page with properties for resetting password availability and status
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
@@ -29,35 +30,40 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        // Validate the user credentials and the "remember" checkbox
+        // Extract user credentials and "remember me" preference
         $credentials = $request->only('email', 'password');
         $remember = $request->boolean('remember');
 
-        // Attempt to authenticate the user
+        // Attempt to authenticate the user with the provided credentials
         if (Auth::attempt($credentials, $remember)) {
+            // Regenerate the session to prevent session fixation attacks
             $request->session()->regenerate();
 
+            // Redirect to the intended page after successful login
             return redirect()->intended(route('dashboard'));
         }
 
-        // If authentication fails
+        // Handle failed login attempt with an error message
         return back()->withErrors([
             'email' => trans('auth.failed'),
         ]);
     }
-
 
     /**
      * Destroy an authenticated session.
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Log out the authenticated user
         Auth::guard('web')->logout();
 
+        // Invalidate the current session
         $request->session()->invalidate();
 
+        // Regenerate the CSRF token
         $request->session()->regenerateToken();
 
+        // Redirect to the login page after logout
         return redirect('/login');
     }
 }

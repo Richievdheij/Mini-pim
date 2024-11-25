@@ -17,6 +17,7 @@ class PasswordResetLinkController extends Controller
      */
     public function create(): Response
     {
+        // Render the Forgot Password view with any status messages
         return Inertia::render('Auth/ForgotPassword', [
             'status' => session('status'),
         ]);
@@ -29,19 +30,22 @@ class PasswordResetLinkController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Validate the email field
         $request->validate([
             'email' => 'required|email',
         ]);
 
+        // Attempt to send a reset link to the provided email
         $status = Password::sendResetLink(
             $request->only('email')
         );
 
+        // Check if the reset link was successfully sent
         if ($status === Password::RESET_LINK_SENT) {
             return back()->with('success', 'We have emailed your password reset link!');
         }
 
-        // Handle errors (e.g., invalid email)
+        // Throw an error for invalid email or failure to send
         throw ValidationException::withMessages([
             'email' => [trans($status)],
         ]);

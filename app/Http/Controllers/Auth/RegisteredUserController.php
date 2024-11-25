@@ -20,6 +20,7 @@ class RegisteredUserController extends Controller
      */
     public function create(): Response
     {
+        // Render the registration view
         return Inertia::render('Auth/Register');
     }
 
@@ -30,22 +31,27 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Validate input fields for user registration
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Create a new user with the provided details
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
+        // Fire the Registered event for the new user
         event(new Registered($user));
 
+        // Log in the newly registered user
         Auth::login($user);
 
+        // Redirect the user to the dashboard
         return redirect(route('dashboard', absolute: false));
     }
 }

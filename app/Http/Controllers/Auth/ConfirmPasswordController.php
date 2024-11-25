@@ -17,6 +17,7 @@ class ConfirmPasswordController extends Controller
      */
     public function show(): Response
     {
+        // Render the confirm password view
         return Inertia::render('Auth/ConfirmPassword');
     }
 
@@ -25,17 +26,21 @@ class ConfirmPasswordController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Validate the provided password against the user's stored password
         if (! Auth::guard('web')->validate([
             'email' => $request->user()->email,
             'password' => $request->password,
         ])) {
+            // Throw validation exception if the password is incorrect
             throw ValidationException::withMessages([
                 'password' => __('auth.password'),
             ]);
         }
 
+        // Mark the password as confirmed by updating the session
         $request->session()->put('auth.password_confirmed_at', time());
 
+        // Redirect the user to their intended page (default: dashboard)
         return redirect()->intended(route('dashboard', absolute: false));
     }
 }
