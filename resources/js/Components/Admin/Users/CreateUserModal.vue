@@ -16,6 +16,7 @@ const form = useForm({
     name: "",
     email: "",
     password: "",
+    password_confirmation: "", // Add this field for password confirmation
     profiles: [],
 });
 
@@ -75,6 +76,15 @@ function submit() {
                     type="field"
                     v-model="form.password"
                     :error="form.errors.password"
+                />
+                <Input
+                    label="Confirm Password"
+                    id="password_confirmation"
+                    inputType="password"
+                    placeholder="Confirm your password"
+                    type="field"
+                    v-model="form.password_confirmation"
+                    :error="form.errors.password_confirmation"
                 />
                 <Input
                     label="Assign Profiles"

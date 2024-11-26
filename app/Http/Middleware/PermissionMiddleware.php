@@ -10,7 +10,7 @@ class PermissionMiddleware
     public function handle($request, Closure $next, $permission)
     {
         if (!Auth::check() || !Auth::user()->hasPermission($permission)) {
-            // Als de gebruiker niet is ingelogd of de vereiste permissie niet heeft
+            // if the user isnt logged in or doesnt have the right permission
             abort(403, 'Unauthorized access.');
         }
 

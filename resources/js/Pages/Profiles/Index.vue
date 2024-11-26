@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed } from "vue";
-import { Head } from "@inertiajs/vue3";
+import {ref, computed} from "vue";
+import {Head, usePage} from "@inertiajs/vue3";
+import {useNotifications} from "@/plugins/notificationPlugin"; // Use centralized notification plugin
 import CreateProfileModal from "@/Components/Admin/Profiles/CreateProfileModal.vue";
 import EditProfileModal from "@/Components/Admin/Profiles/EditProfileModal.vue";
 import DeleteProfileModal from "@/Components/Admin/Profiles/DeleteProfileModal.vue";
@@ -16,11 +17,17 @@ const props = defineProps({
     canCreateProfile: Boolean,
 });
 
+const page = usePage();
+const {success, error} = useNotifications(); // Use notifications
+const flash = page.props.flash;
+
 const isEditModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
 const isCreateModalOpen = ref(false);
 const selectedProfile = ref(null);
 const searchQuery = ref("");
+
+
 
 function openModal(modalType, profile = null) {
     selectedProfile.value = profile;
@@ -69,7 +76,6 @@ const filteredProfiles = computed(() =>
                     <!-- Create Profiles Button -->
                     <div class="profiles__create-button" v-if="props.canCreateProfile">
                         <PrimaryButton
-                            v-if="props.canCreateProfile"
                             label="Create New Profile"
                             type="cancel"
                             icon="fas fa-plus"

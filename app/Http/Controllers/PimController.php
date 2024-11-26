@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Profile;
+use Illuminate\Validation\Rules\Password as PasswordRules;
 
 class PimController extends Controller
 {
@@ -88,24 +89,41 @@ class PimController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        // Validate request
         $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8',
-            'profiles' => 'array',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => [
+                'required',
+                'confirmed', // Ensure password matches confirmation field
+                PasswordRules::min(8)
+                    ->mixedCase() // At least one uppercase and one lowercase character
+                    ->letters() // At least one letter
+                    ->numbers() // At least one number
+                    ->symbols(), // At least one special character
+                function ($attribute, $value, $fail) use ($request) {
+                    // Custom validation to ensure the password is not the same as an existing user's password
+                    $user = User::where('email', $request->email)->first();
+                    if ($user && Hash::check($value, $user->password)) {
+                        $fail(__('The new password cannot be the same as your current password.'));
+                    }
+                },
+            ],
+            'profiles' => 'required|array|min:1', // Ensure at least one profile is selected
+            'profiles.*' => 'exists:profiles,id', // Validate profile IDs
         ]);
 
+        // Create the user
         $newUser = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
 
-        if ($request->has('profiles')) {
-            $newUser->profiles()->sync($request->profiles);
-        }
+        // Assign profiles
+        $newUser->profiles()->sync($request->profiles);
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
     /**
