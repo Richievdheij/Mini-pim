@@ -130,14 +130,14 @@ const isCurrentProfile = (profileId, userProfiles) => {
                                 <SecondaryButton
                                     v-if="props.canEditUser"
                                     type="submit"
-                                    label="Edit"
+                                    label=""
                                     @click="openModal('edit', user)"
                                     icon="fas fa-edit"
                                 />
                                 <SecondaryButton
                                     v-if="props.canDeleteUser"
                                     type="delete"
-                                    label="Delete"
+                                    label=""
                                     @click="openModal('delete', user)"
                                     icon="fas fa-trash"
                                 />

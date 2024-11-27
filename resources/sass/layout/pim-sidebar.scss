@@ -1,5 +1,8 @@
+// Sidebar container styles
 .sidebar {
-    background-color: #0C0C20;
+    background-color: #fff;
+    border-right: 0.06rem solid #E9E8EF;
+    box-shadow: 0 0 0.6rem rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -8,156 +11,73 @@
     transition: width 0.3s ease-in-out;
     width: 20rem;
 
+
+
+    // Styles when the sidebar is collapsed
     &--collapsed {
         width: 4rem;
 
-        .sidebar__button {
-            justify-content: center;
-        }
+        // Adjust padding for main section when collapsed
+        .sidebar-main-section {
+            overflow: hidden;
+            &__logo {
+                max-width: 2rem;
+                max-height: 2rem;
+            }
 
-        .sidebar__title {
-            padding: 0.75rem 1rem;
-            opacity: 0;
-            max-width: 0;
-            transition: opacity 0.3s ease;
-        }
-        .sidebar__button span {
-            opacity: 0;
-            max-width: 0;
-            transition: opacity 0.3s ease;
-        }
-    }
-
-    &__title {
-        align-items: center;
-        color: rgba(200, 200, 200, 1);
-        cursor: pointer;
-        display: flex;
-        font-size: 1rem;
-        justify-content: space-between;
-        padding: 0.5rem;
-        transition: opacity 0.3s ease;
-
-        span {
-            opacity: 1;
-            transition: opacity 0.3s ease;
-        }
-
-        .sidebar--collapsed & span {
-            opacity: 0;
-        }
-    }
-
-    &__button {
-        align-items: center;
-        border: none;
-        color: rgba(255, 255, 255, 0.8);
-        cursor: pointer;
-        display: flex;
-        padding: 0.75rem 1rem;
-        text-align: left;
-        width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-
-        &:hover {
-            background-color: rgba(80, 80, 80, 1);
-        }
-
-        span {
-            opacity: 1;
-            transition: opacity 0.3s ease;
-            max-width: 15rem;
-        }
-
-        .sidebar--collapsed & span {
-            opacity: 0;
-            max-width: 0;
-        }
-    }
-
-    &__chevron {
-        margin-left: auto;
-        font-size: 1rem;
-        color: rgba(255, 255, 255, 0.8);
-        transition: transform 0.3s ease;
-
-        &.fa-chevron-down {
-            transform: rotate(0deg);
-        }
-
-        &.fa-chevron-up {
-            transform: rotate(90deg);
-        }
-    }
-
-    &__divider {
-        background-color: rgba(200, 200, 200, 0.3);
-        height: 0.06rem;
-        width: 100%;
-    }
-
-    &__profile {
-        margin: auto 0 0 0;
-
-        &-divider {
-            background-color: rgba(200, 200, 200, 0.3);
-            height: 0.06rem;
-
-        }
-
-        &-image {
-            background-color: rgba(200, 200, 200, 1);
-            border-radius: 50%;
-            height: 2.5rem;
-            width: 2.5rem;
-            margin: 1rem 0.74rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        &-icon {
-            font-size: 1.3rem;
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        &-info {
-            display: flex;
-            flex-direction: column;
-            padding: 0 0 1rem 1rem;
-            transition: opacity 0.3s ease;
-
-            .sidebar--collapsed & {
-                opacity: 0;
+            &__button-container {
+                display: flex;
+                padding: 1rem 1rem;
             }
         }
 
-        &-name {
-            color: rgba(255, 255, 255, 1);
-            font-size: 1rem;
+        // Hide text for collapsed sections
+        .sidebar-general-section span,
+        .sidebar-manage-section span,
+        .sidebar-account-section span {
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            visibility: hidden;
         }
 
-        &-rank,
-        &-status {
-            color: rgba(150, 150, 150, 1);
-            font-size: 0.875rem;
+        // Hide the section title
+        .sidebar-general-section-title {
+            display: none;
+        }
+
+        // Align chevron icons to center in collapsed mode
+        .sidebar-general-section__chevron,
+        .sidebar-manage-section__chevron,
+        .sidebar-account-section__chevron {
+            flex-shrink: 0;
+            justify-content: center;
+            margin-left: 0;
+        }
+
+        // Adjust collapsed section title layout
+        .sidebar-general-section__title,
+        .sidebar-manage-section__title,
+        .sidebar-account-section__title {
+            align-items: flex-end;
+            display: flex;
+            flex-direction: column;
+            padding: 0.5rem 1.45rem;
         }
     }
 
+    // Toggle button for collapsing/expanding the sidebar
     &__toggle {
         align-items: center;
-        background: rgba(80, 80, 80, 1);
-        color: rgba(255, 255, 255, 0.8);
+        background-color: rgba(220, 220, 220, 1);
+        color: rgba(0, 0, 0, 1);
         cursor: pointer;
         display: flex;
-        height: 2.5rem;
+        height: 2rem;
         justify-content: center;
         transition: background 0.3s ease;
 
         &:hover {
-            background: rgba(90, 90, 90, 1);
+            background-color: rgba(200, 200, 200, 1);
         }
 
         i {
@@ -165,30 +85,194 @@
             transition: transform 0.3s ease;
         }
     }
+}
 
-    &__section {
-        position: relative;
+// Styles for general, manage, and account sections in the sidebar
+.sidebar-account-section,
+.sidebar-general-section,
+.sidebar-manage-section {
+    // Button styles for items in these sections
+    &__button {
+        align-items: center;
+        background-color: transparent;
+        border: none;
+        color: rgba(0, 0, 0, 1);
+        cursor: pointer;
+        display: flex;
+        flex-direction: row;
+        font-size: 1rem;
+        justify-content: left;
+        padding: 0.75rem 1.3rem;
+        text-align: left;
+        transition: background 0.3s ease;
+        white-space: nowrap;
+        width: 100%;
 
-        &-toggle {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.875rem;
-            transition: opacity 0.3s ease;
+        &:hover {
+            background-color: rgba(200, 200, 200, 0.3);
+        }
+    }
 
-            span {
-                opacity: 1;
-                transition: opacity 0.3s ease;
-            }
+    // Chevron icon for expandable sections
+    &__chevron {
+        flex-shrink: 0;
+        justify-content: center;
+        margin-left: 0;
+    }
 
-            .sidebar--collapsed & span {
-                opacity: 0;
+    // Icons for section items
+    &__icon {
+        object-fit: contain; /* Ensure icons scale correctly */
+        opacity: 1;
+        visibility: visible;
+        width: 2rem; /* Consistent width */
+    }
+
+    // Title of the section
+    &__title {
+        align-items: center;
+        border-bottom: 0.06rem solid rgba(200, 200, 200, 1);
+        display: flex;
+        font-size: 1rem;
+        font-weight: bold;
+        height: 2rem;
+        justify-content: space-between;
+        overflow: hidden;
+        padding: 0.5rem 1rem;
+        width: 100%;
+    }
+}
+
+// Main section container styles
+.sidebar-main-section {
+    &__button-container {
+        align-items: center;
+        display: flex;
+        padding: 1rem 1.5rem;
+        transition: padding 0.3s ease;
+
+        &--collapsed {
+            justify-content: center;
+            padding: 0.75rem;
+        }
+    }
+
+    &__button {
+        align-items: center;
+        background: transparent;
+        border: none;
+        color: rgba(0, 0, 0, 1);
+        cursor: pointer;
+        display: flex;
+        width: 100%;
+        text-align: left;
+
+        &:hover {
+            background-color: rgba(220, 220, 220, 0.5);
+        }
+    }
+
+    &__logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        transition: all 0.3s ease;
+
+        &--collapsed {
+            margin-right: 0;
+
+            .sidebar-main-section__logo {
+                max-width: 2rem;
+                max-height: 2rem;
             }
         }
     }
 
     &__logo {
-        width: 5rem;
-        height: auto;
-        margin-right: 0.5rem;
+        max-width: 5rem;
+        max-height: 5rem;
+        transition: all 0.3s ease;
+    }
+
+    &__text-container {
+        flex-grow: 1;
+
+        .sidebar-main-section__text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 1);
+        }
+    }
+
+    &__chevron {
+        font-size: 1rem;
+        margin-left: auto;
+        transition: transform 0.3s ease;
+    }
+
+    &__dropdown {
+        background: #f8f9fa;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        margin-top: 0.5rem;
+        overflow: hidden;
+
+        .sidebar-main-section__dropdown-item {
+            background: transparent;
+            border: none;
+            color: rgba(0, 0, 0, 1);
+            cursor: pointer;
+            padding: 0.75rem 1.5rem;
+            text-align: left;
+
+            &:hover {
+                background-color: rgba(220, 220, 220, 0.5);
+            }
+
+            span {
+                font-size: 1rem;
+            }
+        }
     }
 }
 
+
+// Profile section styles in the sidebar
+.sidebar-profile-section {
+    margin-top: auto;
+
+    // Content layout for the profile section
+    &__content {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2.75rem 1rem;
+    }
+
+    // Divider line in the profile section
+    &__divider {
+        background-color: rgba(200, 200, 200, 1);
+        height: 0.06rem;
+    }
+
+    // Container for user info in the profile section
+    &__info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    // Styling for the user's name
+    &__name {
+        color: rgba(0, 0, 0, 1);
+        font-size: 1rem;
+    }
+
+    // Styling for the user's rank or position
+    &__rank {
+        color: rgba(100, 100, 100, 1);
+        font-size: 0.875rem;
+    }
+}
