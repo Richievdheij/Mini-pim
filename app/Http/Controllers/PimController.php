@@ -97,7 +97,6 @@ class PimController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => [
                 'required',
-                'confirmed', // Ensure password matches confirmation field
                 PasswordRules::min(8)
                     ->mixedCase() // At least one uppercase and one lowercase character
                     ->letters() // At least one letter

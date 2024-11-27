@@ -3,6 +3,9 @@ import { useForm } from '@inertiajs/vue3';
 import { watch, defineProps, defineEmits } from 'vue';
 import SecondaryButton from '@/Components/General/SecondaryButton.vue';
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
+import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
+
+const { success, error } = useNotifications(); // Destructure success and error notifications
 
 // Props and emits
 const props = defineProps({
@@ -38,7 +41,11 @@ function deleteUser() {
     form.delete(`/users/${props.user.id}`, {
         preserveScroll: true,
         onSuccess: () => {
+            success(`User ${props.user.name} deleted successfully! 🗑️`);
             closeModal();
+        },
+        onError: () => {
+            error("Failed to delete user. Please try again. ❌");
         },
     });
 }

@@ -1,6 +1,7 @@
 <script setup>
-import { useForm } from "@inertiajs/vue3";
-import { watch } from "vue";
+import {useForm} from "@inertiajs/vue3";
+import {watch} from "vue";
+import {useNotifications} from "@/plugins/notificationPlugin"; // Import notifications plugin
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
@@ -13,6 +14,9 @@ const props = defineProps({
 
 // Define emits for closing the modal
 const emit = defineEmits(["close"]);
+
+// Notifications
+const {success, error} = useNotifications(); // Use notifications
 
 // Initialize the form object with the current profile's name
 const form = useForm({
@@ -42,7 +46,13 @@ function closeModal() {
 function submit() {
     form.put(route("profiles.update", props.profile.id), {
         preserveScroll: true,
-        onSuccess: () => closeModal(),
+        onSuccess: () => {
+            success(`Profile "${form.name}" updated successfully! 🎉`); // Show success notification
+            closeModal(); // Close modal after success
+        },
+        onError: () => {
+            error("Failed to update profile. Please try again. ❌"); // Show error notification
+        },
     });
 }
 </script>

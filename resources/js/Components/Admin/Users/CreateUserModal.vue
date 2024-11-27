@@ -4,6 +4,9 @@ import { watch } from "vue";
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
+import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
+
+const { success, error } = useNotifications(); // Destructure success and error notifications
 
 const props = defineProps({
     user: Object,
@@ -16,7 +19,6 @@ const form = useForm({
     name: "",
     email: "",
     password: "",
-    password_confirmation: "", // Add this field for password confirmation
     profiles: [],
 });
 
@@ -39,7 +41,13 @@ function closeModal() {
 function submit() {
     form.post("/users", {
         preserveScroll: true,
-        onSuccess: () => closeModal(),
+        onSuccess: () => {
+            success("User created successfully! 🎉");
+            closeModal();
+        },
+        onError: () => {
+            error("Failed to create user. Please try again. ❌");
+        },
     });
 }
 </script>
@@ -76,15 +84,6 @@ function submit() {
                     type="field"
                     v-model="form.password"
                     :error="form.errors.password"
-                />
-                <Input
-                    label="Confirm Password"
-                    id="password_confirmation"
-                    inputType="password"
-                    placeholder="Confirm your password"
-                    type="field"
-                    v-model="form.password_confirmation"
-                    :error="form.errors.password_confirmation"
                 />
                 <Input
                     label="Assign Profiles"

@@ -36,9 +36,9 @@ class PermissionController extends Controller
      * Toggle permission for a profile
      *
      * @param Request $request
-     * @return JsonResponse
+     * @return RedirectResponse
      */
-    public function togglePermission(Request $request): JsonResponse
+    public function togglePermission(Request $request): RedirectResponse
     {
         // Validate the incoming request
         $request->validate([
@@ -59,9 +59,10 @@ class PermissionController extends Controller
             $profile->permissions()->attach($permission->id);
         }
 
-        // Return a success response
-        return response()->json(['status' => 'success']);
+        // Redirect back without a JSON response
+        return back()->with('success', 'Permission updated successfully.');
     }
+
 
     /**
      * Create profile method

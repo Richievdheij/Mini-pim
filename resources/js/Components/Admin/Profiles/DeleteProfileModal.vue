@@ -3,6 +3,10 @@ import { useForm } from '@inertiajs/vue3';
 import { defineProps, defineEmits } from "vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
+import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
+
+const { success, error } = useNotifications(); // Use notifications
+
 
 const props = defineProps({
     isOpen: Boolean,
@@ -20,10 +24,16 @@ function closeModal() {
     emit("close");
 }
 
-function deleteProfile() {
+function deleteProfile(profile) {
+    // Send delete request
     form.delete(route("profiles.destroy", props.profile.id), {
-        preserveScroll: true,
-        onSuccess: () => closeModal(),
+        onSuccess: () => {
+            success("Profile deleted successfully! 🎉"); // Success notification
+            closeModal("delete");
+        },
+        onError: () => {
+            error("Failed to delete profile. ❌"); // Error notification
+        },
     });
 }
 </script>

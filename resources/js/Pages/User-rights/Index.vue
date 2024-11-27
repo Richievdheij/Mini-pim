@@ -1,24 +1,27 @@
 <script setup>
 import { ref, computed } from "vue";
-import { Head, useForm } from '@inertiajs/vue3';
+import { Head, useForm } from "@inertiajs/vue3";
+import { useNotifications } from "@/plugins/notificationPlugin"; // Import notification plugin
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Input from "@/Components/General/Input.vue";
 
 const props = defineProps({
     profiles: {
         type: Array,
-        required: true
+        required: true,
     },
     permissions: {
         type: Array,
-        required: true
-    }
+        required: true,
+    },
 });
 
-const searchQuery = ref('');
+const { success, error } = useNotifications(); // Use notification plugin
+
+const searchQuery = ref("");
 
 const filteredPermissions = computed(() => {
-    return props.permissions.filter(permission =>
+    return props.permissions.filter((permission) =>
         permission.name.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
 });
@@ -29,23 +32,32 @@ function hasPermission(profile, permission) {
 
 const form = useForm({
     profile_id: null,
-    permission_id: null
+    permission_id: null,
 });
 
 function togglePermission(profileId, permissionId) {
     form.profile_id = profileId;
     form.permission_id = permissionId;
 
-    form.post(route('user-rights.update'), {
+    const profile = props.profiles.find((p) => p.id === profileId);
+    const permission = props.permissions.find((p) => p.id === permissionId);
+
+    const action = hasPermission(profile, permission) ? "removed from" : "added to";
+
+    form.post(route("user-rights.update"), {
         onSuccess: () => {
-            form.reset('profile_id', 'permission_id');
+            success(`Permission '${permission.name}' has been ${action} profile '${profile.name}'`);
+            form.reset("profile_id", "permission_id");
+        },
+        onError: () => {
+            error("Failed to update permission. Please try again. ❌");
         },
     });
 }
 </script>
 
 <template>
-    <Head title="Mini-Pim | User-rights"/>
+    <Head title="Mini-Pim | User-rights" />
 
     <AuthenticatedLayout>
         <div class="user-rights">
