@@ -11,8 +11,6 @@
     transition: width 0.3s ease-in-out;
     width: 20rem;
 
-
-
     // Styles when the sidebar is collapsed
     &--collapsed {
         width: 4rem;
@@ -150,12 +148,15 @@
     }
 }
 
+.sidebar-account-section {
+    margin-top: auto;
+}
 // Main section container styles
 .sidebar-main-section {
     &__button-container {
         align-items: center;
         display: flex;
-        padding: 1rem 1.5rem;
+        padding: 1rem 1rem;
         transition: padding 0.3s ease;
 
         &--collapsed {
@@ -242,7 +243,6 @@
 
 // Profile section styles in the sidebar
 .sidebar-profile-section {
-    margin-top: auto;
 
     // Content layout for the profile section
     &__content {

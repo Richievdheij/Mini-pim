@@ -14,11 +14,12 @@
 //@import "auth/pim-verify-email";
 
 // Components
-@import 'components/pim-notification';
 @import "components/pim-button";
 @import "components/pim-checkbox";
+@import "components/pim-filter";
 @import "components/pim-input";
 @import "components/pim-modal";
+@import 'components/pim-notification';
 @import "components/pim-searchbar";
 
 // Dashboard

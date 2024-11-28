@@ -28,6 +28,12 @@
         white-space: nowrap;
     }
 
+    &__table-header-cell i {
+        margin-left: 0.5rem;
+        cursor: pointer;
+    }
+
+
     &__table-header {
         background-color: rgb(86, 122, 197);
         border-bottom: 0.3rem solid rgba(0, 0, 0, 0.1);

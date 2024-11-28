@@ -50,7 +50,7 @@ function deleteUser() {
         <div class="delete-user-modal__content">
             <h2 class="delete-user-modal__title">Delete User</h2>
             <p class="delete-user-modal__description">
-                Are you sure you want to delete this user?
+                Are you sure you want to delete the user "{{ props.user.name }}"?
             </p>
             <form @submit.prevent="deleteUser" class="delete-user-modal__form">
                 <div class="delete-user-modal__actions">
