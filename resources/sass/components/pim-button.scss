@@ -1,4 +1,9 @@
 .button {
+
+    &__icon-container {
+        display: inline-flex;
+        margin-right: 0.5rem;
+    }
     // Default button body
     &__body {
         cursor: pointer;

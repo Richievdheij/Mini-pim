@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useForm, usePage } from '@inertiajs/vue3';
+import { usePage } from '@inertiajs/vue3';
 
 import MainSection from '@/Components/Sidebar/MainSection.vue';
 import AccountSection from '@/Components/Sidebar/AccountSection.vue';
@@ -13,8 +13,7 @@ const isGeneralExpanded = ref(true);
 const isManageExpanded = ref(true);
 const isAccountExpanded = ref(true);
 
-const form = useForm({});
-const { props } = usePage();
+const {props} = usePage();
 const user = props.user;
 
 const toggleSidebar = () => {
@@ -31,30 +30,37 @@ const toggleSection = (section) => {
 <template>
     <aside :class="['sidebar', { 'sidebar--collapsed': !isSidebarExpanded }]">
         <!-- Main Section with Manager Dropdown -->
-        <MainSection :isSidebarExpanded="isSidebarExpanded" />
+        <MainSection
+            :isSidebarExpanded="isSidebarExpanded"
+        />
 
         <!-- Sidebar Toggle Button -->
         <div class="sidebar__toggle" @click="toggleSidebar">
             <i class="sidebar__icon fas" :class="isSidebarExpanded ? 'fa-angle-left' : 'fa-angle-right'"></i>
         </div>
 
-        <div>
-            <GeneralSection
+        <!-- General Section -->
+        <GeneralSection
             :isGeneralExpanded="isGeneralExpanded"
             :isSidebarExpanded="isSidebarExpanded"
             @toggle-section="toggleSection"
-            />
-            <ManageSection
+        />
+
+        <!-- Manage Section -->
+        <ManageSection
             :isManageExpanded="isManageExpanded"
             :isSidebarExpanded="isSidebarExpanded"
             @toggle-section="toggleSection"
-            />
-        </div>
+        />
+
+        <!-- Account Section -->
         <AccountSection
             :isAccountExpanded="isAccountExpanded"
             :isSidebarExpanded="isSidebarExpanded"
             @toggle-section="toggleSection"
         />
+
+        <!-- Profile Section -->
         <ProfileSection
             :isSidebarExpanded="isSidebarExpanded"
         />

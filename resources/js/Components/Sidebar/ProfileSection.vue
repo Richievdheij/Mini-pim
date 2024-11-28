@@ -1,20 +1,23 @@
 <script setup>
 import { defineProps } from 'vue';
 
-const props = defineProps(['isSidebarExpanded']);
+const props = defineProps({
+    isSidebarExpanded: Boolean,
+
+});
 </script>
 
 <template>
-    <div class="sidebar__profile">
-        <div class="sidebar__profile-divider"></div>
-        <div class="sidebar__profile-content">
-            <div class="sidebar__profile-image">
-                <i class="fas fa-user sidebar__profile-icon"></i>
-            </div>
-            <div class="sidebar__profile-info">
-                <span class="sidebar__profile-name" v-if="isSidebarExpanded">test</span>
-                <span class="sidebar__profile-rank" v-if="isSidebarExpanded">test</span>
-            </div>
-        </div>
+  <div class="sidebar-profile-section">
+    <div class="sidebar-profile-section__divider"></div>
+    <div class="sidebar-profile-section__content">
+      <div class="sidebar-profile-section__icon-container">
+        <i class="fas fa-user sidebar-profile-section__icon"></i>
+      </div>
+      <div class="sidebar-profile-section__info">
+        <span class="sidebar-profile-section__name">test</span>
+        <span class="sidebar-profile-section__rank">test</span>
+      </div>
     </div>
+  </div>
 </template>

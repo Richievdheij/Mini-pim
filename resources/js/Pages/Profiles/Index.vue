@@ -99,9 +99,7 @@ const filteredProfiles = computed(() =>
                     <thead>
                     <tr class="profiles__table-header">
                         <th class="profiles__table-header-cell">Name</th>
-                        <th v-if="props.canEditProfile || props.canDeleteProfile" class="profiles__table-header-cell">
-                            Actions
-                        </th>
+                        <th v-if="props.canEditProfile || props.canDeleteProfile" class="profiles__table-header-cell"></th>
                     </tr>
                     </thead>
                     <tbody class="profiles__table-body">
@@ -111,14 +109,14 @@ const filteredProfiles = computed(() =>
                             <div class="users__table-actions">
                                 <SecondaryButton
                                     v-if="props.canEditProfile"
-                                    label="Edit"
+                                    label=""
                                     type="submit"
                                     icon="fas fa-edit"
                                     @click="openModal('edit', profile)"
                                 />
                                 <SecondaryButton
                                     v-if="props.canDeleteProfile"
-                                    label="Delete"
+                                    label=""
                                     type="delete"
                                     icon="fas fa-trash"
                                     @click="openModal('delete', profile)"

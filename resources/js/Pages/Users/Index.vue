@@ -105,9 +105,7 @@ const isCurrentProfile = (profileId, userProfiles) => {
                         <th class="users__table-header-cell">Name</th>
                         <th class="users__table-header-cell">Email</th>
                         <th class="users__table-header-cell">Profiles</th>
-                        <th v-if="props.canEditUser || props.canDeleteUser" class="users__table-header-cell">
-                            Actions
-                        </th>
+                        <th v-if="props.canEditUser || props.canDeleteUser" class="users__table-header-cell"></th>
                     </tr>
                     </thead>
                     <tbody class="users__table-body">
@@ -130,14 +128,14 @@ const isCurrentProfile = (profileId, userProfiles) => {
                                 <SecondaryButton
                                     v-if="props.canEditUser"
                                     type="submit"
-                                    label="Edit"
+                                    label=""
                                     @click="openModal('edit', user)"
                                     icon="fas fa-edit"
                                 />
                                 <SecondaryButton
                                     v-if="props.canDeleteUser"
                                     type="delete"
-                                    label="Delete"
+                                    label=""
                                     @click="openModal('delete', user)"
                                     icon="fas fa-trash"
                                 />
