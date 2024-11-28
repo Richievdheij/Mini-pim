@@ -25,21 +25,42 @@
         width: 3rem;
 
         &__checkbox {
-            display: none; /* Verbergt de checkbox */
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute; // Invisible but functional
+        }
+
+        &__button {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(220, 220, 220, 1);
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+
+            &::before {
+                position: absolute;
+                content: "";
+                height: 1.1rem; // Slightly larger thumb
+                width: 1.1rem;
+                left: 0.2rem;
+                bottom: 0.2rem;
+                background-color: white;
+                border-radius: 50%;
+                transition: transform 0.4s;
+            }
         }
 
         &__checkbox:checked + &__button {
             background-color: rgba(86, 122, 197, 1);
-            transform: translateX(1.5rem);
         }
 
-        &__button {
-            background-color: rgba(255, 255, 255, 1);
-            border-radius: 50%;
-            height: 1rem;
-            position: absolute;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            width: 1rem;
+        &__checkbox:checked + &__button::before {
+            transform: translateX(1.4rem); // Adjust thumb position for checked state
         }
     }
 
@@ -59,4 +80,71 @@
         justify-content: space-between;
         margin: 0 0 1rem;
     }
+
+    &__table {
+        width: auto;
+        border-collapse: collapse;
+
+        &-header {
+            color: #fff; // White text
+            font-weight: bold;
+            text-align: left;
+
+            &-cell {
+                width: 12rem;
+                color: #fff;
+                border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
+                text-align: center;
+                font-size: 1rem; // Standardized font size
+            }
+        }
+
+        &-row {
+            &:hover {
+                background-color: rgba(245, 245, 245, 1);
+            }
+        }
+
+        &-cell {
+            padding: 0.5rem;
+            border-bottom: 0.06rem solid rgba(0, 0, 0, 0.02);
+            text-align: center;
+            vertical-align: middle;
+
+            &:first-child {
+                text-align: left;
+            }
+        }
+    }
+
+    &__category {
+        background-color: rgba(240, 240, 240, 1);
+        font-weight: bold;
+        padding: 0.5rem;
+        font-size: 1rem;
+        text-align: left;
+        border-top: 0.1rem solid rgba(0, 0, 0, 0.1);
+        border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
+        cursor: pointer; // Indicate interactivity for expanding/collapsing
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: rgba(230, 230, 230, 1); // Lighter hover effect
+        }
+
+        &-icon {
+            margin-right: 0.5rem; // Space between icon and text
+        }
+    }
+
+    &__category-row {
+        &:hover {
+            background-color: rgba(245, 245, 245, 1);
+        }
+    }
+
+    &__category + &__table-row {
+        margin-top: 0.5rem; // Ensure spacing between categories
+    }
+
 }

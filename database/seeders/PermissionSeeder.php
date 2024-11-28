@@ -10,26 +10,26 @@ class PermissionSeeder extends Seeder
     public function run()
     {
         $permissions = [
-            ['name' => 'view_pim', 'description' => 'View PIM module'],
-            ['name' => 'edit_pim', 'description' => 'Edit PIM module'],
-            ['name' => 'delete_pim', 'description' => 'Delete PIM module'],
-            ['name' => 'view_users', 'description' => 'View users list'],
-            ['name' => 'edit_users', 'description' => 'Edit users'],
-            ['name' => 'delete_users', 'description' => 'Delete users'],
-            ['name' => 'manage_permissions', 'description' => 'Manage permissions'],
-            ['name' => 'view_reports', 'description' => 'View reports'],
-            ['name' => 'generate_reports', 'description' => 'Generate reports'],
-            ['name' => 'export_data', 'description' => 'Export data'],
-            ['name' => 'view_dashboard', 'description' => 'Access the dashboard'],
-            ['name' => 'create_users', 'description' => 'Create a new user'],
-            ['name' => 'create_profiles', 'description' => 'Create profiles'],
-            ['name' => 'edit_profiles', 'description' => 'Edit profiles'],
-            ['name' => 'delete_profiles', 'description' => 'Delete profiles'],
-            ['name' => 'view_profiles', 'description' => 'View profiles'],
+            ['name' => 'view_pim', 'title' => 'View PIM', 'description' => 'View PIM module'],
+            ['name' => 'edit_pim', 'title' => 'Edit PIM', 'description' => 'Edit PIM module'],
+            ['name' => 'delete_pim', 'title' => 'Delete PIM', 'description' => 'Delete PIM module'],
+            ['name' => 'view_users', 'title' => 'View Users', 'description' => 'View users list'],
+            ['name' => 'edit_users', 'title' => 'Edit Users', 'description' => 'Edit users'],
+            ['name' => 'delete_users', 'title' => 'Delete Users', 'description' => 'Delete users'],
+            ['name' => 'manage_permissions', 'title' => 'Manage Permissions', 'description' => 'Manage permissions'],
+            ['name' => 'view_reports', 'title' => 'View Reports', 'description' => 'View reports'],
+            ['name' => 'generate_reports', 'title' => 'Generate Reports', 'description' => 'Generate reports'],
+            ['name' => 'export_data', 'title' => 'Export Data', 'description' => 'Export data'],
+            ['name' => 'view_dashboard', 'title' => 'View Dashboard', 'description' => 'Access the dashboard'],
+            ['name' => 'create_users', 'title' => 'Create Users', 'description' => 'Create a new user'],
+            ['name' => 'create_profiles', 'title' => 'Create Profiles', 'description' => 'Create profiles'],
+            ['name' => 'edit_profiles', 'title' => 'Edit Profiles', 'description' => 'Edit profiles'],
+            ['name' => 'delete_profiles', 'title' => 'Delete Profiles', 'description' => 'Delete profiles'],
+            ['name' => 'view_profiles', 'title' => 'View Profiles', 'description' => 'View profiles'],
         ];
 
         foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission['name']], $permission);
+            Permission::updateOrCreate(['name' => $permission['name']], $permission);
         }
     }
 }

@@ -11,7 +11,7 @@ const props = defineProps({
         required: true,
     },
     permissions: {
-        type: Array,
+        type: Object, // Permissions grouped by categories
         required: true,
     },
 });
@@ -19,11 +19,19 @@ const props = defineProps({
 const { success, error } = useNotifications(); // Use notification plugin
 
 const searchQuery = ref("");
+const expandedCategories = ref([]); // Track which categories are expanded
 
 const filteredPermissions = computed(() => {
-    return props.permissions.filter((permission) =>
-        permission.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
+    const result = {};
+    Object.keys(props.permissions).forEach((category) => {
+        const filtered = props.permissions[category].filter((permission) =>
+            permission.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+        );
+        if (filtered.length > 0) {
+            result[category] = filtered;
+        }
+    });
+    return result;
 });
 
 function hasPermission(profile, permission) {
@@ -40,7 +48,9 @@ function togglePermission(profileId, permissionId) {
     form.permission_id = permissionId;
 
     const profile = props.profiles.find((p) => p.id === profileId);
-    const permission = props.permissions.find((p) => p.id === permissionId);
+    const permission = Object.values(props.permissions)
+        .flat()
+        .find((p) => p.id === permissionId);
 
     const action = hasPermission(profile, permission) ? "removed from" : "added to";
 
@@ -54,6 +64,14 @@ function togglePermission(profileId, permissionId) {
         },
     });
 }
+
+function toggleCategory(category) {
+    if (expandedCategories.value.includes(category)) {
+        expandedCategories.value = expandedCategories.value.filter((c) => c !== category);
+    } else {
+        expandedCategories.value.push(category);
+    }
+}
 </script>
 
 <template>
@@ -62,7 +80,7 @@ function togglePermission(profileId, permissionId) {
     <AuthenticatedLayout>
         <div class="user-rights">
             <div class="user-rights__header">
-                <h1 class="user-rights__title">User rights</h1>
+                <h1 class="user-rights__title">User Rights</h1>
             </div>
 
             <div class="user-rights__section">
@@ -81,7 +99,7 @@ function togglePermission(profileId, permissionId) {
                 <table class="user-rights__table">
                     <thead>
                     <tr class="user-rights__table-header">
-                        <th class="user-rights__table-header-cell">Rights</th>
+                        <th class="user-rights__table-header-cell">Category / Rights</th>
                         <th
                             v-for="profile in props.profiles"
                             :key="profile.id"
@@ -91,28 +109,51 @@ function togglePermission(profileId, permissionId) {
                         </th>
                     </tr>
                     </thead>
-                    <tbody class="user-rights__table-body">
-                    <tr
-                        v-for="permission in filteredPermissions"
-                        :key="permission.id"
-                        class="user-rights__table-row"
-                    >
-                        <td class="user-rights__table-cell">{{ permission.name }}</td>
-                        <td
-                            v-for="profile in props.profiles"
-                            :key="profile.id"
-                            class="user-rights__table-cell"
+                    <tbody>
+                    <!-- Loop through categories -->
+                    <template v-for="(permissions, category) in filteredPermissions" :key="category">
+                        <!-- Category Row -->
+                        <tr
+                            class="user-rights__category-row"
+                            @click="toggleCategory(category)"
                         >
-                            <label class="user-rights__slider">
-                                <input
-                                    type="checkbox"
-                                    :checked="hasPermission(profile, permission)"
-                                    @change="togglePermission(profile.id, permission.id)"
-                                />
-                                <span class="user-rights__slider-button"></span>
-                            </label>
-                        </td>
-                    </tr>
+                            <td colspan="100%" class="user-rights__category">
+                                <strong>
+                                    <i
+                                        :class="[expandedCategories.includes(category) ? 'fas fa-minus' : 'fas fa-plus']"
+                                        class="user-rights__category-icon"
+                                    ></i>
+                                    {{ category }}
+                                </strong>
+                            </td>
+                        </tr>
+
+                        <!-- Permissions within each category -->
+                        <template v-if="expandedCategories.includes(category)">
+                            <tr
+                                v-for="permission in permissions"
+                                :key="permission.id"
+                                class="user-rights__table-row"
+                            >
+                                <td class="user-rights__table-cell">{{ permission.title || permission.name }}</td>
+                                <td
+                                    v-for="profile in props.profiles"
+                                    :key="profile.id"
+                                    class="user-rights__table-cell"
+                                >
+                                    <label class="user-rights__slider">
+                                        <input
+                                            type="checkbox"
+                                            class="user-rights__slider__checkbox"
+                                            :checked="hasPermission(profile, permission)"
+                                            @change="togglePermission(profile.id, permission.id)"
+                                        />
+                                        <span class="user-rights__slider__button"></span>
+                                    </label>
+                                </td>
+                            </tr>
+                        </template>
+                    </template>
                     </tbody>
                 </table>
             </div>
