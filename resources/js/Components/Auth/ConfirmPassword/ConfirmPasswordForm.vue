@@ -3,6 +3,9 @@ import { useForm } from '@inertiajs/vue3';
 import ConfirmPasswordFormInput from '@/Components/Auth/ConfirmPassword/ConfirmPasswordFormInput.vue';
 import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 import GoBackLoginLink from "@/Components/Auth/GoBackLoginLink.vue";
+import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
+
+const { success, error } = useNotifications(); // Destructure success and error notifications
 
 // Props for email and token
 const props = defineProps({
@@ -27,6 +30,12 @@ const form = useForm({
 // Handle form submission
 const submit = () => {
     form.post(route('password.store'), {
+        onSuccess: () => {
+            success('Password reset successfully! 🎉');
+        },
+        onError: () => {
+            error('Failed to reset password. Please try again. ❌');
+        },
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
 };

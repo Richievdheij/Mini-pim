@@ -1,7 +1,6 @@
 <script setup>
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import ForgotPasswordForm from "@/Components/Auth/ForgotPassword/ForgotPasswordForm.vue";
-import Notification from '@/Components/General/Notification.vue';
 import { ref } from 'vue';
 
 const notification = ref({

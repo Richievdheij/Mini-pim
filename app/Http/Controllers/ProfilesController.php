@@ -77,7 +77,7 @@ class ProfilesController extends Controller
             $profile->permissions()->sync($request->permissions);
         }
 
-        return redirect()->route('profiles.index')->with('success', 'Profile created successfully.');
+        return redirect()->route('profiles.index'); // Removed flash message
     }
 
     /**
@@ -126,7 +126,7 @@ class ProfilesController extends Controller
         // Sync the permissions for the profile
         $profile->permissions()->sync($request->permissions);
 
-        return redirect()->route('profiles.index')->with('success', 'Profile updated successfully.');
+        return redirect()->route('profiles.index'); // Removed flash message
     }
 
     /**
@@ -139,11 +139,17 @@ class ProfilesController extends Controller
     {
         $this->authorizeAction('delete_profiles');
 
-        // Delete the profile
+        if ($profile->users()->exists()) {
+            return back()->withErrors([
+                'error' => 'This profile cannot be deleted because it is assigned to one or more users.',
+            ]);
+        }
+
         $profile->delete();
 
-        return redirect()->route('profiles.index')->with('success', 'Profile deleted successfully.');
+        return back(); // Removed flash message
     }
+
 
     /**
      * Check if the current user has permission to perform an action.

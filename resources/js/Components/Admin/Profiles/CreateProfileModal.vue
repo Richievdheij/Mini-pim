@@ -1,6 +1,7 @@
 <script setup>
-import { useForm } from "@inertiajs/vue3";
-import { watch } from "vue";
+import {useForm} from "@inertiajs/vue3";
+import {watch} from "vue";
+import {useNotifications} from "@/plugins/notificationPlugin"; // Import centralized notification plugin
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
@@ -9,6 +10,8 @@ const props = defineProps({
     isOpen: Boolean,
 });
 const emit = defineEmits(["close"]);
+
+const {success, error} = useNotifications(); // Use notifications
 
 const form = useForm({
     name: "",
@@ -31,9 +34,16 @@ function closeModal() {
 }
 
 function submit() {
+    const { success, error } = useNotifications(); // Simplified usage
+
     form.post(route("profiles.store"), {
-        preserveScroll: true,
-        onSuccess: () => closeModal(),
+        onSuccess: () => {
+            success("Profile created successfully!");
+            closeModal();
+        },
+        onError: () => {
+            error("Failed to create profile.");
+        },
     });
 }
 </script>

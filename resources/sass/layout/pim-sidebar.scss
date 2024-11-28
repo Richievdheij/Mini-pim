@@ -11,13 +11,30 @@
     transition: width 0.3s ease-in-out;
     width: 20rem;
 
-    // Styles when the sidebar is collapsed
+    // Default expanded mode
+    .sidebar-general-section span,
+    .sidebar-manage-section span,
+    .sidebar-account-section span {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0); /* Reset slide effect */
+        transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    }
+
+    .sidebar-general-section__title,
+    .sidebar-manage-section__title,
+    .sidebar-account-section__title {
+        max-width: 100%;
+        transition: max-width 0.3s ease;
+    }
+
     &--collapsed {
         width: 4rem;
 
         // Adjust padding for main section when collapsed
         .sidebar-main-section {
             overflow: hidden;
+
             &__logo {
                 max-width: 2rem;
                 max-height: 2rem;
@@ -34,32 +51,25 @@
         .sidebar-manage-section span,
         .sidebar-account-section span {
             opacity: 0;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
             visibility: hidden;
+            transform: translateX(-1rem); /* Slide effect */
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
         }
 
-        // Hide the section title
-        .sidebar-general-section-title {
-            display: none;
-        }
-
-        // Align chevron icons to center in collapsed mode
-        .sidebar-general-section__chevron,
-        .sidebar-manage-section__chevron,
-        .sidebar-account-section__chevron {
-            flex-shrink: 0;
-            justify-content: center;
-            margin-left: 0;
-        }
-
-        // Adjust collapsed section title layout
+        // Smoothly hide section titles
         .sidebar-general-section__title,
         .sidebar-manage-section__title,
         .sidebar-account-section__title {
-            align-items: flex-end;
-            display: flex;
-            flex-direction: column;
-            padding: 0.5rem 1.45rem;
+            overflow: hidden;
+            white-space: nowrap;
+            transition: max-width 0.3s ease;
+        }
+
+        // Collapsed Sidebar Dividers
+        .sidebar-profile-section__divider,
+        .sidebar-general-section__divider,
+        .sidebar-manage-section__divider {
+            width: 100%; /* Ensure full width in collapsed state */
         }
     }
 
@@ -111,10 +121,16 @@
         }
 
         // Styles for the active button
-        &--active {
+        &.active {
             background-color: rgba(86, 122, 197, 0.25);
             color: rgba(86, 122, 197, 1);
             font-weight: bold;
+
+            .sidebar-account-section__icon,
+            .sidebar-general-section__icon,
+            .sidebar-manage-section__icon {
+                color: rgba(86, 122, 197, 1);
+            }
         }
     }
 
@@ -145,18 +161,25 @@
         overflow: hidden;
         padding: 0.5rem 1rem;
         width: 100%;
+        transition: background 0.3s ease;
+    }
+
+    // Divider styles for each section
+    &__divider {
+        background-color: rgba(200, 200, 200, 1); /* Divider color */
+        height: 0.06rem; /* Divider height */
+        width: 100%; /* Full width */
+        margin: 0 auto; /* Center alignment */
+        transition: width 0.3s ease; /* Smooth transition for sidebar toggle */
     }
 }
 
-.sidebar-account-section {
-    margin-top: auto;
-}
 // Main section container styles
 .sidebar-main-section {
     &__button-container {
         align-items: center;
         display: flex;
-        padding: 1rem 1rem;
+        padding: 1rem 1rem 1rem 1rem;
         transition: padding 0.3s ease;
 
         &--collapsed {
@@ -243,6 +266,7 @@
 
 // Profile section styles in the sidebar
 .sidebar-profile-section {
+    margin-top: auto;
 
     // Content layout for the profile section
     &__content {
@@ -253,27 +277,12 @@
         padding: 2.75rem 1rem;
     }
 
-    // Divider line in the profile section
+    // Divider line for the profile section
     &__divider {
-        background-color: rgba(200, 200, 200, 1);
-        height: 0.06rem;
-    }
-
-    // Container for user info in the profile section
-    &__info {
-        display: flex;
-        flex-direction: column;
-    }
-
-    // Styling for the user's name
-    &__name {
-        color: rgba(0, 0, 0, 1);
-        font-size: 1rem;
-    }
-
-    // Styling for the user's rank or position
-    &__rank {
-        color: rgba(100, 100, 100, 1);
-        font-size: 0.875rem;
+        background-color: rgba(200, 200, 200, 1); /* Divider color */
+        height: 0.06rem; /* Divider height */
+        width: 100%; /* Full width */
+        margin: 0 auto; /* Center alignment */
+        transition: width 0.3s ease; /* Smooth transition for sidebar toggle */
     }
 }

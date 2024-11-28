@@ -4,6 +4,9 @@ import { watch } from 'vue';
 import Input from '@/Components/General/Input.vue';
 import SecondaryButton from '@/Components/General/SecondaryButton.vue';
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
+import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
+
+const { success, error } = useNotifications(); // Destructure success and error notifications
 
 const props = defineProps({
     user: Object,
@@ -41,7 +44,11 @@ function submit() {
     form.put(`/users/${props.user.id}`, {
         preserveScroll: true,
         onSuccess: () => {
+            success(`User ${props.user.name} updated successfully! 🎉`);
             closeModal();
+        },
+        onError: () => {
+            error("Failed to update user. Please try again. ❌");
         },
     });
 }

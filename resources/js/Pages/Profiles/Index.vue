@@ -1,6 +1,7 @@
 <script setup>
-import { ref, computed } from "vue";
-import { Head } from "@inertiajs/vue3";
+import {ref, computed} from "vue";
+import {Head, usePage} from "@inertiajs/vue3";
+import {useNotifications} from "@/plugins/notificationPlugin"; // Use centralized notification plugin
 import CreateProfileModal from "@/Components/Admin/Profiles/CreateProfileModal.vue";
 import EditProfileModal from "@/Components/Admin/Profiles/EditProfileModal.vue";
 import DeleteProfileModal from "@/Components/Admin/Profiles/DeleteProfileModal.vue";
@@ -16,6 +17,10 @@ const props = defineProps({
     canDeleteProfile: Boolean,
     canCreateProfile: Boolean,
 });
+
+const page = usePage();
+const {success, error} = useNotifications(); // Use notifications
+const flash = page.props.flash;
 
 const isEditModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
@@ -114,6 +119,7 @@ const sortedProfiles = computed(() => {
             <!-- Section -->
             <div class="profiles__section">
                 <div class="profiles__top-bar">
+                    <!-- Create Profiles Button -->
                     <div class="profiles__create-button" v-if="props.canCreateProfile">
                         <PrimaryButton
                             label="Create New Profile"
@@ -123,6 +129,7 @@ const sortedProfiles = computed(() => {
                         />
                     </div>
 
+                    <!-- Search Bar -->
                     <div class="profiles__search-bar">
                         <Input
                             type="search"
