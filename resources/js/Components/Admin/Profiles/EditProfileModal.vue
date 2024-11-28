@@ -47,11 +47,11 @@ function submit() {
     form.put(route("profiles.update", props.profile.id), {
         preserveScroll: true,
         onSuccess: () => {
-            success(`Profile "${form.name}" updated successfully! 🎉`); // Show success notification
+            success(`Profile "${form.name}" updated successfully!`); // Show success notification
             closeModal(); // Close modal after success
         },
         onError: () => {
-            error("Failed to update profile. Please try again. ❌"); // Show error notification
+            error("Failed to update profile. Please try again."); // Show error notification
         },
     });
 }

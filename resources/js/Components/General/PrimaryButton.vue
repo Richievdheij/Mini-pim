@@ -30,12 +30,10 @@ const buttonType = computed(() => {
 <template>
     <button :class="buttonType" type="submit">
         <!-- Add icon if provided -->
-        <div class="button__icon-container">
             <i
                 v-if="icon"
                 :class="icon">
             </i>
-        </div>
             {{ label }}
     </button>
 </template>

@@ -42,11 +42,11 @@ function submit() {
     form.post("/users", {
         preserveScroll: true,
         onSuccess: () => {
-            success("User created successfully! 🎉");
+            success("User created successfully!");
             closeModal();
         },
         onError: () => {
-            error("Failed to create user. Please try again. ❌");
+            error("Failed to create user. Please try again.");
         },
     });
 }

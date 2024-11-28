@@ -174,12 +174,16 @@
     }
 }
 
+.sidebar-account-section {
+    margin-top: auto;
+}
+
 // Main section container styles
 .sidebar-main-section {
     &__button-container {
         align-items: center;
         display: flex;
-        padding: 1rem 1rem 1rem 1rem;
+        padding: 1rem;
         transition: padding 0.3s ease;
 
         &--collapsed {
@@ -266,7 +270,6 @@
 
 // Profile section styles in the sidebar
 .sidebar-profile-section {
-    margin-top: auto;
 
     // Content layout for the profile section
     &__content {
@@ -277,12 +280,27 @@
         padding: 2.75rem 1rem;
     }
 
-    // Divider line for the profile section
+    // Divider line in the profile section
     &__divider {
-        background-color: rgba(200, 200, 200, 1); /* Divider color */
-        height: 0.06rem; /* Divider height */
-        width: 100%; /* Full width */
-        margin: 0 auto; /* Center alignment */
-        transition: width 0.3s ease; /* Smooth transition for sidebar toggle */
+        background-color: rgba(200, 200, 200, 1);
+        height: 0.06rem;
+    }
+
+    // Container for user info in the profile section
+    &__info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    // Styling for the user's name
+    &__name {
+        color: rgba(0, 0, 0, 1);
+        font-size: 1rem;
+    }
+
+    // Styling for the user's rank or position
+    &__rank {
+        color: rgba(100, 100, 100, 1);
+        font-size: 0.875rem;
     }
 }

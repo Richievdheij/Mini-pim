@@ -1,10 +1,9 @@
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps } from 'vue';
 import { useForm, Link } from '@inertiajs/vue3';
 
 const form = useForm({});
 const props = defineProps(['isAccountExpanded', 'isSidebarExpanded']);
-const emit = defineEmits(['toggle-section', 'logout']);
 
 function logout() {
     form.post(route('logout'));
@@ -14,11 +13,8 @@ function logout() {
 <template>
     <div class="sidebar-account-section">
         <h3 class="sidebar-account-section__title"
-            @click="$emit('toggle-section', 'account')"
             :class="{ 'sidebar-account-section__title--disabled': !isSidebarExpanded }">
             <span class="sidebar-general-section-title">Account</span>
-            <i class="sidebar-account-section__chevron fas"
-               :class="isAccountExpanded ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
         </h3>
 
         <div class="sidebar-account-section__button-container" v-if="isAccountExpanded">

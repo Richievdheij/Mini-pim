@@ -1,7 +1,7 @@
 <script setup>
 import {ref, computed} from "vue";
 import {Head, usePage} from "@inertiajs/vue3";
-import {useNotifications} from "@/plugins/notificationPlugin"; // Use centralized notification plugin
+import { useNotifications } from "@/plugins/notificationPlugin";
 import CreateProfileModal from "@/Components/Admin/Profiles/CreateProfileModal.vue";
 import EditProfileModal from "@/Components/Admin/Profiles/EditProfileModal.vue";
 import DeleteProfileModal from "@/Components/Admin/Profiles/DeleteProfileModal.vue";
@@ -19,7 +19,7 @@ const props = defineProps({
 });
 
 const page = usePage();
-const {success, error} = useNotifications(); // Use notifications
+const { success, error } = useNotifications(); // Use notifications
 const flash = page.props.flash;
 
 const isEditModalOpen = ref(false);

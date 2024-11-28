@@ -50,7 +50,7 @@ function closeModal(modalType) {
     if (modalType === "edit") {
         isEditModalOpen.value = false;
     } else if (modalType === "delete") {
-        isDeleteModal.value = false;
+        isDeleteModalOpen.value = false;
     } else if (modalType === "create") {
         isCreateModalOpen.value = false;
     }

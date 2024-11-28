@@ -24,15 +24,15 @@ function closeModal() {
     emit("close");
 }
 
-function deleteProfile(profile) {
+function deleteProfile() {
     // Send delete request
     form.delete(route("profiles.destroy", props.profile.id), {
         onSuccess: () => {
-            success("Profile deleted successfully! 🎉"); // Success notification
+            success("Profile deleted successfully!"); // Success notification
             closeModal("delete");
         },
         onError: () => {
-            error("Failed to delete profile. ❌"); // Error notification
+            error("Failed to delete profile."); // Error notification
         },
     });
 }
