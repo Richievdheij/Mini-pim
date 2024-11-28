@@ -77,7 +77,7 @@
         transition: background 0.3s ease;
 
         &:hover {
-            background-color: rgba(200, 200, 200, 1);
+            background-color: rgba(128, 128, 128, 0.2);
         }
 
         i {
@@ -109,7 +109,14 @@
         width: 100%;
 
         &:hover {
-            background-color: rgba(200, 200, 200, 0.3);
+            background-color: rgba(86, 122, 197, 0.25);
+        }
+
+        // Styles for the active button
+        &--active {
+            background-color: rgba(86, 122, 197, 0.25);
+            color: rgba(86, 122, 197, 1);
+            font-weight: bold;
         }
     }
 
@@ -167,8 +174,8 @@
         width: 100%;
         text-align: left;
 
-        &:hover {
-            background-color: rgba(220, 220, 220, 0.5);
+        &--collapsed {
+            pointer-events: none;
         }
     }
 
@@ -201,14 +208,7 @@
         .sidebar-main-section__text {
             font-size: 1rem;
             font-weight: bold;
-            color: rgba(0, 0, 0, 1);
         }
-    }
-
-    &__chevron {
-        font-size: 1rem;
-        margin-left: auto;
-        transition: transform 0.3s ease;
     }
 
     &__dropdown {
@@ -226,6 +226,7 @@
             cursor: pointer;
             padding: 0.75rem 1.5rem;
             text-align: left;
+            transition: 0.3s;
 
             &:hover {
                 background-color: rgba(220, 220, 220, 0.5);

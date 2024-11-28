@@ -105,9 +105,7 @@ const isCurrentProfile = (profileId, userProfiles) => {
                         <th class="users__table-header-cell">Name</th>
                         <th class="users__table-header-cell">Email</th>
                         <th class="users__table-header-cell">Profiles</th>
-                        <th v-if="props.canEditUser || props.canDeleteUser" class="users__table-header-cell">
-                            Actions
-                        </th>
+                        <th v-if="props.canEditUser || props.canDeleteUser" class="users__table-header-cell"></th>
                     </tr>
                     </thead>
                     <tbody class="users__table-body">

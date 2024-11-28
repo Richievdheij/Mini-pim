@@ -11,7 +11,7 @@
     &__table-actions {
         display: flex;
         gap: 0.2rem;
-        justify-content: flex-start;
+        justify-content: flex-end;
     }
 
     &__table-body {
@@ -36,8 +36,15 @@
         text-align: left;
     }
 
-    &__table-header-cell:last-child,
-    &__table-cell:last-child {
+    // Remove border-right for Users and keep it for others
+    .users__table-header-cell:nth-child(3),
+    .users__table-cell:nth-child(3) {
+        border-right: none;
+    }
+
+    // Remove border-right for actions column in profiles
+    .profiles__table-header-cell:nth-child(1),
+    .profiles__table-cell:nth-child(1) {
         border-right: none;
     }
 

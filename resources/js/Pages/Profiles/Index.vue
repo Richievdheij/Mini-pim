@@ -93,9 +93,7 @@ const filteredProfiles = computed(() =>
                     <thead>
                     <tr class="profiles__table-header">
                         <th class="profiles__table-header-cell">Name</th>
-                        <th v-if="props.canEditProfile || props.canDeleteProfile" class="profiles__table-header-cell">
-                            Actions
-                        </th>
+                        <th v-if="props.canEditProfile || props.canDeleteProfile" class="profiles__table-header-cell"></th>
                     </tr>
                     </thead>
                     <tbody class="profiles__table-body">
