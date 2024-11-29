@@ -34,11 +34,6 @@ const toggleSection = (section) => {
             :isSidebarExpanded="isSidebarExpanded"
         />
 
-        <!-- Sidebar Toggle Button -->
-        <div class="sidebar__toggle" @click="toggleSidebar">
-            <i class="sidebar__icon fas" :class="isSidebarExpanded ? 'fa-angle-left' : 'fa-angle-right'"></i>
-        </div>
-
         <!-- General Section -->
         <GeneralSection
             :isGeneralExpanded="isGeneralExpanded"
@@ -52,6 +47,15 @@ const toggleSection = (section) => {
             :isSidebarExpanded="isSidebarExpanded"
             @toggle-section="toggleSection"
         />
+
+        <!-- Sidebar Toggle Button -->
+        <div class="sidebar__toggler">
+            <div class="sidebar__toggle" @click="toggleSidebar">
+                <div class="sidebar__toggle-circle">
+                    <i class="sidebar__toggle-icon fas fa-angle-left"></i>
+                </div>
+            </div>
+        </div>
 
         <!-- Account Section -->
         <AccountSection

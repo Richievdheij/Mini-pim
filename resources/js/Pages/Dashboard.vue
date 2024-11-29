@@ -15,7 +15,7 @@ const user = props.user;
         <div class="dashboard">
 
             <!-- Main content area for dashboard on the right -->
-            <div class="dashboard__content">
+            <main class="dashboard__content">
                 <h2 class="dashboard__header">Dashboard</h2>
 
                 <!-- Buttons inside the dashboard content area -->
@@ -25,7 +25,7 @@ const user = props.user;
                         You are logged in as: <strong>{{ user.name }}</strong>
                     </p>
                 </div>
-            </div>
+            </main>
         </div>
     </AuthenticatedLayout>
 </template>
