@@ -1,0 +1,71 @@
+.users,
+.profiles,
+.user-rights {
+    &__table {
+        border-collapse: collapse;
+        table-layout: fixed;
+        text-align: left;
+        width: 100%;
+    }
+
+    &__table-actions {
+        display: flex;
+        gap: 0.2rem;
+        justify-content: flex-end;
+    }
+
+    &__table-body {
+        background-color: rgba(255, 255, 255, 1);
+    }
+
+    &__table-cell,
+    &__table-header-cell {
+        border-bottom: 0.06rem solid rgba(0, 0, 0, 0.1);
+        border-right: 0.06rem solid rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        padding: 0.5rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__table-header-cell i {
+        margin-left: 0.5rem;
+        cursor: pointer;
+    }
+
+
+    &__table-header {
+        background-color: rgb(86, 122, 197);
+        border-bottom: 0.3rem solid rgba(0, 0, 0, 0.1);
+        color: rgba(255, 255, 255, 1);
+        font-weight: bold;
+        text-align: left;
+    }
+
+    // Remove border-right for Users and keep it for others
+    .users__table-header-cell:nth-child(3),
+    .users__table-cell:nth-child(3) {
+        border-right: none;
+    }
+
+    // Remove border-right for actions column in profiles
+    .profiles__table-header-cell:nth-child(1),
+    .profiles__table-cell:nth-child(1) {
+        border-right: none;
+    }
+
+    &__table-row {
+        transition: background-color 0.3s ease;
+
+        &:hover {
+            background-color: rgb(233, 232, 239);
+        }
+    }
+
+    &__top-bar {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+        margin: 0 0 1rem;
+    }
+}

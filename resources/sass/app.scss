@@ -1,18 +1,53 @@
+* {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
 // PIM
+// Font
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
 // Auth
-@import "auth/pim-confirm-password";
+@import "auth/pim-email";
 @import "auth/pim-forgot-password";
-@import "auth/pim-login";
+//@import "auth/pim-verify-email";
 
 // Components
 @import "components/pim-button";
 @import "components/pim-checkbox";
+@import "components/pim-filter";
 @import "components/pim-input";
+@import "components/pim-modal";
+@import 'components/pim-notification';
+@import "components/pim-searchbar";
 
 // Dashboard
-@import "dashboard/pim-manager";
+@import "dashboard/pim-dashboard";
 
 // Layout
+@import "layout/pim-crud-table";
+@import "layout/pim-footer";
 @import "layout/pim-layout";
 @import "layout/pim-navbar";
 @import "layout/pim-sidebar";
+
+// Manager
+// -- General
+// // -- Profiles
+@import "manager/general/profiles/pim-profiles.scss";
+// // -- User rights
+@import "manager/general/user-rights/pim-user-rights.scss";
+// // -- Users
+@import "manager/general/users/pim-users.scss";
+// -- Manage
+// // -- Logs
+@import "manager/manage/logs/pim-logs.scss";
+// // -- Settings
+@import "manager/manage/settings/pim-settings.scss";
+
+// PIM
+
+// Profile
+@import "profile/pim-profile";
+

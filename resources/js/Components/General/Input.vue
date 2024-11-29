@@ -1,59 +1,97 @@
 <script setup>
 import { defineProps, computed } from 'vue';
+
 const props = defineProps({
-  label: String,         // Label text for InputLabel
-  placeholder: String,   // Placeholder for InputField
-  inputType: String,     // Type of the input field, e.g., 'text', 'password'
-  message: String,       // Error message for InputError
-  type: {
-    type: String,
-    required: true,      // Can be 'error', 'field', or 'label'
-  },
-  modelValue: String,    // v-model value from parent component (form data)
+    error: String,
+    inputType: String,
+    label: String,
+    message: String,
+    modelValue: [String, Array],
+    multiple: Boolean,
+    options: {
+        type: Array,
+        default: () => [],
+    },
+    placeholder: String,
+    type: {
+        type: String,
+        required: true,
+    },
+    icon: String,
 });
 
-// Emit event to update v-model
 const emit = defineEmits(['update:modelValue']);
 
-// Computed class to apply based on the input type (error, field, or label)
+// Compute the input class based on the type and status
 const inputClass = computed(() => {
-  let type = 'input input__body';
-  if (props.message) {
-    type += ' input__body--error';
-  }
-  if (props.type === 'field') {
-    type += ' input__body--field';
-  }
-  if (props.type === 'label') {
-    type += ' input__body--label';
-  }
-  return type;
-});
-
-const hasErrorMessage = computed(() => {
-    return !!props.message
+    let type = 'input input__body';
+    if (props.error) {
+        type += ' input__body--error';
     }
-)
-</script>
-<template>
-  <div :class="inputClass">
-    <!-- If type is 'label', display the input label -->
-    <label v-if="label">
-      {{ label }}
-    </label>
+    if (props.success) {
+        type += ' input__body--success';
+    }
+    if (props.type === 'field') {
+        type += ' input__body--field';
+    }
+    if (props.type === 'select') {
+        type += ' input__body--select';
+    }
+    if (props.type === 'search') {
+        type += ' input__body--search';
+    }
 
-    <!-- If type is 'field', display the input field -->
-    <input
-      v-if="type === 'field'"
-      :type="inputType"
-      :placeholder="placeholder"
-      class="input__field"
-      :value="modelValue"
-      @input="$emit('update:modelValue', $event.target.value)"
-    />
-    <!-- If type is 'error', display the error message -->
-    <div v-if="type === 'error'" class="input__error">
-      <p>{{ message }}</p>
+    return type;
+});
+</script>
+
+<template>
+    <div :class="inputClass">
+        <label v-if="label">
+            {{ label }}
+        </label>
+
+        <!-- Select Field -->
+        <select
+            v-if="type === 'select'"
+            class="input__select"
+            :multiple="multiple"
+            :value="modelValue"
+            @change="$emit('update:modelValue', Array.from($event.target.selectedOptions, option => option.value))"
+        >
+            <option
+                v-for="option in options"
+                :key="option.id || option"
+                :value="option.id || option"
+            >
+                {{ option.name || option }}
+            </option>
+        </select>
+
+        <!-- Search Field -->
+        <input
+            v-if="type === 'search'"
+            :type="inputType"
+            :placeholder="placeholder"
+            class="input__search"
+            :value="modelValue"
+            @input="$emit('update:modelValue', $event.target.value)"
+        />
+
+        <!-- Field Input -->
+        <input
+            v-if="type === 'field'"
+            :type="inputType"
+            :placeholder="placeholder"
+            class="input__field"
+            :class="{ 'has-value': modelValue }"
+            :value="modelValue"
+            @input="$emit('update:modelValue', $event.target.value)"
+        />
+
+        <!-- Error or Success Message Container -->
+        <div class="input__message-container">
+            <p class="input__error" v-if="error">{{ error }}</p>
+        </div>
     </div>
-  </div>
 </template>

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\ConfirmablePasswordController;
+use App\Http\Controllers\Auth\ConfirmPasswordController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -22,6 +22,7 @@ Route::middleware('guest')->group(function () {
         ->name('login');
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
+
     // Forgot password routes
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
@@ -32,7 +33,9 @@ Route::middleware('guest')->group(function () {
     Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
         ->name('password.reset');
     Route::post('reset-password', [NewPasswordController::class, 'store'])
-        ->name('password.store');
+        ->name('password.reset.update');  // Ensure this matches your form submission
+    Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.store');
+
 });
 
 Route::middleware('auth')->group(function () {
@@ -46,15 +49,11 @@ Route::middleware('auth')->group(function () {
         ->middleware('throttle:6,1')
         ->name('verification.send');
 
-    // Password confirmation routes
-    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
-        ->name('password.confirm');
-    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
-
-    // Password update routes
-    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+    // Password update routes for logged-in users
+    Route::post('password', [PasswordController::class, 'update'])->name('password.update');
 
     // Logout route
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });
+

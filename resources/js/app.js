@@ -5,23 +5,49 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import { InertiaProgress } from '@inertiajs/progress';
 
-// Import FontAwesome CSS to use the classic i tag approach
+// Toastification
+import Toast from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
+import '../sass/components/pim-notification.scss'; // Custom Toast styles
+
+// FontAwesome CSS
 import '@fortawesome/fontawesome-free/css/all.css';
+
+// Sidebar Config
+import { sidebarConfig } from './Config/Sidebar/sidebarConfig.js';
+
+const toastOptions = {
+    timeout: 3000, // Default timeout for all toasts
+    position: "top-right", // Default position
+    draggable: false, // Keep it simple
+    pauseOnHover: true, // Pause timer when hovering
+    closeOnClick: true, // Close toast on click
+};
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
-// Initialize and configure the Inertia.js app
+// Initialize Inertia.js app
 createInertiaApp({
-    title: (title) => `${title} - ${appName}`, // Set the title of the page dynamically based on the Inertia page title
-    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+    title: (title) => `${title} - ${appName}`, // Dynamically set the page title
+    resolve: (name) =>
+        resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')), // Correct backtick closure
     setup({ el, App, props, plugin }) {
-        return createApp({ render: () => h(App, props) })
-            .use(plugin)
-            .use(ZiggyVue)
-            .mount(el);
+        // Create Vue app instance
+        const app = createApp({ render: () => h(App, { ...props, sidebarConfig }) });
+
+        // Register plugins
+        app.use(plugin) // Inertia.js plugin
+            .use(ZiggyVue) // Ziggy for routing
+            .use(Toast, toastOptions); // Toastification
+
+        // Mount the app
+        app.mount(el);
     },
-    progress: {
-        color: '#4B5563',
-    },
+});
+
+// Initialize Inertia Progress
+InertiaProgress.init({
+    color: '#4B5563',
 });

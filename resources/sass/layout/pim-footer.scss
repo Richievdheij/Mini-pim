@@ -1,0 +1,54 @@
+.guest-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    justify-content: space-between;
+
+    &__footer {
+        background-color: rgb(255, 255, 255);
+        padding: 1.5rem 1rem; // Smaller padding
+        width: 100%; // Full width
+        position: absolute; // Keep it fixed at the bottom
+        bottom: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    &__footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 100%; // Ensures it spans the full page
+        padding: 0 2rem;
+    }
+
+    &__footer-logo img {
+        height: 1.5rem; // Smaller logo
+    }
+
+    &__footer-links {
+        display: flex;
+        gap: 1rem; // Smaller gap between links
+        font-size: 1rem; // Smaller text size
+    }
+
+    &__footer-link {
+        color: rgb(128, 128, 128);
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+            color: rgba(0, 0, 0, 1);
+            text-decoration: underline;
+        }
+    }
+
+    &__footer-separator {
+        color: rgb(86, 122, 197);
+        pointer-events: none; // Make it unresponsive to mouse events
+    }
+}

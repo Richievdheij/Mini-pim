@@ -1,0 +1,21 @@
+.logout-button {
+    background-color: transparent;
+    border: none;
+    color: rgba(85, 85, 85, 1);
+    cursor: pointer;
+    display: block;
+    font-size: 1rem;
+    margin: 0;
+    padding: 0.5rem 1rem;
+    text-align: start;
+    transition: background-color 0.15s ease-in-out;
+
+    &:hover {
+        background-color: rgba(229, 229, 229, 1);
+    }
+
+    &:focus {
+        outline: none;
+        background-color: rgba(229, 229, 229, 1);
+    }
+}

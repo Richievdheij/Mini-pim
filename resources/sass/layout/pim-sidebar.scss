@@ -1,0 +1,306 @@
+// Sidebar container styles
+.sidebar {
+    background-color: #fff;
+    border-right: 0.06rem solid #E9E8EF;
+    box-shadow: 0 0 0.6rem rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    height: 100vh;
+    position: relative;
+    transition: width 0.3s ease-in-out;
+    width: 20rem;
+
+    // Default expanded mode
+    .sidebar-general-section span,
+    .sidebar-manage-section span,
+    .sidebar-account-section span {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0); /* Reset slide effect */
+        transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    }
+
+    .sidebar-general-section__title,
+    .sidebar-manage-section__title,
+    .sidebar-account-section__title {
+        max-width: 100%;
+        transition: max-width 0.3s ease;
+    }
+
+    &--collapsed {
+        width: 4rem;
+
+        // Adjust padding for main section when collapsed
+        .sidebar-main-section {
+            overflow: hidden;
+
+            &__logo {
+                max-width: 2rem;
+                max-height: 2rem;
+            }
+
+            &__button-container {
+                display: flex;
+                padding: 1rem 1rem;
+            }
+        }
+
+        // Hide text for collapsed sections
+        .sidebar-general-section span,
+        .sidebar-manage-section span,
+        .sidebar-account-section span {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-1rem); /* Slide effect */
+            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+        }
+
+        // Smoothly hide section titles
+        .sidebar-general-section__title,
+        .sidebar-manage-section__title,
+        .sidebar-account-section__title {
+            overflow: hidden;
+            white-space: nowrap;
+            transition: max-width 0.3s ease;
+        }
+
+        // Collapsed Sidebar Dividers
+        .sidebar-profile-section__divider,
+        .sidebar-general-section__divider,
+        .sidebar-manage-section__divider {
+            width: 100%; /* Ensure full width in collapsed state */
+        }
+    }
+
+    // Toggle button for collapsing/expanding the sidebar
+    &__toggle {
+        align-items: center;
+        background-color: rgba(220, 220, 220, 1);
+        color: rgba(0, 0, 0, 1);
+        cursor: pointer;
+        display: flex;
+        height: 2rem;
+        justify-content: center;
+        transition: background 0.3s ease;
+
+        &:hover {
+            background-color: rgba(128, 128, 128, 0.2);
+        }
+
+        i {
+            font-size: 1.3rem;
+            transition: transform 0.3s ease;
+        }
+    }
+}
+
+// Styles for general, manage, and account sections in the sidebar
+.sidebar-account-section,
+.sidebar-general-section,
+.sidebar-manage-section {
+    // Button styles for items in these sections
+    &__button {
+        align-items: center;
+        background-color: transparent;
+        border: none;
+        color: rgba(0, 0, 0, 1);
+        cursor: pointer;
+        display: flex;
+        flex-direction: row;
+        font-size: 1rem;
+        justify-content: left;
+        padding: 0.75rem 1.3rem;
+        text-align: left;
+        transition: background 0.3s ease;
+        white-space: nowrap;
+        width: 100%;
+
+        &:hover {
+            background-color: rgba(86, 122, 197, 0.25);
+        }
+
+        // Styles for the active button
+        &.active {
+            background-color: rgba(86, 122, 197, 0.25);
+            color: rgba(86, 122, 197, 1);
+            font-weight: bold;
+
+            .sidebar-account-section__icon,
+            .sidebar-general-section__icon,
+            .sidebar-manage-section__icon {
+                color: rgba(86, 122, 197, 1);
+            }
+        }
+    }
+
+    // Chevron icon for expandable sections
+    &__chevron {
+        flex-shrink: 0;
+        justify-content: center;
+        margin-left: 0;
+    }
+
+    // Icons for section items
+    &__icon {
+        object-fit: contain; /* Ensure icons scale correctly */
+        opacity: 1;
+        visibility: visible;
+        width: 2rem; /* Consistent width */
+    }
+
+    // Title of the section
+    &__title {
+        align-items: center;
+        border-bottom: 0.06rem solid rgba(200, 200, 200, 1);
+        display: flex;
+        font-size: 1rem;
+        font-weight: bold;
+        height: 2rem;
+        justify-content: space-between;
+        overflow: hidden;
+        padding: 0.5rem 1rem;
+        width: 100%;
+        transition: background 0.3s ease;
+    }
+
+    // Divider styles for each section
+    &__divider {
+        background-color: rgba(200, 200, 200, 1); /* Divider color */
+        height: 0.06rem; /* Divider height */
+        width: 100%; /* Full width */
+        margin: 0 auto; /* Center alignment */
+        transition: width 0.3s ease; /* Smooth transition for sidebar toggle */
+    }
+}
+
+.sidebar-account-section {
+    margin-top: auto;
+}
+
+// Main section container styles
+.sidebar-main-section {
+    &__button-container {
+        align-items: center;
+        display: flex;
+        padding: 1rem;
+        transition: padding 0.3s ease;
+
+        &--collapsed {
+            justify-content: center;
+            padding: 0.75rem;
+        }
+    }
+
+    &__button {
+        align-items: center;
+        background: transparent;
+        border: none;
+        color: rgba(0, 0, 0, 1);
+        cursor: pointer;
+        display: flex;
+        width: 100%;
+        text-align: left;
+
+        &--collapsed {
+            pointer-events: none;
+        }
+    }
+
+    &__logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        transition: all 0.3s ease;
+
+        &--collapsed {
+            margin-right: 0;
+
+            .sidebar-main-section__logo {
+                max-width: 2rem;
+                max-height: 2rem;
+            }
+        }
+    }
+
+    &__logo {
+        max-width: 5rem;
+        max-height: 5rem;
+        transition: all 0.3s ease;
+    }
+
+    &__text-container {
+        flex-grow: 1;
+
+        .sidebar-main-section__text {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+    }
+
+    &__dropdown {
+        background: #f8f9fa;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        margin-top: 0.5rem;
+        overflow: hidden;
+
+        .sidebar-main-section__dropdown-item {
+            background: transparent;
+            border: none;
+            color: rgba(0, 0, 0, 1);
+            cursor: pointer;
+            padding: 0.75rem 1.5rem;
+            text-align: left;
+            transition: 0.3s;
+
+            &:hover {
+                background-color: rgba(220, 220, 220, 0.5);
+            }
+
+            span {
+                font-size: 1rem;
+            }
+        }
+    }
+}
+
+
+// Profile section styles in the sidebar
+.sidebar-profile-section {
+
+    // Content layout for the profile section
+    &__content {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 2.75rem 1rem;
+    }
+
+    // Divider line in the profile section
+    &__divider {
+        background-color: rgba(200, 200, 200, 1);
+        height: 0.06rem;
+    }
+
+    // Container for user info in the profile section
+    &__info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    // Styling for the user's name
+    &__name {
+        color: rgba(0, 0, 0, 1);
+        font-size: 1rem;
+    }
+
+    // Styling for the user's rank or position
+    &__rank {
+        color: rgba(100, 100, 100, 1);
+        font-size: 0.875rem;
+    }
+}

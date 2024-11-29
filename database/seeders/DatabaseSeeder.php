@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Profile;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +13,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Voer de permissie seeders uit
+        $this->call([
+            PermissionSeeder::class,
+            ProfilePermissionSeeder::class,
         ]);
+
+        // Maak de testgebruiker aan, indien deze nog niet bestaat
+        $testUser = User::firstOrCreate(
+            ['email' => 'test@example.com'], // Zoek op basis van e-mailadres
+            [
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+                'password' => bcrypt('password'), // Stel een standaard wachtwoord in
+            ]
+        );
+
+        // Koppel de testgebruiker aan het Admin-profiel
+        $adminProfile = Profile::firstOrCreate(['name' => 'Admin']);
+        $testUser->profiles()->attach($adminProfile);
     }
 }

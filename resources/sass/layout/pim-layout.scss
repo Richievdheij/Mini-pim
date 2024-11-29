@@ -1,0 +1,204 @@
+.guest-layout {
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+
+// Head class for login-form component
+    .login-form {
+        display: flex;
+        max-width: 70rem;
+        width: 100%;
+        border-radius: 0 0 2rem 0;
+        box-shadow: -.4rem .4rem 1rem rgba(0, 0, 0, 0.1);
+
+        &__box {
+            background-color: rgb(255, 255, 255);
+            padding: 3rem;
+            width: 60%; // Make sure it takes half the space
+            border-bottom: 0.3rem solid rgb(86, 122, 197);
+        }
+
+        &__form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        &__image {
+            height: 100%;
+            object-fit: cover; /* Makes sure the image covers the entire container */
+            object-position: left;
+            width: 100%;
+            max-height: 40rem;  // Set a fixed maximum height
+            box-shadow: -.5rem 0rem 0.5rem rgba(0, 0, 0, 0.1);
+        }
+
+        &__image-box {
+            background-color: rgba(255, 255, 255, 1);
+            border-radius: 0 0 2rem 0;
+            width: 50%; // This box will take the other half
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-right: 0.3rem solid rgb(86, 122, 197);
+            border-bottom: 0.3rem solid rgb(86, 122, 197);
+        }
+
+        &__links {
+            display: flex;
+            justify-content: space-between; // Space between the links
+            margin: 0 0 1.4rem 0;
+        }
+
+        &__logo {
+            display: block;
+            margin: 0 0 1rem 0;
+            width: 10rem; /* Adjust the width to make it smaller */
+            height: auto;
+        }
+
+        &__title {
+            font-family: 'Poppins', sans-serif; // ADD A TITLE FONT
+            font-size: 3rem;
+            font-weight: 600;
+        }
+    }
+
+// Head class for forgot-password-form component
+    .forgot-password-form {
+        display: flex;
+        max-width: 70rem;
+        width: 100%;
+        border-radius: 0 0 2rem 0;
+        box-shadow: -.4rem .4rem 1rem rgba(0, 0, 0, 0.1);
+
+        &__box {
+            background-color: rgb(255, 255, 255);
+            padding: 3rem 3rem;
+            width: 60%; // Make sure it takes half the space
+            border-bottom: 0.3rem solid rgb(86, 122, 197);
+        }
+
+        &__form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        &__image {
+            height: 100%;
+            object-fit: cover; /* Makes sure the image covers the entire container */
+            object-position: left;
+            width: 100%;
+            max-height: 40rem;  // Set a fixed maximum height
+        }
+
+        &__image-box {
+            background-color: rgba(255, 255, 255, 1);
+            border-radius: 0 0 2rem 0;
+            width: 50%; // This box will take the other half
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-right: 0.3rem solid rgb(86, 122, 197);
+            border-bottom: 0.3rem solid rgb(86, 122, 197);
+        }
+
+        &__logo {
+            display: block;
+            margin: 0 0 1rem 0;
+            width: 10rem; /* Adjust the width to make it smaller */
+            height: auto;
+        }
+
+        &__title {
+            font-family: 'Poppins', sans-serif; // ADD A TITLE FONT
+            font-size: 3rem;
+            font-weight: 600;
+            margin: 0 0 1rem 0;
+        }
+
+        &__links {
+            display: flex;
+            justify-content: space-between; // Space between the links
+            margin: 1.4rem 0 0 0;
+        }
+    }
+// Head class for confirm-password-form component
+    .confirm-password-form {
+        display: flex;
+        max-width: 70rem;
+        width: 100%;
+        border-radius: 0 0 2rem 0;
+        box-shadow: -.4rem .4rem 1rem rgba(0, 0, 0, 0.1);
+
+        &__box {
+            background-color: rgb(255, 255, 255);
+            padding: 3rem 3rem;
+            width: 60%; // Make sure it takes half the space
+            border-bottom: 0.3rem solid rgb(86, 122, 197);
+        }
+
+        &__form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        &__image {
+            height: 100%;
+            object-fit: cover; /* Makes sure the image covers the entire container */
+            object-position: left;
+            width: 100%;
+            max-height: 40rem;  // Set a fixed maximum height
+        }
+
+        &__image-box {
+            background-color: rgba(255, 255, 255, 1);
+            border-radius: 0 0 2rem 0;
+            width: 50%; // This box will take the other half
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-right: 0.3rem solid rgb(86, 122, 197);
+            border-bottom: 0.3rem solid rgb(86, 122, 197);
+        }
+
+        &__logo {
+            display: block;
+            margin: 0 0 1rem 0;
+            width: 10rem; /* Adjust the width to make it smaller */
+            height: auto;
+        }
+
+        &__title {
+            font-family: 'Poppins', sans-serif; // ADD A TITLE FONT
+            font-size: 3rem;
+            font-weight: 600;
+            margin: 0 0 1rem 0;
+        }
+
+        &__links {
+            display: flex;
+            justify-content: space-between; // Space between the links
+            margin: 1.4rem 0 0 0;
+        }
+    }
+}
+
+.authenticated-layout {
+    display: flex; // Ensure layout is flex for sidebar and content alignment
+    height: 100vh; // Full viewport height
+    overflow: hidden;
+}
+
+.authenticated-layout__content {
+    flex-grow: 1; // Allow content to grow
+    padding: 3rem 1rem 1rem 1rem;
+    overflow-y: scroll;
+}

@@ -1,59 +1,68 @@
-<script>
-import Categories from '@/Components/Dashboard/SideBar/CategoriesContainer.vue';
-import TopPosts from '@/Components/Posts/TopPosts/TopPostsContainer.vue';
-import axios from 'axios'; // To fetch data from the backend
-import { ref } from 'vue'; // Import ref for reactivity
+<script setup>
+import { ref } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 
-export default {
-    props: {
-        selectedCategory: String, // Currently selected category
-        topPosts: Array, // Array of top posts
-    },
-    components: {
-        Categories,
-        TopPosts,
-    },
-    setup() {
-        const categories = ref([]); // Reactive array to store fetched categories
-        const selectedCategory = ref('All blogs'); // Default category for selected
+import MainSection from '@/Components/Sidebar/MainSection.vue';
+import AccountSection from '@/Components/Sidebar/AccountSection.vue';
+import GeneralSection from '@/Components/Sidebar/Manager/GeneralSection.vue';
+import ManageSection from '@/Components/Sidebar/Manager/ManageSection.vue';
+import ProfileSection from '@/Components/Sidebar/ProfileSection.vue';
 
-        // Fetch categories when the component is mounted
-        const fetchCategories = async () => {
-            try {
-                const response = await axios.get('/categories'); // Fetch categories from backend
-                categories.value = response.data; // Store fetched categories in the reactive array
-            } catch (error) {
-                console.error('Error fetching categories:', error);
-            }
-        };
+const isSidebarExpanded = ref(true);
+const isGeneralExpanded = ref(true);
+const isManageExpanded = ref(true);
+const isAccountExpanded = ref(true);
 
-        // Handle the selected category change
-        const handleCategorySelected = (category) => {
-            selectedCategory.value = category; // Update the selected category
-        };
+const {props} = usePage();
+const user = props.user;
 
-        // Fetch categories on component mount
-        fetchCategories();
+const toggleSidebar = () => {
+    isSidebarExpanded.value = !isSidebarExpanded.value;
+};
 
-        return {
-            categories,
-            selectedCategory,
-            handleCategorySelected,
-        };
-    },
+const toggleSection = (section) => {
+    if (section === 'general') isGeneralExpanded.value = !isGeneralExpanded.value;
+    if (section === 'manage') isManageExpanded.value = !isManageExpanded.value;
+    if (section === 'account') isAccountExpanded.value = !isAccountExpanded.value;
 };
 </script>
 
 <template>
-    <aside class="sidebar">
-        <!-- Categorieën sectie -->
-        <Categories
-            :categories="categories"
-            :selectedCategory="selectedCategory"
-            @categorySelected="handleCategorySelected"
+    <aside :class="['sidebar', { 'sidebar--collapsed': !isSidebarExpanded }]">
+        <!-- Main Section with Manager Dropdown -->
+        <MainSection
+            :isSidebarExpanded="isSidebarExpanded"
         />
 
-        <!-- Top posts sectie -->
-        <TopPosts :topPosts="topPosts" /> <!-- topPosts prop used here -->
+        <!-- Sidebar Toggle Button -->
+        <div class="sidebar__toggle" @click="toggleSidebar">
+            <i class="sidebar__icon fas" :class="isSidebarExpanded ? 'fa-angle-left' : 'fa-angle-right'"></i>
+        </div>
+
+        <!-- General Section -->
+        <GeneralSection
+            :isGeneralExpanded="isGeneralExpanded"
+            :isSidebarExpanded="isSidebarExpanded"
+            @toggle-section="toggleSection"
+        />
+
+        <!-- Manage Section -->
+        <ManageSection
+            :isManageExpanded="isManageExpanded"
+            :isSidebarExpanded="isSidebarExpanded"
+            @toggle-section="toggleSection"
+        />
+
+        <!-- Account Section -->
+        <AccountSection
+            :isAccountExpanded="isAccountExpanded"
+            :isSidebarExpanded="isSidebarExpanded"
+            @toggle-section="toggleSection"
+        />
+
+        <!-- Profile Section -->
+        <ProfileSection
+            :isSidebarExpanded="isSidebarExpanded"
+        />
     </aside>
 </template>
