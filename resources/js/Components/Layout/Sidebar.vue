@@ -13,8 +13,11 @@ const isGeneralExpanded = ref(true);
 const isManageExpanded = ref(true);
 const isAccountExpanded = ref(true);
 
-const {props} = usePage();
-const user = props.user;
+const { props } = usePage();
+const user = props.auth.user || {
+    name: '',
+    profiles: [],
+};
 
 const toggleSidebar = () => {
     isSidebarExpanded.value = !isSidebarExpanded.value;
@@ -67,6 +70,7 @@ const toggleSection = (section) => {
         <!-- Profile Section -->
         <ProfileSection
             :isSidebarExpanded="isSidebarExpanded"
+            :user="user"
         />
     </aside>
 </template>

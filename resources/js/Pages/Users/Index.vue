@@ -149,21 +149,31 @@ const sortedUsers = computed(() => {
                             @click="sortColumn('name')"
                         >
                             Name
-                            <i :class="{'fas fa-sort-up': sortConfig.column === 'name' && sortConfig.direction === 'asc', 'fas fa-sort-down': sortConfig.column === 'name' && sortConfig.direction === 'desc'}"></i>
+                            <i :class="{'fas fa-sort-up'
+                               :sortConfig.column === 'name' && sortConfig.direction === 'asc', 'fas fa-sort-down'
+                               :sortConfig.column === 'name' && sortConfig.direction === 'desc'}">
+                            </i>
                         </th>
                         <th
                             class="users__table-header-cell"
                             @click="sortColumn('email')"
                         >
                             Email
-                            <i :class="{'fas fa-sort-up': sortConfig.column === 'email' && sortConfig.direction === 'asc', 'fas fa-sort-down': sortConfig.column === 'email' && sortConfig.direction === 'desc'}"></i>
+                            <i :class="{'fas fa-sort-up'
+                               :sortConfig.column === 'email' && sortConfig.direction === 'asc', 'fas fa-sort-down'
+                               :sortConfig.column === 'email' && sortConfig.direction === 'desc'}">
+                            </i>
                         </th>
                         <th
                             class="users__table-header-cell"
                             @click="sortColumn('profiles')"
                         >
                             Profiles
-                            <i :class="{'fas fa-sort-up': sortConfig.column === 'profiles' && sortConfig.direction === 'asc', 'fas fa-sort-down': sortConfig.column === 'profiles' && sortConfig.direction === 'desc'}"></i>
+                            <i
+                                :class="{'fas fa-sort-up'
+                                :sortConfig.column === 'profiles' && sortConfig.direction === 'asc', 'fas fa-sort-down'
+                                :sortConfig.column === 'profiles' && sortConfig.direction === 'desc'}">
+                            </i>
                         </th>
                         <th v-if="props.canEditUser || props.canDeleteUser" class="users__table-header-cell"></th>
                     </tr>

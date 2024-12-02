@@ -25,7 +25,9 @@ const navigateToPim = () => {
             <!-- Logo and title -->
             <button
                 class="sidebar-main-section__button"
+                :class="{ 'sidebar-main-section__button--collapsed': !isSidebarExpanded }"
                 @click="toggleDropdown"
+                :disabled="!isSidebarExpanded"
             >
                 <div class="sidebar-main-section__logo-container"
                      :class="{ 'sidebar-main-section__logo-container--collapsed': !isSidebarExpanded }"
