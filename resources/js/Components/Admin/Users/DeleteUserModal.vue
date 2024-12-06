@@ -3,9 +3,9 @@ import { useForm } from '@inertiajs/vue3';
 import { watch, defineProps, defineEmits } from 'vue';
 import SecondaryButton from '@/Components/General/SecondaryButton.vue';
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
-import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
+import { useNotifications } from "@/plugins/notificationPlugin";
 
-const { success, error } = useNotifications(); // Destructure success and error notifications
+const { success, error } = useNotifications();
 
 // Props and emits
 const props = defineProps({
@@ -61,11 +61,13 @@ function deleteUser() {
             </p>
             <form @submit.prevent="deleteUser" class="delete-user-modal__form">
                 <div class="delete-user-modal__actions">
+                    <!-- Cancel button -->
                     <TertiaryButton
                         label="Cancel"
                         type="cancel"
                         @click="closeModal"
                     />
+                    <!-- Delete button -->
                     <SecondaryButton
                         label="Delete"
                         type="delete"

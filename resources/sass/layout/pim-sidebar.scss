@@ -13,6 +13,7 @@
     overflow: hidden;
 
     // Default expanded mode
+    .sidebar-data-section span,
     .sidebar-general-section span,
     .sidebar-manage-section span,
     .sidebar-account-section span {
@@ -22,6 +23,7 @@
         transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
     }
 
+    .sidebar-data-section__title,
     .sidebar-general-section__title,
     .sidebar-manage-section__title,
     .sidebar-account-section__title {
@@ -35,6 +37,7 @@
         // Adjust padding for main section when collapsed
         .sidebar-main-section {
             overflow: hidden;
+            pointer-events: none;
 
             &__logo {
                 max-width: 2rem;
@@ -48,6 +51,7 @@
         }
 
         // Hide text for collapsed sections
+        .sidebar-data-section span,
         .sidebar-general-section span,
         .sidebar-manage-section span,
         .sidebar-account-section span {
@@ -58,6 +62,7 @@
         }
 
         // Smoothly hide section titles
+        .sidebar-data-section__title,
         .sidebar-general-section__title,
         .sidebar-manage-section__title,
         .sidebar-account-section__title {
@@ -67,6 +72,7 @@
         }
 
         // Collapsed Sidebar Dividers
+        .sidebar-data-section__divider,
         .sidebar-profile-section__divider,
         .sidebar-general-section__divider,
         .sidebar-manage-section__divider {
@@ -129,6 +135,7 @@
     }
 }
 
+.sidebar-data-section__button-container,
 .sidebar-general-section__button-container,
 .sidebar-manage-section__button-container {
     display: flex;
@@ -139,6 +146,7 @@
     transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
 }
 
+.sidebar-data-section.open .sidebar-data-section__button-container,
 .sidebar-general-section.open .sidebar-general-section__button-container,
 .sidebar-manage-section.open .sidebar-manage-section__button-container {
     max-height: 12.5rem;
@@ -146,6 +154,7 @@
 }
 
 // Chevron icon for expandable sections
+.sidebar-data-section__chevron,
 .sidebar-general-section__chevron,
 .sidebar-manage-section__chevron {
     flex-shrink: 0;
@@ -160,11 +169,13 @@
     }
 }
 
+.sidebar-data-section.open .sidebar-data-section__chevron,
 .sidebar-general-section.open .sidebar-general-section__chevron,
 .sidebar-manage-section.open .sidebar-manage-section__chevron {
     transform: rotate(0deg);
 }
 
+.sidebar--collapsed .sidebar-data-section__chevron,
 .sidebar--collapsed .sidebar-general-section__chevron,
 .sidebar--collapsed .sidebar-manage-section__chevron {
     transform: rotate(90deg); /* Rotate the chevron to point right */
@@ -172,6 +183,7 @@
 }
 
 // Styles for general, manage, and account sections in the sidebar
+.sidebar-data-section,
 .sidebar-account-section,
 .sidebar-general-section,
 .sidebar-manage-section {
@@ -200,6 +212,7 @@
             color: rgba(86, 122, 197, 1);
             font-weight: bold;
 
+            .sidebar-data-section__icon,
             .sidebar-account-section__icon,
             .sidebar-general-section__icon,
             .sidebar-manage-section__icon {
@@ -254,6 +267,8 @@
 
 // Main section container styles
 .sidebar-main-section {
+    background-color: #fff;
+
     &__button-container {
         align-items: center;
         display: flex;
@@ -314,11 +329,10 @@
     }
 
     &__dropdown {
-        background: #f8f9fa;
-        border: 1px solid rgba(0, 0, 0, 0.1);
+        background: #fff;
+        border-bottom: 0.06rem solid rgba(0, 0, 0, 0.1);
         display: flex;
         flex-direction: column;
-        margin-top: 0.5rem;
         overflow: hidden;
 
         .sidebar-main-section__dropdown-item {

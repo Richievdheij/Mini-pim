@@ -1,6 +1,7 @@
 <script setup>
-import {useForm} from '@inertiajs/vue3';
-import {ref, computed} from 'vue';
+import { useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from '@/Components/General/Input.vue';
 import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 
@@ -13,16 +14,21 @@ const form = useForm({
     password_confirmation: '',
 });
 
-// Computed property to check if passwords match
-const passwordMatchSuccess = computed(() => {
-    return form.password === form.password_confirmation && form.password_confirmation !== '';
-});
+// Initialize notifications system
+const { success, error } = useNotifications();
 
-const updatePassword = () => {
+// Handle form submission (patch the form data)
+
+
+const submit = () => {
     form.post(route('password.update'), {
         preserveScroll: true,
-        onSuccess: () => form.reset(),
+        onSuccess: () => {
+            form.reset();
+            success("Password updated successfully!"); // Notify success
+        },
         onError: () => {
+            error("Failed to update password."); // Notify failure
             if (form.errors.password) {
                 form.reset('password', 'password_confirmation');
                 passwordInput.value.focus();
@@ -34,6 +40,7 @@ const updatePassword = () => {
         },
     });
 };
+
 </script>
 
 <template>
@@ -44,7 +51,7 @@ const updatePassword = () => {
         </p>
 
         <!-- Update Password Form -->
-        <form class="update-password-form__form" @submit.prevent="updatePassword">
+        <form class="update-password-form__form" @submit.prevent="submit">
             <Input
                 type="field"
                 label="Current Password"

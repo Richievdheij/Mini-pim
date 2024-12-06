@@ -1,6 +1,7 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from '@/Components/General/Input.vue';
 import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
@@ -16,25 +17,36 @@ const form = useForm({
 
 const confirmUserDeletion = () => {
     confirmingUserDeletion.value = true;
-
 };
-
-const deleteUser = () => {
-    form.delete(route('account.destroy'), {
-        preserveScroll: true,
-        onSuccess: () => closeModal(),
-        onFinish: () => {
-            form.reset(); // Reset the form after submission
-        }
-    });
-};
-
 
 const closeModal = () => {
     confirmingUserDeletion.value = false;
     form.clearErrors();
     form.reset();
 };
+
+// Initialize notifications system
+const { success, error } = useNotifications();
+
+const deleteUser = () => {
+    form.delete(route('account.destroy'), {
+        preserveScroll: true,
+        onSuccess: () => {
+            closeModal();
+            success("Account deleted successfully!"); // Notify success
+        },
+        onError: () => {
+            error("Failed to delete account."); // Notify failure
+            if (form.errors.password) {
+                passwordInput.value.focus();
+            }
+        },
+        onFinish: () => {
+            form.reset(); // Reset the form after submission
+        },
+    });
+};
+
 </script>
 
 <template>

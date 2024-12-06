@@ -2,7 +2,7 @@ import GeneralSection from '@/Components/Sidebar/Manager/GeneralSection.vue';
 import ManageSection from '@/Components/Sidebar//Manager/ManageSection.vue';
 import AccountSection from '@/Components/Sidebar/AccountSection.vue';
 import ProfileSection from '@/Components/Sidebar/ProfileSection.vue';
-import MainSection from '@/Components/Sidebar/MainSection.vue';
+import MainSection from '@/Components/Sidebar/Manager/MainSection.vue';
 
 export const sidebarConfig = {
     sections: [

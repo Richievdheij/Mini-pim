@@ -4,9 +4,9 @@ import { watch } from "vue";
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
-import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
+import { useNotifications } from "@/plugins/notificationPlugin";
 
-const { success, error } = useNotifications(); // Destructure success and error notifications
+const { success, error } = useNotifications();
 
 const props = defineProps({
     user: Object,
@@ -22,6 +22,7 @@ const form = useForm({
     profiles: [],
 });
 
+// Watch for changes to the `isOpen` prop and reset form when modal opens
 watch(
     () => props.isOpen,
     (isOpen) => {
@@ -58,6 +59,7 @@ function submit() {
         <div class="create-user-modal__content">
             <h2 class="create-user-modal__title">Create User</h2>
             <form @submit.prevent="submit" class="create-user-modal__form">
+                <!-- Name input field -->
                 <Input
                     label="Name"
                     id="name"
@@ -67,6 +69,7 @@ function submit() {
                     v-model="form.name"
                     :error="form.errors.name"
                 />
+                <!-- Email input field -->
                 <Input
                     label="Email"
                     id="email"
@@ -76,6 +79,7 @@ function submit() {
                     v-model="form.email"
                     :error="form.errors.email"
                 />
+                <!-- Password input field -->
                 <Input
                     label="Password"
                     id="password"
@@ -85,6 +89,7 @@ function submit() {
                     v-model="form.password"
                     :error="form.errors.password"
                 />
+                <!-- Assign profiles select field -->
                 <Input
                     label="Assign Profiles"
                     id="profiles"
@@ -95,6 +100,7 @@ function submit() {
                     :options="profiles"
                     :error="form.errors.profiles"
                 />
+                <!-- Model actions -->
                 <div class="create-user-modal__actions">
                     <TertiaryButton
                         label="Cancel"

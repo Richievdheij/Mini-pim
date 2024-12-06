@@ -6,9 +6,9 @@ import EditUserModal from "@/Components/Admin/Users/EditUserModal.vue";
 import DeleteUserModal from "@/Components/Admin/Users/DeleteUserModal.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/General/PrimaryButton.vue";
-import Input from "@/Components/General/Input.vue";
 import Filter from '@/Components/General/Filter.vue';
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
+import Searchbar from "@/Components/General/Searchbar.vue";
 
 const props = defineProps({
     users: Array,
@@ -126,14 +126,13 @@ const sortedUsers = computed(() => {
                     </div>
 
                     <div class="users__search-bar">
-                        <Input
-                            type="search"
+                        <Searchbar
                             id="search"
                             placeholder="Search..."
                             v-model="searchQuery"
-                            icon="fas fa-search"
                         />
                     </div>
+
 
                     <div class="users__filter">
                         <Filter />

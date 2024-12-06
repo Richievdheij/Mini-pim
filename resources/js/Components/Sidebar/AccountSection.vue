@@ -30,12 +30,15 @@ function logout() {
             </Link>
 
             <!-- Logout Button -->
-            <Link class="sidebar-account-section__button" @click="logout">
+            <button
+                class="sidebar-account-section__button"
+                @click="logout"
+            >
                 <div class="sidebar-account-section__icon-container">
                     <i class="sidebar-account-section__icon fas fa-sign-out-alt"></i>
                 </div>
                 <span>Logout</span>
-            </Link>
+            </button>
         </div>
     </div>
 </template>

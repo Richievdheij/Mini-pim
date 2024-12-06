@@ -1,9 +1,9 @@
 <script setup>
 import { ref, computed } from "vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { useNotifications } from "@/plugins/notificationPlugin"; // Import notification plugin
+import { useNotifications } from "@/plugins/notificationPlugin";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Input from "@/Components/General/Input.vue";
+import Searchbar from "@/Components/General/Searchbar.vue";
 
 const props = defineProps({
     profiles: {
@@ -60,7 +60,7 @@ function togglePermission(profileId, permissionId) {
             form.reset("profile_id", "permission_id");
         },
         onError: () => {
-            error("Failed to update permission. Please try again. ❌");
+            error("Failed to update permission. Please try again.");
         },
     });
 }
@@ -86,12 +86,10 @@ function toggleCategory(category) {
             <div class="user-rights__section">
                 <div class="user-rights__top-bar">
                     <div class="user-rights__search-bar">
-                        <Input
-                            type="search"
+                        <Searchbar
                             id="search"
                             placeholder="Search..."
                             v-model="searchQuery"
-                            icon="fas fa-search"
                         />
                     </div>
                 </div>
@@ -156,6 +154,11 @@ function toggleCategory(category) {
                     </template>
                     </tbody>
                 </table>
+
+                <!-- Show message if no permissions match the search -->
+                <div v-if="Object.keys(filteredPermissions).length === 0" class="user-rights__no-results">
+                    <p>No results found</p>
+                </div>
             </div>
         </div>
     </AuthenticatedLayout>

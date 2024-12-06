@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/vue3';
 import ForgotPasswordFormInput from '@/Components/Auth/ForgotPassword/ForgotPasswordFormInput.vue';
 import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 import GoBackLoginLink from "@/Components/Auth/GoBackLoginLink.vue";
-import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
+import { useNotifications } from "@/plugins/notificationPlugin";
 
 const { success, error } = useNotifications(); // Destructure success and error notifications
 
@@ -16,11 +16,11 @@ const form = useForm({
 const submit = () => {
     form.post(route('password.email'), {
         onSuccess: () => {
-            success('We have emailed your password reset link! 🎉'); // Show success notification
+            success('We have emailed your password reset link!'); // Show success notification
             form.reset();
         },
         onError: () => {
-            error('Unable to send the reset password link. Please check the email address. ❌'); // Show error notification
+            error('Unable to send the reset password link. Please check the email address.'); // Show error notification
         },
     });
 };

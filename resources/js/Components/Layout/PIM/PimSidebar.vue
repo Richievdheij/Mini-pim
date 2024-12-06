@@ -2,13 +2,14 @@
 import { ref } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 
-import MainSection from '@/Components/Sidebar/Manager/MainSection.vue';
+import PimMainSection from "@/Components/Sidebar/PIM/PimMainSection.vue";
+import PimDataSection from "@/Components/Sidebar/PIM/PimDataSection.vue";
 import AccountSection from '@/Components/Sidebar/AccountSection.vue';
-import GeneralSection from '@/Components/Sidebar/Manager/GeneralSection.vue';
-import ManageSection from '@/Components/Sidebar/Manager/ManageSection.vue';
 import ProfileSection from '@/Components/Sidebar/ProfileSection.vue';
+import ManageSection from "@/Components/Sidebar/Manager/ManageSection.vue";
 
 const isSidebarExpanded = ref(true);
+const isDataExpanded = ref(true);
 const isGeneralExpanded = ref(true);
 const isManageExpanded = ref(true);
 const isAccountExpanded = ref(true);
@@ -24,21 +25,23 @@ const toggleSidebar = () => {
 };
 
 const toggleSection = (section) => {
+    if (section === 'data') isDataExpanded.value = !isDataExpanded.value;
     if (section === 'general') isGeneralExpanded.value = !isGeneralExpanded.value;
     if (section === 'manage') isManageExpanded.value = !isManageExpanded.value;
+    if (section === 'account') isAccountExpanded.value = !isAccountExpanded.value;
 };
 </script>
 
 <template>
     <aside :class="['sidebar', { 'sidebar--collapsed': !isSidebarExpanded }]">
-        <!-- Main Section with Manager Dropdown -->
-        <MainSection
+        <!-- PIM Main Section with Dropdown -->
+        <PimMainSection
             :isSidebarExpanded="isSidebarExpanded"
         />
 
-        <!-- General Section -->
-        <GeneralSection
-            :isGeneralExpanded="isGeneralExpanded"
+        <!-- Data Section -->
+        <PimDataSection
+            :isDataExpanded="isDataExpanded"
             :isSidebarExpanded="isSidebarExpanded"
             @toggle-section="toggleSection"
         />

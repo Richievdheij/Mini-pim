@@ -4,9 +4,9 @@ import { watch } from 'vue';
 import Input from '@/Components/General/Input.vue';
 import SecondaryButton from '@/Components/General/SecondaryButton.vue';
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
-import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
+import { useNotifications } from "@/plugins/notificationPlugin";
 
-const { success, error } = useNotifications(); // Destructure success and error notifications
+const { success, error } = useNotifications();
 
 const props = defineProps({
     user: Object,
@@ -60,6 +60,7 @@ function submit() {
         <div class="edit-user-modal__content">
             <h2 class="edit-user-modal__title">Edit User</h2>
             <form @submit.prevent="submit" class="edit-user-modal__form">
+                <!-- Name input -->
                 <Input
                     label="Name"
                     inputType="text"
@@ -68,6 +69,7 @@ function submit() {
                     v-model="form.name"
                     :error="form.errors.name"
                 />
+                <!-- Email input -->
                 <Input
                     label="Email"
                     id="email"
@@ -77,6 +79,7 @@ function submit() {
                     v-model="form.email"
                     :error="form.errors.email"
                 />
+                <!-- Password input -->
                 <Input
                     label="Password"
                     id="password"
@@ -86,6 +89,7 @@ function submit() {
                     v-model="form.password"
                     :error="form.errors.password"
                 />
+                <!-- Assign profiles select -->
                 <Input
                     label="Assign Profiles"
                     id="profiles"
@@ -97,6 +101,7 @@ function submit() {
                     :error="form.errors.profiles"
                 />
                 <div class="edit-user-modal__actions">
+                    <!-- Cancel and Update buttons -->
                     <TertiaryButton
                         label="Cancel"
                         type="cancel"

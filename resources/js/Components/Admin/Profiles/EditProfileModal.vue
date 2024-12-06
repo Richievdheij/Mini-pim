@@ -1,7 +1,7 @@
 <script setup>
-import {useForm} from "@inertiajs/vue3";
-import {watch} from "vue";
-import {useNotifications} from "@/plugins/notificationPlugin"; // Import notifications plugin
+import { useForm } from "@inertiajs/vue3";
+import { watch } from "vue";
+import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
@@ -16,7 +16,7 @@ const props = defineProps({
 const emit = defineEmits(["close"]);
 
 // Notifications
-const {success, error} = useNotifications(); // Use notifications
+const { success, error } = useNotifications(); // Use notifications
 
 // Initialize the form object with the current profile's name
 const form = useForm({
@@ -61,7 +61,6 @@ function submit() {
     <div v-if="isOpen" class="edit-profile-modal">
         <div class="edit-profile-modal__overlay"></div>
         <div class="edit-profile-modal__content">
-            <!-- Modal Title -->
             <h2 class="edit-profile-modal__title">Edit Profile</h2>
 
             <!-- Form for editing the profile -->
@@ -76,7 +75,6 @@ function submit() {
                     :error="form.errors.name"
                 />
 
-                <!-- Modal Actions (Cancel and Update buttons) -->
                 <div class="edit-profile-modal__actions">
                     <!-- Cancel Button -->
                     <TertiaryButton

@@ -1,10 +1,10 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import PIMLayout from "@/Layouts/PIMLayout.vue";
 import { Head } from "@inertiajs/vue3";
 </script>
 
 <template>
-    <AuthenticatedLayout>
+    <PIMLayout>
         <Head title="Mini-pim | PIM Dashboard" />
 
         <div class="pim-dashboard">
@@ -13,7 +13,7 @@ import { Head } from "@inertiajs/vue3";
                 <slot />
             </main>
         </div>
-    </AuthenticatedLayout>
+    </PIMLayout>
 </template>
 
 

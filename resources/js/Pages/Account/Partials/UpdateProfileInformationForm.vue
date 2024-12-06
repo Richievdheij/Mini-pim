@@ -1,5 +1,6 @@
 <script setup>
 import { useForm, usePage } from '@inertiajs/vue3';
+import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from '@/Components/General/Input.vue';
 import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 
@@ -19,6 +20,20 @@ const form = useForm({
     email: user.email,
 });
 
+// Initialize notifications system
+const { success, error } = useNotifications();
+
+// Handle form submission (patch the form data)
+function submit() {
+    form.patch(route('account.update'), {
+        onSuccess: () => {
+            success("Account updated successfully!"); // Notify success
+        },
+        onError: () => {
+            error("Failed to update account."); // Notify failure
+        },
+    });
+}
 </script>
 
 <template>
@@ -28,7 +43,7 @@ const form = useForm({
             Update your account's profile information and email address.
         </p>
 
-        <form class="update-profile-information-form__form" @submit.prevent="form.patch(route('account.update'))">
+        <form class="update-profile-information-form__form" @submit.prevent="submit">
             <!-- Name Input Group -->
             <Input
                 type="field"

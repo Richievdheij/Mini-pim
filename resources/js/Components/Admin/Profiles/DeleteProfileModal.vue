@@ -3,14 +3,14 @@ import { useForm } from '@inertiajs/vue3';
 import { defineProps, defineEmits } from "vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
-import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
+import { useNotifications } from "@/plugins/notificationPlugin";
 
-const { success, error } = useNotifications(); // Use notifications
+const { success, error } = useNotifications();
 
-
+// Define the props the component will accept
 const props = defineProps({
-    isOpen: Boolean,
-    profile: Object,
+    isOpen: Boolean, // Indicates whether the modal is open
+    profile: Object, // Profile data to be deleted
 });
 
 const emit = defineEmits(["close", "delete"]);
@@ -32,7 +32,7 @@ function deleteProfile() {
             closeModal("delete");
         },
         onError: () => {
-            error("Failed to delete profile."); // Error notification
+            error("Failed to delete profile, there are users still linked to this profile."); // Error notification
         },
     });
 }
@@ -47,11 +47,13 @@ function deleteProfile() {
                 Are you sure you want to delete the profile "{{ props.profile.name }}"?
             </p>
             <form @submit.prevent="deleteProfile" class="delete-profile-modal__actions">
+                <!-- Cancel button to close the modal -->
                 <TertiaryButton
                     label="Cancel"
                     type="cancel"
                     @click="closeModal"
                 />
+                <!-- Delete button to confirm the deletion -->
                 <SecondaryButton
                     label="Delete"
                     type="delete"

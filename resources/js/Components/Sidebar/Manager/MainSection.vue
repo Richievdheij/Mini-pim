@@ -1,8 +1,7 @@
 <script setup>
 import { ref } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
+import { Link } from '@inertiajs/vue3';
 
-const activeView = ref('Manager'); // Current active tab
 const isSidebarExpanded = ref(true); // Sidebar state (expanded or collapsed)
 const isPIMDropdownOpen = ref(false); // Dropdown state (open or closed)
 
@@ -11,10 +10,6 @@ const toggleDropdown = () => {
     isPIMDropdownOpen.value = !isPIMDropdownOpen.value;
 };
 
-// Navigate to the PIM dashboard
-const navigateToPim = () => {
-    Inertia.visit(route('dashboard')); // FIX THIS
-};
 </script>
 
 <template>
@@ -42,7 +37,7 @@ const navigateToPim = () => {
                         class="sidebar-main-section__text"
                         :class="{ 'sidebar-main-section__text--collapsed': !isSidebarExpanded }"
                     >
-                        {{ activeView }}
+                        Manager
                     </span>
                 </div>
                 <i class="fas sidebar-main-section__chevron"
@@ -53,12 +48,12 @@ const navigateToPim = () => {
 
         <!-- Dropdown-menu -->
         <div class="sidebar-main-section__dropdown" v-if="isPIMDropdownOpen">
-            <button
+            <Link
                 class="sidebar-main-section__dropdown-item"
-                @click.prevent="navigateToPim"
+                :href="route('pim.dashboard')"
             >
                 <span>PIM</span>
-            </button>
+            </Link>
         </div>
     </button>
 </template>
