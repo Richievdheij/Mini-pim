@@ -21,9 +21,14 @@ const props = defineProps({
                 <i class="fas fa-user sidebar-profile-section__icon"></i>
             </div>
             <div class="sidebar-profile-section__info">
-                <!-- Display user name & Profile name -->
+                <!-- Display user name -->
                 <span class="sidebar-profile-section__name">{{ user.name }}</span>
-                <span class="sidebar-profile-section__rank">TEST</span>
+                <!-- Display profile names -->
+                <span class="sidebar-profile-section__rank">
+                    {{ user.profiles.length > 0
+                    ? user.profiles.map(profile => profile.name).join(', ')
+                    : 'No Profile Assigned' }}
+                </span>
             </div>
         </div>
     </div>

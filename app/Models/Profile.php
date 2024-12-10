@@ -4,35 +4,50 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Profile extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = ['name'];
 
     /**
-     * Get the permissions associated with the profile.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * Relationship to Users
      */
-    public function permissions(): BelongsToMany
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_profile');
+    }
+
+    /**
+     * Relationship to Permissions
+     */
+    public function permissions()
     {
         return $this->belongsToMany(Permission::class, 'profile_permission');
     }
+
     /**
-     * Get the users associated with the profile.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * Relationship to ProductTypes
      */
-    public function users(): BelongsToMany
+    public function productTypes()
     {
-        return $this->belongsToMany(User::class, 'user_profile');
+        return $this->hasMany(ProductType::class);
+    }
+
+    /**
+     * Relationship to Attributes
+     */
+    public function attributes()
+    {
+        return $this->hasMany(Attribute::class);
+    }
+
+    /**
+     * Relationship to AttributeValues
+     */
+    public function attributeValues()
+    {
+        return $this->hasMany(AttributeValue::class);
     }
 }
