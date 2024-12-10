@@ -12,15 +12,28 @@ class Attribute extends Model
     protected $fillable = [
         'name', // Attribute name (e.g., Brand, Size)
         'type_id', // Foreign key to ProductType
+        'profile_id', // Foreign key to Profile
     ];
 
-// In App\Models\Attribute.php
+    /**
+     * Relationship to Profile
+     */
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class , 'profile_id');
+    }
+
+    /**
+     * Relationship to ProductType
+     */
     public function type()
     {
         return $this->belongsTo(ProductType::class, 'type_id');
     }
 
-
+    /**
+     * Relationship to AttributeValues
+     */
     public function values()
     {
         return $this->hasMany(AttributeValue::class);

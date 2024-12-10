@@ -12,11 +12,12 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('product_id')->unique();
             $table->string('name');
-            $table->foreignId('type_id')->constrained('product_types'); // Product type relation
-            $table->decimal('weight', 8, 2)->nullable(); // Weight in kg or g
-            $table->text('description')->nullable(); // Product description
-            $table->decimal('price', 10, 2); // Price of the product
-            $table->integer('stock_quantity')->default(0); // Quantity in stock
+            $table->foreignId('type_id')->constrained('product_types'); // Tied to product type
+            $table->foreignId('profile_id')->constrained('profiles'); // Scoped to a profile
+            $table->decimal('weight', 8, 2)->nullable();
+            $table->text('description')->nullable();
+            $table->decimal('price', 10, 2);
+            $table->integer('stock_quantity')->default(0);
             $table->timestamps();
         });
     }

@@ -10,9 +10,11 @@ class CreateProductTypesTable extends Migration
     {
         Schema::create('product_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // E.g., Electronics, Clothing, Furniture
+            $table->string('name'); // Product type name (e.g., Shoes)
+            $table->foreignId('profile_id')->constrained('profiles'); // Scoped to a profile
             $table->timestamps();
         });
+
     }
 
     public function down(): void

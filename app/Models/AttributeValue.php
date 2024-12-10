@@ -12,8 +12,20 @@ class AttributeValue extends Model
     protected $fillable = [
         'attribute_id', // Foreign key to Attribute
         'value', // Actual value (e.g., "Red", "Large")
+        'profile_id', // Foreign key to Profile
     ];
 
+    /**
+     * Relationship to Profile
+     */
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class);
+    }
+
+    /**
+     * Relationship to Attribute
+     */
     public function attribute()
     {
         return $this->belongsTo(Attribute::class);

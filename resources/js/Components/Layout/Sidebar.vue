@@ -13,8 +13,11 @@ const isGeneralExpanded = ref(true);
 const isManageExpanded = ref(true);
 const isAccountExpanded = ref(true);
 
-const {props} = usePage();
-const user = props.user;
+const { props } = usePage();
+const user = props.auth.user || {
+    name: '',
+    profiles: [],
+};
 
 const toggleSidebar = () => {
     isSidebarExpanded.value = !isSidebarExpanded.value;
@@ -23,7 +26,6 @@ const toggleSidebar = () => {
 const toggleSection = (section) => {
     if (section === 'general') isGeneralExpanded.value = !isGeneralExpanded.value;
     if (section === 'manage') isManageExpanded.value = !isManageExpanded.value;
-    if (section === 'account') isAccountExpanded.value = !isAccountExpanded.value;
 };
 </script>
 
@@ -33,11 +35,6 @@ const toggleSection = (section) => {
         <MainSection
             :isSidebarExpanded="isSidebarExpanded"
         />
-
-        <!-- Sidebar Toggle Button -->
-        <div class="sidebar__toggle" @click="toggleSidebar">
-            <i class="sidebar__icon fas" :class="isSidebarExpanded ? 'fa-angle-left' : 'fa-angle-right'"></i>
-        </div>
 
         <!-- General Section -->
         <GeneralSection
@@ -53,6 +50,15 @@ const toggleSection = (section) => {
             @toggle-section="toggleSection"
         />
 
+        <!-- Sidebar Toggle Button -->
+        <div class="sidebar__toggler">
+            <div class="sidebar__toggle" @click="toggleSidebar">
+                <div class="sidebar__toggle-circle">
+                    <i class="sidebar__toggle-icon fas fa-angle-left"></i>
+                </div>
+            </div>
+        </div>
+
         <!-- Account Section -->
         <AccountSection
             :isAccountExpanded="isAccountExpanded"
@@ -63,6 +69,7 @@ const toggleSection = (section) => {
         <!-- Profile Section -->
         <ProfileSection
             :isSidebarExpanded="isSidebarExpanded"
+            :user="user"
         />
     </aside>
 </template>

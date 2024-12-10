@@ -19,11 +19,17 @@ class Product extends Model
         'stock_quantity',
     ];
 
+    /**
+     * Relationship to ProductType
+     */
     public function type()
     {
-        return $this->belongsTo(ProductType::class, 'type_id');
+        return $this->belongsTo(ProductType::class);
     }
 
+    /**
+     * Relationship to Attributes
+     */
     public function attributes()
     {
         return $this->belongsToMany(Attribute::class, 'product_attribute_values')
@@ -31,6 +37,9 @@ class Product extends Model
             ->withTimestamps();
     }
 
+    /**
+     * Relationship to Images
+     */
     public function images()
     {
         return $this->hasMany(ProductImage::class);

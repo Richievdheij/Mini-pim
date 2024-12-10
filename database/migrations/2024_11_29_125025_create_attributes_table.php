@@ -10,8 +10,9 @@ class CreateAttributesTable extends Migration
     {
         Schema::create('attributes', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Attribute name (e.g., Brand, Color)
-            $table->foreignId('type_id')->constrained('product_types'); // Attribute belongs to product type
+            $table->string('name'); // Attribute name (e.g., Color)
+            $table->foreignId('type_id')->constrained('product_types'); // Tied to product type
+            $table->foreignId('profile_id')->constrained('profiles'); // Scoped to a profile
             $table->timestamps();
         });
     }
