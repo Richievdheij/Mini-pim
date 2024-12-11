@@ -76,33 +76,3 @@ function submit() {
         </div>
     </div>
 </template>
-
-<style scoped>
-.edit-type-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-.edit-type-modal__content {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    width: 400px;
-}
-.edit-type-modal__title {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-}
-.edit-type-modal__actions {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 1rem;
-}
-</style>

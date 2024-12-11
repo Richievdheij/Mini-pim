@@ -47,6 +47,13 @@
 @import "manager/manage/settings/pim-settings.scss";
 
 // PIM
+// -- Data
+// // -- Attributes
+@import "pim/data/attributes/pim-attributes";
+// // -- Products
+@import "pim/data/products/pim-products";
+// // -- Types
+@import "pim/data/types/pim-types";
 
 // Profile
 @import "profile/pim-profile";

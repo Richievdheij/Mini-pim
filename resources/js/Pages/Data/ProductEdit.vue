@@ -23,7 +23,7 @@ async function fetchAttributes(typeId) {
         attributes.value = [];
         return;
     }
-    const response = await axios.get(route('types.attributes', typeId));
+    const response = await axios.get(route('pim.types.attributes', typeId));
     attributes.value = response.data.attributes;
 
     // Ensure all attributes exist in the form

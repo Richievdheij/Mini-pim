@@ -34,7 +34,7 @@ async function fetchAttributes(typeId) {
 }
 
 function submit() {
-    form.post(route('products.store'), {
+    form.post(route('pim.products.store'), {
         onSuccess: () => {
             alert('Product created successfully!');
         },

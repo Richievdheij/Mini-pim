@@ -35,7 +35,7 @@ function closeModal() {
 }
 
 function submit() {
-    form.post(route("types.store"), {
+    form.post(route("pim.types.store"), {
         preserveScroll: true,
         onSuccess: () => {
             success("Type created successfully!"); // Display success notification
@@ -79,38 +79,3 @@ function submit() {
         </div>
     </div>
 </template>
-
-<style scoped>
-.create-type-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.create-type-modal__content {
-    background: white;
-    padding: 2rem;
-    border-radius: 8px;
-    max-width: 500px;
-    width: 100%;
-}
-
-.create-type-modal__title {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.create-type-modal__actions {
-    margin-top: 1.5rem;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-}
-</style>

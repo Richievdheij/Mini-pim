@@ -1,6 +1,5 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
-import { watch, defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits } from 'vue';
 import SecondaryButton from '@/Components/General/SecondaryButton.vue';
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 import { useNotifications } from "@/plugins/notificationPlugin";
@@ -9,25 +8,11 @@ const { success, error } = useNotifications();
 
 // Props and emits
 const props = defineProps({
-    user: Object,
+    type: Object,
     isOpen: Boolean,
 });
 const emit = defineEmits(['close']);
 
-// Form setup
-const form = useForm({
-    password: '',
-});
-
-// Watch for when the modal is opened
-watch(
-    () => props.isOpen,
-    (isOpen) => {
-        if (isOpen) {
-            form.password = '';
-        }
-    }
-);
 
 // Close modal function
 function closeModal() {
@@ -36,31 +21,31 @@ function closeModal() {
     form.clearErrors();
 }
 
-// Submit function to handle user deletion
+// Submit function to handle type deletion
 function submit() {
-    form.delete(`/users/${props.user.id}`, {
+    form.delete(`/types/${props.type.id}`, {
         preserveScroll: true,
         onSuccess: () => {
-            success(`User ${props.user.name} deleted successfully!`);
+            success(`Type ${props.type.name} deleted successfully!`);
             closeModal();
         },
         onError: () => {
-            error("Failed to delete user. Please try again.");
+            error("Failed to delete type. Please try again.");
         },
     });
 }
 </script>
 
 <template>
-    <div v-if="isOpen" class="delete-user-modal">
-        <div class="delete-user-modal__overlay"></div>
-        <div class="delete-user-modal__content">
-            <h2 class="delete-user-modal__title">Delete User</h2>
-            <p class="delete-user-modal__description">
-                Are you sure you want to delete the user <strong>"{{ props.user.name }}"?</strong>
+    <div v-if="isOpen" class="delete-type-modal">
+        <div class="delete-type-modal__overlay"></div>
+        <div class="delete-type-modal__content">
+            <h2 class="delete-type-modal__title">Delete Type</h2>
+            <p class="delete-type-modal__description">
+                Are you sure you want to delete the type <strong>"{{ props.type.name }}"?</strong>
             </p>
-            <form @submit.prevent="submit" class="delete-user-modal__form">
-                <div class="delete-user-modal__actions">
+            <form @submit.prevent="submit" class="delete-type-modal__form">
+                <div class="delete-type-modal__actions">
                     <!-- Cancel button -->
                     <TertiaryButton
                         label="Cancel"
@@ -71,7 +56,6 @@ function submit() {
                     <SecondaryButton
                         label="Delete"
                         type="delete"
-                        :disabled="form.processing"
                     />
                 </div>
             </form>

@@ -7,10 +7,8 @@ import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
 const props = defineProps({
     isOpen: Boolean,
-    product: {
-        type: Object,
-        default: null,
-    },
+    attribute: Object,
+
 });
 
 const emit = defineEmits(["close"]);
@@ -24,30 +22,30 @@ function closeModal() {
 }
 
 function submit() {
-    if (!props.product) return;
+    if (!props.attribute) return;
 
-    form.delete(route("pim.products.destroy", props.product.id), {
+    form.delete(route("pim.attributes.destroy", props.attribute.id), {
         onSuccess: () => {
-            success("Product deleted successfully!");
+            success("Attribute deleted successfully!");
             closeModal();
         },
         onError: () => {
-            error("Failed to delete the product. Please try again.");
+            error("Failed to delete the attribute. Please try again.");
         },
     });
 }
 </script>
 
 <template>
-    <div v-if="isOpen" class="delete-product-modal">
-        <div class="delete-product-modal__overlay"></div>
-        <div class="delete-product-modal__content">
-            <h2 class="delete-product-modal__title">Delete Product</h2>
-            <p class="delete-product-modal__message">
-                Are you sure you want to delete the product <strong>"{{ product?.name }}"?</strong>
+    <div v-if="isOpen" class="delete-attribute-modal">
+        <div class="delete-attribute-modal__overlay"></div>
+        <div class="delete-attribute-modal__content">
+            <h2 class="delete-attribute-modal__title">Delete Attribute</h2>
+            <p class="delete-attribute-modal__message">
+                Are you sure you want to delete the attribute <strong>"{{ props.attribute.name }}"?</strong>
             </p>
-            <form @submit.prevent="submit" class="delete-product-modal__form">
-                <div class="delete-product-modal__actions">
+            <form @submit.prevent="submit" class="delete-attribute-modal__form">
+                <div class="delete-attribute-modal__actions">
                     <!-- Cancel button -->
                     <TertiaryButton
                         label="Cancel"

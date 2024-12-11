@@ -5,7 +5,14 @@
 .delete-profile-modal,
 .edit-profile-modal,
 .create-product-modal,
-.edit-product-modal {
+.edit-product-modal,
+.delete-product-modal,
+.create-type-modal,
+.edit-type-modal,
+.delete-type-modal,
+.create-attribute-modal,
+.edit-attribute-modal,
+.delete-attribute-modal, {
     position: fixed;
     inset: 0;
     z-index: 50;
@@ -38,7 +45,6 @@
     &__form {
         display: flex;
         flex-direction: column;
-        gap: 1rem; // Space between form fields
     }
 
     &__actions {
@@ -52,5 +58,4 @@
         font-size: 1rem;
         color: rgba(0, 0, 0, 0.7); // Lighter text for descriptions
     }
-
 }

@@ -1,95 +1,92 @@
 <script setup>
-import { useForm } from '@inertiajs/vue3';
-import { usePage } from '@inertiajs/vue3';
-import { defineEmits } from 'vue';
+import { useForm } from "@inertiajs/vue3";
+import { useNotifications } from "@/plugins/notificationPlugin";
+import { defineEmits } from "vue";
+import Input from "@/Components/General/Input.vue";
+import SecondaryButton from "@/Components/General/SecondaryButton.vue";
+import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
-const emit = defineEmits(['close']);
-const { types } = usePage().props;
+const emit = defineEmits(["close"]);
+const { success, error } = useNotifications(); // Initialize notifications
 
-const form = useForm({
-    name: '',
-    type_id: '',
+// Props from the parent component
+const props = defineProps({
+    isOpen: Boolean, // Determines if the modal is open
+    types: Array, // List of available types for the attribute
 });
 
+const form = useForm({
+    name: "",
+    type_id: "",
+});
+
+// Submit form
 function submit() {
-    form.post(route('attributes.store'), {
+    form.post(route("pim.attributes.store"), {
         onSuccess: () => {
-            emit('close'); // Close modal on successful submission
-            form.reset(); // Reset the form fields
+            success("Attribute successfully created!"); // Success message
+            emit("close"); // Close the modal after successful submission
+            form.reset(); // Reset the form
         },
-        onError: (errors) => {
-            console.error(errors); // Debugging errors
+        onError: () => {
+            error("Error creating the attribute."); // Error message
         },
     });
 }
 
+// Close the modal
 function closeModal() {
-    emit('close');
+    emit("close");
 }
 </script>
 
 <template>
-    <div class="modal">
-        <div class="modal-content">
-            <h2>Create Attribute</h2>
-            <form @submit.prevent="submit">
-                <label>
-                    Name:
-                    <input v-model="form.name" type="text" required placeholder="Enter attribute name"/>
-                </label>
-                <label>
+    <div v-if="form.processing" class="create-attribute-modal">
+        <div class="create-attribute-modal__overlay"></div>
+        <div class="create-attribute-modal__content">
+            <h2 class="create-attribute-modal__title">Create Attribute</h2>
+            <form @submit.prevent="submit" class="create-attribute-modal__form">
+                <!-- Name input field -->
+                <Input
+                    label="Name"
+                    id="name"
+                    inputType="text"
+                    placeholder="Enter the attribute name"
+                    type="field"
+                    v-model="form.name"
+                    :error="form.errors.name"
+                />
+
+                <!-- Type dropdown field -->
+                <label for="type_id" class="create-attribute-modal__label">
                     Type:
-                    <select v-model="form.type_id" required>
+                    <select
+                        v-model="form.type_id"
+                        id="type_id"
+                        class="create-attribute-modal__select"
+                        required
+                    >
                         <option disabled value="">Select Type</option>
-                        <option v-for="type in types" :value="type.id" :key="type.id">
+                        <option v-for="type in props.types" :value="type.id" :key="type.id">
                             {{ type.name }}
                         </option>
                     </select>
                 </label>
-                <div class="modal-actions">
-                    <button type="submit">Save</button>
-                    <button type="button" @click="closeModal">Cancel</button>
+
+                <!-- Action buttons for the modal (Cancel and Save) -->
+                <div class="create-attribute-modal__actions">
+                    <TertiaryButton
+                        label="Cancel"
+                        type="cancel"
+                        @click="closeModal"
+                    />
+                    <SecondaryButton
+                        label="Create"
+                        type="submit"
+                        :disabled="form.processing"
+                    />
                 </div>
             </form>
         </div>
     </div>
 </template>
-
-<style scoped>
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    width: 30rem;
-}
-
-.modal-actions {
-    margin-top: 1rem;
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-}
-
-button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.25rem;
-    cursor: pointer;
-}
-
-button:hover {
-    opacity: 0.9;
-}
-</style>

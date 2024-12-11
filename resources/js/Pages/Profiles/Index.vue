@@ -153,7 +153,10 @@ const sortedProfiles = computed(() => {
                             Name
                             <i :class="{'fas fa-sort-up': sortConfig.column === 'name' && sortConfig.direction === 'asc', 'fas fa-sort-down': sortConfig.column === 'name' && sortConfig.direction === 'desc'}"></i>
                         </th>
-                        <th v-if="props.canEditProfile || props.canDeleteProfile" class="profiles__table-header-cell"></th>
+                        <th
+                            v-if="props.canEditProfile || props.canDeleteProfile"
+                            class="profiles__table-header-cell">
+                        </th>
                     </tr>
                     </thead>
                     <tbody class="profiles__table-body">

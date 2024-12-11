@@ -16,20 +16,38 @@ class ProductController extends Controller
 
     public function index()
     {
-        $products = Product::where('profile_id', auth()->user()->profiles->first()->id)->with('type')->get();
-        return inertia('Data/ProductsIndex', compact('products'));
+        $user = auth()->user();
+
+        return inertia('Data/ProductsIndex', [
+            'products' => Product::where('profile_id', $user->profiles->first()->id)->with('type')->get(),
+            'canCreateProduct' => $user->hasPermission('create_products'),
+            'canEditProduct' => $user->hasPermission('edit_products'),
+            'canDeleteProduct' => $user->hasPermission('delete_products'),
+        ]);
     }
 
     public function create()
     {
-        $types = ProductType::where('profile_id', auth()->user()->profiles->first()->id)->get();
-        $attributes = Attribute::where('profile_id', auth()->user()->profiles->first()->id)->get();
+        $user = auth()->user();
+
+        if (!$user || !$user->hasPermission('create_products')) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $types = ProductType::where('profile_id', $user->profiles->first()->id)->get();
+        $attributes = Attribute::where('profile_id', $user->profiles->first()->id)->get();
 
         return inertia('Data/ProductCreate', compact('types', 'attributes'));
     }
 
     public function store(Request $request)
     {
+        $user = auth()->user();
+
+        if (!$user || !$user->hasPermission('create_products')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $validated = $request->validate([
             'product_id' => 'required|unique:products,product_id',
             'name' => 'required|string',
@@ -43,7 +61,7 @@ class ProductController extends Controller
             'attributes.*.value' => 'string',
         ]);
 
-        $product = Product::create(array_merge($validated, ['profile_id' => auth()->user()->profiles->first()->id]));
+        $product = Product::create(array_merge($validated, ['profile_id' => $user->profiles->first()->id]));
 
         if (!empty($validated['attributes'])) {
             foreach ($validated['attributes'] as $attribute) {
@@ -53,6 +71,7 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Product created successfully!');
     }
+
     public function edit($id)
     {
         $user = auth()->user();
@@ -61,24 +80,23 @@ class ProductController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $product = Product::with('type')->findOrFail($id); // Fetch the product and its related type
-        $types = ProductType::where('profile_id', $user->profiles->first()->id)->get(); // Fetch product types
+        $product = Product::with('type')->findOrFail($id);
+        $types = ProductType::where('profile_id', $user->profiles->first()->id)->get();
 
         return inertia('Data/ProductEdit', [
             'product' => $product,
             'types' => $types,
         ]);
     }
+
     public function update(Request $request, Product $product)
     {
         $user = auth()->user();
 
-        // Check if the user has permission to update products
         if (!$user || !$user->hasPermission('edit_products')) {
             abort(403, 'Unauthorized action.');
         }
 
-        // Validate the incoming data
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type_id' => 'required|exists:product_types,id',
@@ -88,14 +106,19 @@ class ProductController extends Controller
             'stock_quantity' => 'required|integer|min:0',
         ]);
 
-        // Update the product with validated data
         $product->update($validated);
 
-        // Redirect back to the products index with a success message
         return redirect()->route('products.index')->with('success', 'Product updated successfully!');
     }
+
     public function destroy(Product $product)
     {
+        $user = auth()->user();
+
+        if (!$user || !$user->hasPermission('delete_products')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $this->authorizeOwnership($product);
 
         $product->delete();

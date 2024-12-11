@@ -66,7 +66,7 @@ const filteredUsers = computed(() => {
 
 // Sorting function
 function sortColumn(column) {
-    const { direction } = sortConfig.value;
+    const {direction} = sortConfig.value;
     let newDirection = 'asc';
 
     if (direction === 'asc') {
@@ -83,13 +83,19 @@ function sortColumn(column) {
 
 // Sorted users
 const sortedUsers = computed(() => {
-    const { column, direction } = sortConfig.value;
+    const {column, direction} = sortConfig.value;
     let usersToSort = [...filteredUsers.value];
 
     if (column && direction !== 'none') {
         usersToSort.sort((a, b) => {
-            const aValue = a[column];
-            const bValue = b[column];
+            let aValue = a[column];
+            let bValue = b[column];
+
+            // Special handling for the 'profiles' column
+            if (column === "profiles") {
+                aValue = a.profiles && a.profiles.length > 0 ? a.profiles[0].name : ""; // Get the first profile name
+                bValue = b.profiles && b.profiles.length > 0 ? b.profiles[0].name : "";
+            }
 
             if (direction === 'asc') {
                 return aValue > bValue ? 1 : -1;
@@ -133,9 +139,8 @@ const sortedUsers = computed(() => {
                         />
                     </div>
 
-
                     <div class="users__filter">
-                        <Filter />
+                        <Filter/>
                     </div>
                 </div>
 

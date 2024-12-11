@@ -24,7 +24,7 @@ function closeModal() {
     emit("close");
 }
 
-function deleteProfile() {
+function submit() {
     // Send delete request
     form.delete(route("profiles.destroy", props.profile.id), {
         onSuccess: () => {
@@ -44,9 +44,9 @@ function deleteProfile() {
         <div class="delete-profile-modal__content">
             <h2 class="delete-profile-modal__title">Delete Profile</h2>
             <p class="delete-profile-modal__description">
-                Are you sure you want to delete the profile "{{ props.profile.name }}"?
+                Are you sure you want to delete the profile <strong>"{{ props.profile.name }}"?</strong>
             </p>
-            <form @submit.prevent="deleteProfile" class="delete-profile-modal__actions">
+            <form @submit.prevent="submit" class="delete-profile-modal__actions">
                 <!-- Cancel button to close the modal -->
                 <TertiaryButton
                     label="Cancel"
@@ -57,7 +57,6 @@ function deleteProfile() {
                 <SecondaryButton
                     label="Delete"
                     type="delete"
-                    @click="deleteProfile"
                 />
             </form>
         </div>
