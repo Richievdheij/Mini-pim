@@ -21,13 +21,37 @@ const emit = defineEmits(['toggle-section']);
             <!-- Products -->
             <Link
                 class="sidebar-data-section__button"
-                :class="{ 'active': route().current('users.index') }"
-                :href="route('users.index')"
+                :class="{ 'active': route().current('pim.products.index') }"
+                :href="route('pim.products.index')"
             >
                 <div class="sidebar-data-section__icon-container">
                     <i class="sidebar-data-section__icon fas fa-cogs"></i>
                 </div>
                 <span>Products</span>
+            </Link>
+
+            <!-- Types -->
+            <Link
+                class="sidebar-data-section__button"
+                :class="{ 'active': route().current('pim.types.index') }"
+                :href="route('pim.types.index')"
+            >
+                <div class="sidebar-data-section__icon-container">
+                    <i class="sidebar-data-section__icon fas fa-cogs"></i>
+                </div>
+                <span>Types</span>
+            </Link>
+
+            <!-- Attributes -->
+            <Link
+                class="sidebar-data-section__button"
+                :class="{ 'active': route().current('pim.attributes.index') }"
+                :href="route('pim.attributes.index')"
+            >
+                <div class="sidebar-data-section__icon-container">
+                    <i class="sidebar-data-section__icon fas fa-cogs"></i>
+                </div>
+                <span>Attributes</span>
             </Link>
         </div>
     </div>

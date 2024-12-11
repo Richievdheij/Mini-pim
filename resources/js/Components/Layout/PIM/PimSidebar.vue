@@ -4,9 +4,9 @@ import { usePage } from '@inertiajs/vue3';
 
 import PimMainSection from "@/Components/Sidebar/PIM/PimMainSection.vue";
 import PimDataSection from "@/Components/Sidebar/PIM/PimDataSection.vue";
-import AccountSection from '@/Components/Sidebar/AccountSection.vue';
+import PimManageSection from "@/Components/Sidebar/PIM/PimManageSection.vue";
+import PimAccountSection from '@/Components/Sidebar/PIM/PimAccountSection.vue';
 import ProfileSection from '@/Components/Sidebar/ProfileSection.vue';
-import ManageSection from "@/Components/Sidebar/Manager/ManageSection.vue";
 
 const isSidebarExpanded = ref(true);
 const isDataExpanded = ref(true);
@@ -47,7 +47,7 @@ const toggleSection = (section) => {
         />
 
         <!-- Manage Section -->
-        <ManageSection
+        <PimManageSection
             :isManageExpanded="isManageExpanded"
             :isSidebarExpanded="isSidebarExpanded"
             @toggle-section="toggleSection"
@@ -63,7 +63,7 @@ const toggleSection = (section) => {
         </div>
 
         <!-- Account Section -->
-        <AccountSection
+        <PimAccountSection
             :isAccountExpanded="isAccountExpanded"
             :isSidebarExpanded="isSidebarExpanded"
             @toggle-section="toggleSection"

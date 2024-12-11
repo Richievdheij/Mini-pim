@@ -3,9 +3,9 @@ import { ref } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 
 import MainSection from '@/Components/Sidebar/Manager/MainSection.vue';
-import AccountSection from '@/Components/Sidebar/AccountSection.vue';
 import GeneralSection from '@/Components/Sidebar/Manager/GeneralSection.vue';
 import ManageSection from '@/Components/Sidebar/Manager/ManageSection.vue';
+import AccountSection from '@/Components/Sidebar/Manager/AccountSection.vue';
 import ProfileSection from '@/Components/Sidebar/ProfileSection.vue';
 
 const isSidebarExpanded = ref(true);

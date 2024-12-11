@@ -14,21 +14,35 @@ use Inertia\Response;
 class AccountController extends Controller
 {
     /**
-     * Show the account edit form.
+     * Show the default account edit form.
      *
      * @param Request $request
      * @return Response
      */
     public function edit(Request $request): Response
     {
-        return Inertia::render('Account/Edit', [
+        return Inertia::render('Account/Edit', [ // Default component
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
         ]);
     }
 
     /**
-     * Update the account information.
+     * Show the PIM-specific account edit form.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function editPim(Request $request): Response
+    {
+        return Inertia::render('Account/Pim-sidebar/PimEdit', [ // Account PIM component
+            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
+            'status' => session('status'),
+        ]);
+    }
+
+    /**
+     * Update account information (shared logic).
      *
      * @param ProfileUpdateRequest $request
      * @return RedirectResponse
@@ -44,11 +58,14 @@ class AccountController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('account.edit');
+        // Determine where to redirect based on the route name
+        $route = $request->routeIs('pim.account.*') ? 'pim.account.edit' : 'account.edit';
+
+        return Redirect::route($route);
     }
 
     /**
-     * Delete the user's account.
+     * Delete the user's account (shared logic).
      *
      * @param Request $request
      * @return RedirectResponse
