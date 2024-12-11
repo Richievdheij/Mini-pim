@@ -5,6 +5,8 @@ import ProductCreateModal from "@/Components/Admin/Data/Products/ProductCreateMo
 import ProductEditModal from "@/Components/Admin/Data/Products/ProductEditModal.vue";
 
 const { products } = usePage().props;
+const { types } = usePage().props; // Ensure the types are loaded here
+console.log(types); // Check if types array contains the expected data
 
 const showCreateModal = ref(false);
 const showEditModal = ref(false);
@@ -76,11 +78,14 @@ function handleProductUpdated(updatedProduct) {
         <!-- Modals -->
         <ProductCreateModal
             v-if="showCreateModal"
+            :isOpen="showCreateModal"
+            :types="types"
             @close="toggleCreateModal"
             @productCreated="handleProductCreated"
         />
         <ProductEditModal
             v-if="showEditModal"
+            :isOpen="showEditModal"
             :product="productToEdit"
             @close="toggleEditModal"
             @productUpdated="handleProductUpdated"
