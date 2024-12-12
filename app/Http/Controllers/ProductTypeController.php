@@ -69,7 +69,7 @@ class ProductTypeController extends Controller
         ProductType::create(array_merge($validated, ['profile_id' => $user->profiles->first()->id]));
 
         // Redirect to the product types index with a success message
-        return redirect()->route('types.index')->with('success', 'Product type created successfully!');
+        return redirect()->route('pim.types.index')->with('success', 'Product type created successfully!');
     }
 
     /**
@@ -109,7 +109,7 @@ class ProductTypeController extends Controller
         $productType->update($validated);
 
         // Redirect to the product types index with a success message
-        return redirect()->route('types.index')->with('success', 'Product type updated successfully!');
+        return redirect()->route('pim.types.index')->with('success', 'Product type updated successfully!');
     }
 
     /**
@@ -124,11 +124,18 @@ class ProductTypeController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
+        // Check if the product type has any associated attributes
+        if ($productType->attributes()->exists()) {
+            return back()->withErrors([
+                'error' => 'This product type cannot be deleted because it has associated attributes.',
+            ]);
+        }
+
         // Delete the product type
         $productType->delete();
 
         // Redirect to the product types index with a success message
-        return redirect()->route('types.index')->with('success', 'Product type deleted successfully!');
+        return redirect()->route('pim.types.index')->with('success', 'Product type deleted successfully!');
     }
 
     /**

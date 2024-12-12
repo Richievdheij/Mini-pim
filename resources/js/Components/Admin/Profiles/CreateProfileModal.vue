@@ -40,11 +40,9 @@ function closeModal() {
 
 // Handle form submission (post the form data)
 function submit() {
-    const { success, error } = useNotifications(); // Get notification methods
-
     form.post(route("profiles.store"), {
         onSuccess: () => {
-            success("Profile created successfully!"); // Notify success
+            success(`Profile "${form.name}" created successfully!`); // Success message
             closeModal(); // Close modal on success
         },
         onError: () => {

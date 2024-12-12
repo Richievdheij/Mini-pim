@@ -28,7 +28,7 @@ function submit() {
     // Send delete request
     form.delete(route("profiles.destroy", props.profile.id), {
         onSuccess: () => {
-            success("Profile deleted successfully!"); // Success notification
+            success(`Profile "${props.profile.name}" deleted successfully!`); // Success message
             closeModal("delete");
         },
         onError: () => {

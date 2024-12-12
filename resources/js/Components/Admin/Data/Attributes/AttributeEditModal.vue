@@ -1,11 +1,15 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, watch } from 'vue';
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
+import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
+
+const { success, error } = useNotifications(); // Destructure success and error notifications
 
 const props = defineProps({
+    isOpen: Boolean,
     attribute: Object,
     types: Array,
 });
@@ -17,6 +21,14 @@ const form = useForm({
     type_id: props.attribute?.type_id || '',
 });
 
+// Watch for changes in the attribute prop to update the form
+watch(() => props.attribute, (newAttribute) => {
+    if (newAttribute) {
+        form.name = newAttribute.name;
+        form.type_id = newAttribute.type_id;
+    }
+});
+
 function closeModal() {
     emit('close');
     form.reset();
@@ -26,17 +38,18 @@ function closeModal() {
 function submit() {
     form.put(route('pim.attributes.update', props.attribute.id), {
         onSuccess: () => {
-            emit('close');
+            success(`Attribute "${form.name}" updated successfully!`); // Success message
+            closeModal()
         },
-        onError: (errors) => {
-            console.error(errors); // Debugging errors
+        onError: () => {
+            error('Failed to update attribute. Please try again.');
         },
     });
 }
 </script>
 
 <template>
-    <div v-if="form.processing" class="edit-attribute-modal">
+    <div v-if="isOpen" class="edit-attribute-modal">
         <div class="edit-attribute-modal__overlay"></div>
         <div class="edit-attribute-modal__content">
             <h2 class="edit-attribute-modal__title">Edit Attribute</h2>
@@ -52,21 +65,16 @@ function submit() {
                     :error="form.errors.name"
                 />
 
-                <!-- Type dropdown field -->
-                <label for="type_id" class="edit-attribute-modal__label">
-                    Type:
-                    <select
-                        v-model="form.type_id"
-                        id="type_id"
-                        class="edit-attribute-modal__select"
-                        required
-                    >
-                        <option disabled value="">Select Type</option>
-                        <option v-for="type in props.types" :value="type.id" :key="type.id">
-                            {{ type.name }}
-                        </option>
-                    </select>
-                </label>
+                <!-- Type select input field -->
+                <Input
+                    label="Type"
+                    id="type_id"
+                    type="selectType"
+                    placeholder="Select Type"
+                    v-model="form.type_id"
+                    :types="types"
+                    :error="form.errors.type_id"
+                />
 
                 <!-- Action buttons for the modal (Cancel and Edit) -->
                 <div class="edit-attribute-modal__actions">

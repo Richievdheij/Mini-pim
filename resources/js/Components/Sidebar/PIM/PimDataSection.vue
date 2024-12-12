@@ -25,7 +25,7 @@ const emit = defineEmits(['toggle-section']);
                 :href="route('pim.products.index')"
             >
                 <div class="sidebar-data-section__icon-container">
-                    <i class="sidebar-data-section__icon fas fa-cogs"></i>
+                    <i class="sidebar-data-section__icon fas fa-layer-group"></i>
                 </div>
                 <span>Products</span>
             </Link>
@@ -37,7 +37,7 @@ const emit = defineEmits(['toggle-section']);
                 :href="route('pim.types.index')"
             >
                 <div class="sidebar-data-section__icon-container">
-                    <i class="sidebar-data-section__icon fas fa-cogs"></i>
+                    <i class="sidebar-data-section__icon fas fa-th-list"></i>
                 </div>
                 <span>Types</span>
             </Link>
@@ -49,7 +49,7 @@ const emit = defineEmits(['toggle-section']);
                 :href="route('pim.attributes.index')"
             >
                 <div class="sidebar-data-section__icon-container">
-                    <i class="sidebar-data-section__icon fas fa-cogs"></i>
+                    <i class="sidebar-data-section__icon fas fa-list"></i>
                 </div>
                 <span>Attributes</span>
             </Link>

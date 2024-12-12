@@ -1,8 +1,9 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue';
+import { useForm } from '@inertiajs/inertia-vue3';
+import { useNotifications } from '@/plugins/notificationPlugin';
 import SecondaryButton from '@/Components/General/SecondaryButton.vue';
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
-import { useNotifications } from "@/plugins/notificationPlugin";
 
 const { success, error } = useNotifications();
 
@@ -13,20 +14,21 @@ const props = defineProps({
 });
 const emit = defineEmits(['close']);
 
+// Use Inertia's form helper for making the delete request
+const form = useForm({
+    name: '',
+});
 
 // Close modal function
 function closeModal() {
     emit('close');
-    form.reset();
-    form.clearErrors();
 }
 
 // Submit function to handle type deletion
 function submit() {
-    form.delete(`/types/${props.type.id}`, {
-        preserveScroll: true,
+    form.delete(route("pim.types.destroy", props.type.id), {
         onSuccess: () => {
-            success(`Type ${props.type.name} deleted successfully!`);
+            success(`Type "${form.name}" deleted successfully!`); // Success message
             closeModal();
         },
         onError: () => {
@@ -56,6 +58,7 @@ function submit() {
                     <SecondaryButton
                         label="Delete"
                         type="delete"
+                        :disabled="form.processing"
                     />
                 </div>
             </form>

@@ -162,7 +162,7 @@ function handleAttributeDeleted(attributeId) {
                             label="Create new Attribute"
                             type="cancel"
                             icon="fas fa-plus"
-                            @click="openModal('create')"
+                            @click="openModal('create', null)"
                         />
                     </div>
 

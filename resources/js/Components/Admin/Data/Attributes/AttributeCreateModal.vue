@@ -13,6 +13,7 @@ const { success, error } = useNotifications(); // Initialize notifications
 const props = defineProps({
     isOpen: Boolean, // Determines if the modal is open
     types: Array, // List of available types for the attribute
+    attributes: Array, // List of available attributes
 });
 
 const form = useForm({
@@ -23,10 +24,10 @@ const form = useForm({
 // Submit form
 function submit() {
     form.post(route("pim.attributes.store"), {
+        preserveScroll: true,
         onSuccess: () => {
-            success("Attribute successfully created!"); // Success message
-            emit("close"); // Close the modal after successful submission
-            form.reset(); // Reset the form
+            success(`Attribute "${form.name}" created successfully!`); // Success message
+            closeModal(); // Close the modal
         },
         onError: () => {
             error("Error creating the attribute."); // Error message
@@ -37,11 +38,14 @@ function submit() {
 // Close the modal
 function closeModal() {
     emit("close");
+    form.reset();
+    form.clearErrors();
 }
+
 </script>
 
 <template>
-    <div v-if="form.processing" class="create-attribute-modal">
+    <div v-if="isOpen" class="create-attribute-modal">
         <div class="create-attribute-modal__overlay"></div>
         <div class="create-attribute-modal__content">
             <h2 class="create-attribute-modal__title">Create Attribute</h2>
@@ -57,21 +61,16 @@ function closeModal() {
                     :error="form.errors.name"
                 />
 
-                <!-- Type dropdown field -->
-                <label for="type_id" class="create-attribute-modal__label">
-                    Type:
-                    <select
-                        v-model="form.type_id"
-                        id="type_id"
-                        class="create-attribute-modal__select"
-                        required
-                    >
-                        <option disabled value="">Select Type</option>
-                        <option v-for="type in props.types" :value="type.id" :key="type.id">
-                            {{ type.name }}
-                        </option>
-                    </select>
-                </label>
+                <!-- Type select input field -->
+                <Input
+                    label="Type"
+                    id="type"
+                    type="selectType"
+                    placeholder="Select Type"
+                    v-model="form.type_id"
+                    :types="types"
+                    :error="form.errors.type_id"
+                />
 
                 <!-- Action buttons for the modal (Cancel and Save) -->
                 <div class="create-attribute-modal__actions">

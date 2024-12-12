@@ -41,7 +41,7 @@ function submit() {
     form.delete(`/users/${props.user.id}`, {
         preserveScroll: true,
         onSuccess: () => {
-            success(`User ${props.user.name} deleted successfully!`);
+            success(`User "${props.user.name}" deleted successfully!`);
             closeModal();
         },
         onError: () => {

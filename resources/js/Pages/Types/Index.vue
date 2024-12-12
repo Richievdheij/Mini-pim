@@ -37,8 +37,10 @@ function openModal(modalType, type = null) {
     selectedType.value = type;
 
     if (modalType === "edit") {
+        typeToEdit.value = type;
         showEditModal.value = true;
     } else if (modalType === "delete") {
+        typeToDelete.value = type;
         showDeleteModal.value = true;
     } else if (modalType === "create") {
         showCreateModal.value = true;
@@ -115,25 +117,22 @@ const sortedTypes = computed(() => {
 function handleTypeCreated(newType) {
     showCreateModal.value = false;
     // Optionally, add the new type to the list
-    types.push(newType);
+    types.value.push(newType);
 }
 
 function handleTypeUpdated(updatedType) {
     showEditModal.value = false;
-    // Update the type in the list
-    const index = types.findIndex(type => type.id === updatedType.id);
+    // Find and update the type in the array
+    const index = types.value.findIndex(type => type.id === updatedType.id);
     if (index !== -1) {
-        types[index] = updatedType;
+        types.value[index] = updatedType;
     }
 }
 
 function handleTypeDeleted(typeId) {
     showDeleteModal.value = false;
-    // Remove the deleted type from the list
-    const index = types.findIndex(type => type.id === typeId);
-    if (index !== -1) {
-        types.splice(index, 1);
-    }
+    // Remove the deleted type from the array
+    types.value = types.value.filter(type => type.id !== typeId);
 }
 </script>
 
@@ -155,7 +154,7 @@ function handleTypeDeleted(typeId) {
                             label="Create New Type"
                             icon="fas fa-plus"
                             type="cancel"
-                            @click="openModal('create', type)"
+                            @click="openModal('create', null)"
                         />
                     </div>
 

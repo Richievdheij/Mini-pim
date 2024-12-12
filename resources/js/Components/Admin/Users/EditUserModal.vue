@@ -44,7 +44,7 @@ function submit() {
     form.put(`/users/${props.user.id}`, {
         preserveScroll: true,
         onSuccess: () => {
-            success(`User ${props.user.name} updated successfully!`);
+            success(`User "${props.user.name}" updated successfully!`);
             closeModal();
         },
         onError: () => {

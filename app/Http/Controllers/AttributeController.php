@@ -75,7 +75,7 @@ class AttributeController extends Controller
         $attribute = Attribute::create(array_merge($validated, ['profile_id' => $user->profiles->first()->id]));
 
         // Redirect to the attributes index with a success message
-        return redirect()->route('attributes.index')->with('success', 'Attribute created successfully!')->with('newAttribute', $attribute);
+        return redirect()->route('pim.attributes.index')->with('success', 'Attribute created successfully!')->with('newAttribute', $attribute);
     }
 
     /**
@@ -119,7 +119,7 @@ class AttributeController extends Controller
         $attribute->update($validated);
 
         // Redirect to the attributes index with a success message
-        return redirect()->route('attributes.index')->with('success', 'Attribute updated successfully!');
+        return redirect()->route('pim.attributes.index')->with('success', 'Attribute updated successfully!');
     }
 
     /**
@@ -138,6 +138,6 @@ class AttributeController extends Controller
         $attribute->delete();
 
         // Redirect to the attributes index with a success message
-        return redirect()->route('attributes.index')->with('success', 'Attribute deleted successfully!');
+        return redirect()->route('pim.attributes.index')->with('success', 'Attribute deleted successfully!');
     }
 }

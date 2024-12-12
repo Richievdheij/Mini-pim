@@ -8,6 +8,10 @@ const props = defineProps({
     message: String,
     modelValue: [String, Array],
     multiple: Boolean,
+    types: {
+        type: Array,
+        default: () => [],
+    },
     options: {
         type: Array,
         default: () => [],
@@ -40,6 +44,9 @@ const inputClass = computed(() => {
     if (props.type === 'search') {
         type += ' input__body--search';
     }
+    if (props.type === 'selectType') {
+        type += ' input__body--select';
+    }
 
     return type;
 });
@@ -53,19 +60,19 @@ const inputClass = computed(() => {
 
         <!-- Select Field -->
         <select
-            v-if="type === 'select'"
+            v-if="type === 'select' || type === 'selectType'"
             class="input__select"
             :multiple="multiple"
             :value="modelValue"
-            @change="$emit('update:modelValue', Array.from($event.target.selectedOptions, option => option.value))"
+            @change="$emit('update:modelValue', $event.target.value)"
         >
-            <option
-                v-for="option in options"
-                :key="option.id || option"
-                :value="option.id || option"
-            >
-                {{ option.name || option }}
-            </option>
+        <option
+            v-for="option in (type === 'select' ? options : types)"
+            :key="option.id || option"
+            :value="option.id || option"
+        >
+            {{ option.name || option }}
+        </option>
         </select>
 
         <!-- Search Field -->

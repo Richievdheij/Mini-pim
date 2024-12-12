@@ -18,8 +18,14 @@ class ProductController extends Controller
     {
         $user = auth()->user();
 
+        // Check if the user has permission to view product types
+        if (!$user || !$user->hasPermission('view_products')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         return inertia('Data/ProductsIndex', [
             'products' => Product::where('profile_id', $user->profiles->first()->id)->with('type')->get(),
+            'types' => ProductType::where('profile_id', $user->profiles->first()->id)->get(),
             'canCreateProduct' => $user->hasPermission('create_products'),
             'canEditProduct' => $user->hasPermission('edit_products'),
             'canDeleteProduct' => $user->hasPermission('delete_products'),
@@ -69,7 +75,7 @@ class ProductController extends Controller
             }
         }
 
-        return redirect()->route('products.index')->with('success', 'Product created successfully!');
+        return redirect()->route('pim.products.index')->with('success', 'Product created successfully!');
     }
 
     public function edit($id)
@@ -108,7 +114,7 @@ class ProductController extends Controller
 
         $product->update($validated);
 
-        return redirect()->route('products.index')->with('success', 'Product updated successfully!');
+        return redirect()->route('pim.products.index')->with('success', 'Product updated successfully!');
     }
 
     public function destroy(Product $product)
@@ -123,7 +129,7 @@ class ProductController extends Controller
 
         $product->delete();
 
-        return redirect()->route('products.index')->with('success', 'Product deleted successfully!');
+        return redirect()->route('pim.products.index')->with('success', 'Product deleted successfully!');
     }
 
     private function authorizeOwnership(Product $product)

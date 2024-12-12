@@ -65,6 +65,7 @@ Route::middleware(['auth', LoadUserProfiles::class])->group(function () {
     // PIM Routes - Root route is /pim
     Route::prefix('pim')->name('pim.')->group(function () {
         Route::get('/', [ProductController::class, 'dashboard'])->name('dashboard'); // PIM Dashboard
+
         Route::resource('products', ProductController::class) // Product Management
             ->except(['show']) // No show page for products
             ->names([

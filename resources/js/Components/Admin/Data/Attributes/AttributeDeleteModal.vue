@@ -1,21 +1,21 @@
 <script setup>
 import { defineProps, defineEmits } from "vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm } from '@inertiajs/inertia-vue3';
 import { useNotifications } from "@/plugins/notificationPlugin";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
+const { success, error } = useNotifications();
+const emit = defineEmits(["close"]);
+
 const props = defineProps({
     isOpen: Boolean,
     attribute: Object,
-
 });
 
-const emit = defineEmits(["close"]);
-
-const { success, error } = useNotifications();
-
-const form = useForm({});
+const form = useForm({
+    name: "",
+});
 
 function closeModal() {
     emit("close");
@@ -26,7 +26,7 @@ function submit() {
 
     form.delete(route("pim.attributes.destroy", props.attribute.id), {
         onSuccess: () => {
-            success("Attribute deleted successfully!");
+            success(`Type "${form.name}" deleted successfully!`); // Success message
             closeModal();
         },
         onError: () => {
@@ -56,6 +56,7 @@ function submit() {
                     <SecondaryButton
                         label="Delete"
                         type="delete"
+                        :disabled="form.processing"
                     />
                 </div>
             </form>

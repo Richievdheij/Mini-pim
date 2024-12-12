@@ -34,10 +34,10 @@ function closeModal() {
 }
 
 function submit() {
-    form.put(`/product-types/${props.type.id}`, {
+    form.put(route('pim.types.update', props.type.id), {
         preserveScroll: true,
         onSuccess: () => {
-            success(`Product Type "${props.type.name}" updated successfully!`);
+            success(`Type "${form.name}" updated successfully!`); // Success message
             closeModal();
         },
         onError: () => {

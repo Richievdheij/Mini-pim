@@ -43,7 +43,7 @@ function submit() {
     form.post("/users", {
         preserveScroll: true,
         onSuccess: () => {
-            success("User created successfully!");
+            success(`User "${form.name}" created successfully!`); // Success message
             closeModal();
         },
         onError: () => {
