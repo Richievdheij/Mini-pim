@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductType;
-use App\Models\Attribute; // Add this line for attributes management
+use App\Models\Attribute;
 use Illuminate\Http\Request;
 
 class ProductTypeController extends Controller
@@ -69,7 +69,7 @@ class ProductTypeController extends Controller
         ProductType::create(array_merge($validated, ['profile_id' => $user->profiles->first()->id]));
 
         // Redirect to the product types index with a success message
-        return redirect()->route('types.index')->with('success', 'Product type created successfully!');
+        return redirect()->route('pim.types.index')->with('success', 'Product type created successfully!');
     }
 
     /**
@@ -109,7 +109,7 @@ class ProductTypeController extends Controller
         $productType->update($validated);
 
         // Redirect to the product types index with a success message
-        return redirect()->route('types.index')->with('success', 'Product type updated successfully!');
+        return redirect()->route('pim.types.index')->with('success', 'Product type updated successfully!');
     }
 
     /**
@@ -128,7 +128,7 @@ class ProductTypeController extends Controller
         $productType->delete();
 
         // Redirect to the product types index with a success message
-        return redirect()->route('types.index')->with('success', 'Product type deleted successfully!');
+        return redirect()->route('pim.types.index')->with('success', 'Product type deleted successfully!');
     }
 
     /**
@@ -138,17 +138,16 @@ class ProductTypeController extends Controller
     {
         $user = auth()->user();
 
-        // Check if the user has permission to view attributes
-        if (!$user || !$user->hasPermission('view_types')) {
+        // Ensure the user has access to the type and its attributes
+        if (!$user) {
             abort(403, 'Unauthorized action.');
         }
 
-        // Fetch attributes for the given product type
-        $attributes = Attribute::where('type_id', $typeId)->get();
+        // Fetch attributes for the provided type_id and user's profile
+        $attributes = Attribute::where('type_id', $typeId)
+            ->where('profile_id', $user->profiles->first()->id)
+            ->get();
 
-        // Return the attributes as a JSON response
-        return response()->json([
-            'attributes' => $attributes
-        ]);
+        return response()->json(['attributes' => $attributes]);
     }
 }

@@ -111,7 +111,7 @@ Route::middleware(['auth', LoadUserProfiles::class])->group(function () {
                 'update' => 'attribute-values.update',
                 'destroy' => 'attribute-values.destroy',
             ]);
-        Route::get('/types/{typeId}/attributes', [ProductTypeController::class, 'attributes'])->name('types.attributes');
+        Route::get('/pim/types/{typeId}/attributes', [ProductTypeController::class, 'attributes'])->name('types.attributes');
     });
 });
 

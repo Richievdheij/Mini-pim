@@ -17,6 +17,8 @@ const props = defineProps({
 });
 
 const { products, types } = usePage().props;
+const attributes = ref([]);
+
 
 const showCreateModal = ref(false);
 const showEditModal = ref(false);
@@ -36,11 +38,11 @@ const sortConfig = ref({
 function openModal(modalType, product = null) {
     selectedProduct.value = product;
 
-    if (modalType === "edit") {
+    if (modalType === 'edit') {
         showEditModal.value = true;
-    } else if (modalType === "delete") {
+    } else if (modalType === 'delete') {
         showDeleteModal.value = true;
-    } else if (modalType === "create") {
+    } else if (modalType === 'create') {
         showCreateModal.value = true;
     }
 }
@@ -60,9 +62,11 @@ function closeModal(modalType) {
 
 // Search and Sorting
 const filteredProducts = computed(() => {
-    return products.filter((product) =>
-        product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
+    return products
+        .filter((product) => product && product.name) // Ensure product and product.name exist
+        .filter((product) =>
+            product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+        );
 });
 
 function sortColumn(column) {
@@ -243,8 +247,10 @@ function handleProductDeleted(productId) {
             />
             <ProductEditModal
                 :isOpen="showEditModal"
-                :product="productToEdit"
-                @close="closeModal('edit')"
+                :product="selectedProduct"
+                :types="types"
+                :attributes="attributes"
+                @close="showEditModal = false"
                 @productUpdated="handleProductUpdated"
             />
             <ProductDeleteModal
