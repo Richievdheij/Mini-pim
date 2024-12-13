@@ -32,7 +32,7 @@ function submit() {
             closeModal();
         },
         onError: () => {
-            error("Failed to delete type. Please try again.");
+            error("Failed to delete type, there are attributes still linked to this type.");
         },
     });
 }

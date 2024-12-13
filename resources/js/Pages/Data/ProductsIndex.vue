@@ -101,30 +101,6 @@ const sortedProducts = computed(() => {
     return productsToSort;
 });
 
-// Event Handlers for Product Modals
-function handleProductCreated(product) {
-    showCreateModal.value = false;
-    // Optionally, add the new product to the list
-    products.push(product);
-}
-
-function handleProductUpdated(updatedProduct) {
-    showEditModal.value = false;
-    // Update the product in the list
-    const index = products.findIndex(product => product.id === updatedProduct.id);
-    if (index !== -1) {
-        products[index] = updatedProduct;
-    }
-}
-
-function handleProductDeleted(productId) {
-    showDeleteModal.value = false;
-    // Remove the deleted product from the list
-    const index = products.findIndex(product => product.id === productId);
-    if (index !== -1) {
-        products.splice(index, 1);
-    }
-}
 </script>
 
 <template>
@@ -145,7 +121,7 @@ function handleProductDeleted(productId) {
                             label="Create New Product"
                             icon="fas fa-plus"
                             type="cancel"
-                            @click="openModal('create', product)"
+                            @click="openModal('create')"
                         />
                     </div>
 
@@ -239,19 +215,17 @@ function handleProductDeleted(productId) {
                 :isOpen="showCreateModal"
                 :types="types"
                 @close="closeModal('create')"
-                @productCreated="handleProductCreated"
             />
             <ProductEditModal
                 :isOpen="showEditModal"
                 :product="productToEdit"
+                :types="types"
                 @close="closeModal('edit')"
-                @productUpdated="handleProductUpdated"
             />
             <ProductDeleteModal
                 :isOpen="showDeleteModal"
                 :product="productToDelete"
                 @close="closeModal('delete')"
-                @productDeleted="handleProductDeleted"
             />
         </div>
     </PIMLayout>

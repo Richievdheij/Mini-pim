@@ -4,9 +4,9 @@ import { defineProps, defineEmits, watch } from 'vue';
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
-import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
+import { useNotifications } from "@/plugins/notificationPlugin";
 
-const { success, error } = useNotifications(); // Destructure success and error notifications
+const { success, error } = useNotifications(); // success and error notifications
 
 const props = defineProps({
     isOpen: Boolean,
@@ -14,8 +14,10 @@ const props = defineProps({
     types: Array,
 });
 
+// Function to close the modal
 const emit = defineEmits(['close']);
 
+// Form to handle the attribute data
 const form = useForm({
     name: props.attribute?.name || '',
     type_id: props.attribute?.type_id || '',
@@ -29,6 +31,7 @@ watch(() => props.attribute, (newAttribute) => {
     }
 });
 
+// Function to close the modal
 function closeModal() {
     emit('close');
     form.reset();

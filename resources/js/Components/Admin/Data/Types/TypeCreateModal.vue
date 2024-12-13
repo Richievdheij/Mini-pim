@@ -30,6 +30,7 @@ watch(
     }
 );
 
+// Close the modal
 function closeModal() {
     emit("close");
     form.reset();
@@ -55,6 +56,7 @@ function submit() {
         <div class="create-type-modal__content">
             <h2 class="create-type-modal__title">Create Type</h2>
             <form @submit.prevent="submit" class="create-type-modal__form">
+                <!-- Name -->
                 <Input
                     label="Name"
                     id="name"
@@ -64,12 +66,15 @@ function submit() {
                     v-model="form.name"
                     :error="form.errors.name"
                 />
+                <!-- Actions -->
                 <div class="create-type-modal__actions">
+                    <!-- Cancel -->
                     <TertiaryButton
                         label="Cancel"
                         type="cancel"
                         @click="closeModal"
                     />
+                    <!-- Create -->
                     <SecondaryButton
                         label="Create"
                         type="submit"

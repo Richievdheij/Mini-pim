@@ -1,7 +1,6 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
-import axios from "axios";
+import { watch } from "vue";
 import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
@@ -22,48 +21,16 @@ const form = useForm({
     product_id: "",
     name: "",
     type_id: "",
-    attributes: [],
-    weight: "",
     description: "",
-    price: "",
-    stock_quantity: "",
 });
 
-// Store values for dynamically fetched attributes
-const attributeValues = ref([]);
-
-// Watch for changes to `type_id` to fetch attributes when a product type is selected
-watch(
-    () => form.type_id,
-    async (typeId) => {
-        if (typeId) {
-            try {
-                const { data } = await axios.get(`/types/${typeId}/attributes`);
-                form.attributes = data;
-                attributeValues.value = data.reduce((acc, attr) => {
-                    acc[attr.id] = ""; // Default value for attributes
-                    return acc;
-                }, {});
-            } catch (err) {
-                console.error("Failed to fetch attributes:", err);
-                form.attributes = [];
-                attributeValues.value = {};
-            }
-        } else {
-            form.attributes = [];
-            attributeValues.value = {};
-        }
-    }
-);
-
-// Watch for changes to `isOpen` prop to reset form when modal opens
+// Watch for changes to the `isOpen` prop to reset form when modal opens
 watch(
     () => props.isOpen,
     (isOpen) => {
         if (isOpen) {
             form.reset(); // Reset form fields
-            form.clearErrors(); // Clear any existing errors
-            attributeValues.value = {}; // Clear attribute values
+            form.clearErrors(); // Clear any existing form errors
         }
     }
 );
@@ -73,24 +40,16 @@ function closeModal() {
     emit("close"); // Emit the close event
     form.reset(); // Reset form fields
     form.clearErrors(); // Clear any existing errors
-    attributeValues.value = {}; // Clear attribute values
 }
-
-// Handle form submission (post the form data)
+// Submit form
 function submit() {
-    const payload = {
-        ...form,
-        attributeValues: attributeValues.value,
-    };
-
     form.post(route("pim.products.store"), {
-        data: payload,
-        onSuccess: ({ props }) => {
-            success("Product created successfully!"); // Notify success
-            closeModal(); // Close modal on success
+        onSuccess: () => {
+            success(`Product "${form.name}" created successfully!`); // Success message
+            closeModal(); // Close the modal
         },
         onError: () => {
-            error("Failed to create product. Please try again."); // Notify failure
+            error("Failed to create product. Please try again."); // Error message
         },
     });
 }
@@ -122,26 +81,15 @@ function submit() {
                     v-model="form.name"
                     :error="form.errors.name"
                 />
-                <!-- Type input field (Select Type) -->
+                <!-- Type select input field -->
                 <Input
                     label="Type"
-                    id="type_id"
-                    type="select"
-                    inputType="select"
-                    placeholder="Select product type"
+                    id="type"
+                    type="selectType"
+                    placeholder="Select Type"
                     v-model="form.type_id"
-                    :options="types"
+                    :types="types"
                     :error="form.errors.type_id"
-                />
-                <!-- Weight input field -->
-                <Input
-                    label="Weight"
-                    id="weight"
-                    inputType="number"
-                    placeholder="Enter product weight"
-                    type="field"
-                    v-model="form.weight"
-                    :error="form.errors.weight"
                 />
                 <!-- Description input field -->
                 <Input
@@ -153,42 +101,6 @@ function submit() {
                     v-model="form.description"
                     :error="form.errors.description"
                 />
-                <!-- Price input field -->
-                <Input
-                    label="Price"
-                    id="price"
-                    inputType="number"
-                    placeholder="Enter product price"
-                    type="field"
-                    v-model="form.price"
-                    :error="form.errors.price"
-                />
-                <!-- Stock Quantity input field -->
-                <Input
-                    label="Stock Quantity"
-                    id="stock_quantity"
-                    inputType="number"
-                    placeholder="Enter stock quantity"
-                    type="field"
-                    v-model="form.stock_quantity"
-                    :error="form.errors.stock_quantity"
-                />
-
-                <div class="create-product-modal__attributes">
-                    <div
-                        v-for="attribute in form.attributes"
-                        :key="attribute.id"
-                        class="create-product-modal__attribute"
-                    >
-                        <label :for="attribute.id">{{ attribute.name }}</label>
-                        <input
-                            v-if="attribute.type === 'text'"
-                            class="create-product-modal__attribute-input"
-                            type="text"
-                            v-model="attributeValues[attribute.id]"
-                        />
-                    </div>
-                </div>
 
                 <div class="create-product-modal__actions">
                     <TertiaryButton

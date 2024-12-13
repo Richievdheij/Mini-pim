@@ -4,6 +4,7 @@ import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from '@/Components/General/Input.vue';
 import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 
+// Define the component props
 defineProps({
     mustVerifyEmail: {
         type: Boolean,
@@ -13,6 +14,7 @@ defineProps({
     },
 });
 
+// Get the authenticated user
 const user = usePage().props.auth.user;
 
 const form = useForm({
@@ -68,7 +70,11 @@ function submit() {
             />
 
             <!-- Save Button -->
-            <PrimaryButton label="Save" type="submit" :disabled="form.processing"/>
+            <PrimaryButton
+                label="Save"
+                type="submit"
+                :disabled="form.processing"
+            />
         </form>
     </div>
 </template>

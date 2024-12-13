@@ -1,4 +1,5 @@
 <script setup>
+// Define the props and emits
 const props = defineProps({
     modelValue: String,
     placeholder: {
@@ -15,10 +16,12 @@ const props = defineProps({
     },
 });
 
+// Emit the input event to update the model value in the parent component
 function onInput(event) {
     emit('update:modelValue', event.target.value);
 }
 
+// Emit the input event to update the model value in the parent component
 const emit = defineEmits(["update:modelValue"]);
 </script>
 

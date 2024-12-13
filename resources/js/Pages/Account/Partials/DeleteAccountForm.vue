@@ -15,10 +15,12 @@ const form = useForm({
     password: '',
 });
 
+// Confirm user deletion
 const confirmUserDeletion = () => {
     confirmingUserDeletion.value = true;
 };
 
+// Close the modal
 const closeModal = () => {
     confirmingUserDeletion.value = false;
     form.clearErrors();

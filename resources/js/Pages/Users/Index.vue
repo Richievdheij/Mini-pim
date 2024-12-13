@@ -69,12 +69,14 @@ function sortColumn(column) {
     const {direction} = sortConfig.value;
     let newDirection = 'asc';
 
+    // If the column is already sorted, change the direction
     if (direction === 'asc') {
         newDirection = 'desc';
     } else if (direction === 'desc') {
         newDirection = 'none';
     }
 
+    // Update the sort configuration
     sortConfig.value = {
         column,
         direction: newDirection,
@@ -86,6 +88,7 @@ const sortedUsers = computed(() => {
     const {column, direction} = sortConfig.value;
     let usersToSort = [...filteredUsers.value];
 
+    // Sort the users based on the column and direction
     if (column && direction !== 'none') {
         usersToSort.sort((a, b) => {
             let aValue = a[column];
@@ -97,6 +100,7 @@ const sortedUsers = computed(() => {
                 bValue = b.profiles && b.profiles.length > 0 ? b.profiles[0].name : "";
             }
 
+            // Sort the values based on the direction
             if (direction === 'asc') {
                 return aValue > bValue ? 1 : -1;
             } else {

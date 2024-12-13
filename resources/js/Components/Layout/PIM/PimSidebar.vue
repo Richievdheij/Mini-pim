@@ -8,7 +8,8 @@ import PimManageSection from "@/Components/Sidebar/PIM/PimManageSection.vue";
 import PimAccountSection from '@/Components/Sidebar/PIM/PimAccountSection.vue';
 import ProfileSection from '@/Components/Sidebar/ProfileSection.vue';
 
-const isSidebarExpanded = ref(true);
+// Sidebar State Management
+const isSidebarExpanded = ref(true); //
 const isDataExpanded = ref(true);
 const isGeneralExpanded = ref(true);
 const isManageExpanded = ref(true);
@@ -20,10 +21,12 @@ const user = props.auth.user || {
     profiles: [],
 };
 
+// Sidebar Toggle Function
 const toggleSidebar = () => {
     isSidebarExpanded.value = !isSidebarExpanded.value;
 };
 
+// Toggle Section Function
 const toggleSection = (section) => {
     if (section === 'data') isDataExpanded.value = !isDataExpanded.value;
     if (section === 'general') isGeneralExpanded.value = !isGeneralExpanded.value;

@@ -5,6 +5,7 @@ import { useForm, Link } from '@inertiajs/vue3';
 const form = useForm({});
 const props = defineProps(['isAccountExpanded', 'isSidebarExpanded']);
 
+// Logout function
 function logout() {
     form.post(route('logout'));
 }

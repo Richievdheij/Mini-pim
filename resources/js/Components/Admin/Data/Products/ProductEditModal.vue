@@ -3,11 +3,14 @@ import { useForm } from "@inertiajs/vue3";
 import { watch } from "vue";
 import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from "@/Components/General/Input.vue";
+import ProductEditModalInfo from "@/Components/Admin/Data/Products/Edit/ProductEditModalInfo.vue";
+import ProductEditModalTypes from "@/Components/Admin/Data/Products/Edit/ProductEditModalTypes.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
 const props = defineProps({
     product: Object,
+    types: Array,
     isOpen: Boolean,
 });
 
@@ -59,6 +62,8 @@ function submit() {
         <div class="edit-product-modal__overlay"></div>
         <div class="edit-product-modal__content">
             <h2 class="edit-product-modal__title">Edit Product</h2>
+            <h3 class="edit-product-modal__subtitle">General Information</h3>
+
             <form @submit.prevent="submit" class="edit-product-modal__form">
                 <!-- Product ID input field -->
                 <Input
@@ -80,15 +85,35 @@ function submit() {
                     v-model="form.name"
                     :error="form.errors.name"
                 />
-                <!-- Type input field (Select Type) -->
+                <!-- Description input field -->
+                <Input
+                    label="Description"
+                    id="description"
+                    inputType="text"
+                    placeholder="Enter product description"
+                    type="field"
+                    v-model="form.description"
+                    :error="form.errors.description"
+                />
+
+                <!-- Component for product types -->
+                <ProductEditModalTypes
+                    :types="types"
+                />
+
+                <!-- Component for product info -->
+                <ProductEditModalInfo
+
+                />
+
+                <!-- Type select input field -->
                 <Input
                     label="Type"
-                    id="type_id"
-                    type="select"
-                    inputType="select"
-                    placeholder="Select product type"
+                    id="type"
+                    type="selectType"
+                    placeholder="Select Type"
                     v-model="form.type_id"
-                    :options="types"
+                    :types="types"
                     :error="form.errors.type_id"
                 />
 
@@ -101,17 +126,6 @@ function submit() {
                     type="field"
                     v-model="form.weight"
                     :error="form.errors.weight"
-                />
-
-                <!-- Description input field -->
-                <Input
-                    label="Description"
-                    id="description"
-                    inputType="text"
-                    placeholder="Enter product description"
-                    type="field"
-                    v-model="form.description"
-                    :error="form.errors.description"
                 />
 
                 <!-- Price input field -->

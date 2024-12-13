@@ -1,13 +1,10 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
 import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from '@/Components/General/Input.vue';
 import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 
-const passwordInput = ref(null);
-const currentPasswordInput = ref(null);
-
+// Initialize form
 const form = useForm({
     current_password: '',
     password: '',
@@ -31,11 +28,9 @@ const submit = () => {
             error("Failed to update password."); // Notify failure
             if (form.errors.password) {
                 form.reset('password', 'password_confirmation');
-                passwordInput.value.focus();
             }
             if (form.errors.current_password) {
                 form.reset('current_password');
-                currentPasswordInput.value.focus();
             }
         },
     });
@@ -58,7 +53,6 @@ const submit = () => {
                 input-type="password"
                 placeholder="Current Password"
                 v-model="form.current_password"
-                ref="currentPasswordInput"
                 :error="form.errors.current_password"
             />
 
@@ -69,7 +63,6 @@ const submit = () => {
                 input-type="password"
                 placeholder="Enter your new password"
                 v-model="form.password"
-                ref="passwordInput"
                 :error="form.errors.password"
             />
 
@@ -84,7 +77,11 @@ const submit = () => {
             />
 
             <!-- Submit Button -->
-            <PrimaryButton label="Save" type="submit" :disabled="form.processing"/>
+            <PrimaryButton
+                label="Save"
+                type="submit"
+                :disabled="form.processing"
+            />
         </form>
     </div>
 </template>

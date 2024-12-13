@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
-import { Head, usePage } from "@inertiajs/vue3";
+import { Head } from "@inertiajs/vue3";
 import { useNotifications } from "@/plugins/notificationPlugin";
 import CreateProfileModal from "@/Components/Admin/Profiles/CreateProfileModal.vue";
 import EditProfileModal from "@/Components/Admin/Profiles/EditProfileModal.vue";
@@ -18,7 +18,6 @@ const props = defineProps({
     canCreateProfile: Boolean,
 });
 
-const page = usePage();
 const { success, error } = useNotifications(); // Use notifications
 
 const isEditModalOpen = ref(false);

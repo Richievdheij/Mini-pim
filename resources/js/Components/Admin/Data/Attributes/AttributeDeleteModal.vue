@@ -5,25 +5,29 @@ import { useNotifications } from "@/plugins/notificationPlugin";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
+// Success and error functions from notifications plugin
 const { success, error } = useNotifications();
+
+// Emit the close event
 const emit = defineEmits(["close"]);
 
+// Props from the parent component
 const props = defineProps({
     isOpen: Boolean,
     attribute: Object,
 });
 
+// Form for deleting the attribute
 const form = useForm({
     name: "",
 });
 
+// Close the modal
 function closeModal() {
     emit("close");
 }
 
 function submit() {
-    if (!props.attribute) return;
-
     form.delete(route("pim.attributes.destroy", props.attribute.id), {
         onSuccess: () => {
             success(`Type "${form.name}" deleted successfully!`); // Success message

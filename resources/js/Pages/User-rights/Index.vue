@@ -18,6 +18,7 @@ const props = defineProps({
 
 const { success, error } = useNotifications(); // Use notification plugin
 
+// Reactive variables
 const searchQuery = ref("");
 const expandedCategories = ref([]); // Track which categories are expanded
 
@@ -34,24 +35,29 @@ const filteredPermissions = computed(() => {
     return result;
 });
 
+// Check if a profile has a permission
 function hasPermission(profile, permission) {
     return profile.permissions.some((p) => p.id === permission.id);
 }
 
+// Form to update user rights
 const form = useForm({
     profile_id: null,
     permission_id: null,
 });
 
+// Toggle permission for a profile
 function togglePermission(profileId, permissionId) {
     form.profile_id = profileId;
     form.permission_id = permissionId;
 
+    // Find the profile and permission
     const profile = props.profiles.find((p) => p.id === profileId);
     const permission = Object.values(props.permissions)
         .flat()
         .find((p) => p.id === permissionId);
 
+    // Check if permission is already assigned to the profile
     const action = hasPermission(profile, permission) ? "removed from" : "added to";
 
     form.post(route("user-rights.update"), {
@@ -65,6 +71,7 @@ function togglePermission(profileId, permissionId) {
     });
 }
 
+// Toggle category to expand/collapse
 function toggleCategory(category) {
     if (expandedCategories.value.includes(category)) {
         expandedCategories.value = expandedCategories.value.filter((c) => c !== category);
@@ -94,6 +101,7 @@ function toggleCategory(category) {
                     </div>
                 </div>
 
+                <!-- Table to display user rights -->
                 <table class="user-rights__table">
                     <thead>
                     <tr class="user-rights__table-header">

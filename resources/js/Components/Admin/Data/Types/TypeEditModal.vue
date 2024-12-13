@@ -1,23 +1,28 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
 import { watch } from 'vue';
+import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from '@/Components/General/Input.vue';
 import SecondaryButton from '@/Components/General/SecondaryButton.vue';
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
-import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
 
 const { success, error } = useNotifications(); // Destructure success and error notifications
 
+// Define props and emits from parent component
 const props = defineProps({
     type: Object,
     isOpen: Boolean,
 });
+
+// Define emits
 const emit = defineEmits(['close']);
 
+// Form handling
 const form = useForm({
     name: '',
 });
 
+// Watch for changes in isOpen prop
 watch(
     () => props.isOpen,
     (isOpen) => {
@@ -27,6 +32,7 @@ watch(
     }
 );
 
+// Close modal
 function closeModal() {
     emit('close');
     form.reset();
@@ -53,6 +59,7 @@ function submit() {
         <div class="edit-type-modal__content">
             <h2 class="edit-type-modal__title">Edit Product Type</h2>
             <form @submit.prevent="submit" class="edit-type-modal__form">
+                <!-- Name -->
                 <Input
                     label="Type Name"
                     inputType="text"
@@ -61,6 +68,7 @@ function submit() {
                     v-model="form.name"
                     :error="form.errors.name"
                 />
+                <!-- Actions -->
                 <div class="edit-type-modal__actions">
                     <TertiaryButton
                         label="Cancel"

@@ -68,7 +68,11 @@ function submit() {
             />
 
             <!-- Save Button -->
-            <PrimaryButton label="Save" type="submit" :disabled="form.processing"/>
+            <PrimaryButton
+                label="Save"
+                type="submit"
+                :disabled="form.processing"
+            />
         </form>
     </div>
 </template>

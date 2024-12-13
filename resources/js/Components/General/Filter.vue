@@ -4,10 +4,12 @@ import { ref } from "vue";
 const selectedOption = ref("profile");
 const dropdownVisible = ref(false);
 
+// Toggle the dropdown visibility
 const toggleDropdown = () => {
     dropdownVisible.value = !dropdownVisible.value;
 };
 
+// Select the option and hide the dropdown
 const selectOption = (option) => {
     selectedOption.value = option;
     dropdownVisible.value = false;

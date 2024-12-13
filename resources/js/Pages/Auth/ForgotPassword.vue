@@ -9,6 +9,7 @@ const notification = ref({
     type: 'success', // Can be 'success' or 'error'
 });
 
+// Function to trigger the notification
 const triggerNotification = (message, type) => {
     notification.value = {
         show: true,
@@ -30,7 +31,6 @@ const triggerNotification = (message, type) => {
             v-if="notification.show"
             :message="notification.message"
             :type="notification.type"
-            @close="notification.show = false"
         />
 
         <!-- Forgot Password Form -->

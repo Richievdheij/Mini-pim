@@ -2,6 +2,7 @@
 import { defineProps, defineEmits } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
+// Define props and emit
 const props = defineProps(['isGeneralExpanded', 'isSidebarExpanded']);
 const emit = defineEmits(['toggle-section']);
 </script>

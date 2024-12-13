@@ -8,6 +8,7 @@ import { useNotifications } from "@/plugins/notificationPlugin";
 
 const { success, error } = useNotifications();
 
+// Define props and emit events
 const props = defineProps({
     user: Object,
     profiles: Array,
@@ -15,6 +16,7 @@ const props = defineProps({
 });
 const emit = defineEmits(["close"]);
 
+// Set up form with default values
 const form = useForm({
     name: "",
     email: "",
@@ -33,6 +35,7 @@ watch(
     }
 );
 
+// Close the modal and reset the form
 function closeModal() {
     emit("close");
     form.reset();

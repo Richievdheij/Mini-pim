@@ -1,6 +1,7 @@
 <script setup>
 import { defineProps, computed } from 'vue';
 
+// Define the props and emits
 const props = defineProps({
     error: String,
     inputType: String,

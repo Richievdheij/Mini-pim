@@ -30,9 +30,24 @@
         background-color: #fff;
         border-radius: 0.375rem; // Rounded corners
         box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.15); // Subtle shadow
-        max-width: 35%; // Adjust modal width
+        max-width: 25%; // Adjust modal width
         top: 50%;
         transform: translateY(-50%); // Center vertically
+    }
+
+    .edit-product-modal__content {
+        max-width: 80%; // Ensures the input takes the full width of the modal
+    }
+
+    .edit-product-modal__form .input {
+        width: 25%; // Ensures the input takes the full width of the modal
+    }
+
+    .edit-product-modal__subtitle {
+        font-size: 1.3rem;
+        font-weight: bold;
+
+        color: rgba(0, 0, 0, 0.85);
     }
 
     &__title {
@@ -58,4 +73,5 @@
         font-size: 1rem;
         color: rgba(0, 0, 0, 0.7); // Lighter text for descriptions
     }
+
 }

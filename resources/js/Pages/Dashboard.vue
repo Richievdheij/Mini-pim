@@ -4,7 +4,7 @@ import { Head, usePage } from '@inertiajs/vue3';
 
 // Get the user and roles from Inertia's props
 const { props } = usePage();
-const user = props.user;
+const user = props.auth.user;
 
 </script>
 

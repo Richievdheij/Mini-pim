@@ -118,30 +118,6 @@ const sortedAttributes = computed(() => {
     return attributesToSort;
 });
 
-// Event Handlers for Attribute Modals
-function handleAttributeCreated(attribute) {
-    showCreateModal.value = false;
-    // Optionally, add the new attribute to the list
-    attributes.value.push(attribute);
-}
-
-function handleAttributeUpdated(updatedAttribute) {
-    showEditModal.value = false;
-    // Update the attribute in the list
-    const index = attributes.value.findIndex(attribute => attribute.id === updatedAttribute.id);
-    if (index !== -1) {
-        attributes.value[index] = updatedAttribute;
-    }
-}
-
-function handleAttributeDeleted(attributeId) {
-    showDeleteModal.value = false;
-    // Remove the deleted attribute from the list
-    const index = attributes.value.findIndex(attribute => attribute.id === attributeId);
-    if (index !== -1) {
-        attributes.value.splice(index, 1);
-    }
-}
 </script>
 
 <template>
@@ -244,20 +220,17 @@ function handleAttributeDeleted(attributeId) {
                 :isOpen="showCreateModal"
                 :types="types"
                 @close="closeModal('create')"
-                @attributeCreated="handleAttributeCreated"
             />
             <AttributeEditModal
                 :isOpen="showEditModal"
                 :attribute="attributeToEdit"
                 :types="types"
                 @close="closeModal('edit')"
-                @attributeUpdated="handleAttributeUpdated"
             />
             <AttributeDeleteModal
                 :isOpen="showDeleteModal"
                 :attribute="attributeToDelete"
                 @close="closeModal('delete')"
-                @attributeDeleted="handleAttributeDeleted"
             />
         </div>
     </PIMLayout>
