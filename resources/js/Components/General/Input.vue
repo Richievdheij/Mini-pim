@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, computed } from 'vue';
+import { defineProps, computed, ref } from 'vue';
 
 // Define the props and emits
 const props = defineProps({
@@ -7,7 +7,10 @@ const props = defineProps({
     inputType: String,
     label: String,
     message: String,
-    modelValue: [String, Array],
+    modelValue: [
+        String,
+        Array
+    ],
     multiple: Boolean,
     types: {
         type: Array,
@@ -33,9 +36,6 @@ const inputClass = computed(() => {
     if (props.error) {
         type += ' input__body--error';
     }
-    if (props.success) {
-        type += ' input__body--success';
-    }
     if (props.type === 'field') {
         type += ' input__body--field';
     }
@@ -51,6 +51,17 @@ const inputClass = computed(() => {
 
     return type;
 });
+
+// Compute placeholder text based on type
+const computedPlaceholder = computed(() => {
+    if (props.type === 'select') {
+        return props.placeholder || 'Select a profile';  // Default placeholder for profile selection
+    }
+    if (props.type === 'selectType') {
+        return props.placeholder || 'Select a type';  // Default placeholder for type selection
+    }
+    return props.placeholder || '';  // Default placeholder for other types
+});
 </script>
 
 <template>
@@ -59,21 +70,40 @@ const inputClass = computed(() => {
             {{ label }}
         </label>
 
-        <!-- Select Field -->
+        <!-- Select Field assign profiles -->
         <select
-            v-if="type === 'select' || type === 'selectType'"
+            v-if="type === 'select'"
             class="input__select"
-            :multiple="multiple"
+            :multiple="false"
             :value="modelValue"
-            @change="$emit('update:modelValue', $event.target.value)"
+            @change="$emit('update:modelValue', Array.from($event.target.selectedOptions, option => option.value))"
         >
-        <option
-            v-for="option in (type === 'select' ? options : types)"
-            :key="option.id || option"
-            :value="option.id || option"
+            <option value="" disabled selected>{{ computedPlaceholder }}</option>
+            <option
+                v-for="option in options"
+                :key="option.id || option"
+                :value="option.id || option"
+            >
+                {{ option.name || option }}
+            </option>
+        </select>
+
+        <!-- Select Field for assigning types (SelectType) -->
+        <select
+            v-if="type === 'selectType'"
+            class="input__select"
+            :multiple="false"
+            :value="modelValue"
+            @change="$emit('update:modelValue',  $event.target.value)"
         >
-            {{ option.name || option }}
-        </option>
+            <option value="" disabled selected>{{ computedPlaceholder }}</option>
+            <option
+                v-for="option in types"
+                :key="option.id || option"
+                :value="option.id || option"
+            >
+                {{ option.name || option }}
+            </option>
         </select>
 
         <!-- Search Field -->
@@ -103,3 +133,5 @@ const inputClass = computed(() => {
         </div>
     </div>
 </template>
+
+

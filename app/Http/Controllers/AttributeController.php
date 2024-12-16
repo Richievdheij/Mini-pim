@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attribute;
 use App\Models\ProductType;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class AttributeController extends Controller
 {
@@ -13,19 +14,13 @@ class AttributeController extends Controller
      */
     public function index()
     {
+        $this->authorizeAction('view_attributes');
+
         $user = auth()->user();
-
-        // Check if the user has permission to view attributes
-        if (!$user || !$user->hasPermission('view_attributes')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        // Fetch attributes and types for the current user's profile
         $attributes = Attribute::where('profile_id', $user->profiles->first()->id)->with('type')->get();
         $types = ProductType::where('profile_id', $user->profiles->first()->id)->get();
 
-        // Pass attributes, types, and permissions to the Inertia view
-        return inertia('Attributes/Index', [
+        return Inertia::render('Attributes/Index', [
             'attributes' => $attributes,
             'types' => $types,
             'canCreateAttribute' => $user->hasPermission('create_attributes'),
@@ -39,18 +34,12 @@ class AttributeController extends Controller
      */
     public function create()
     {
+        $this->authorizeAction('create_attributes');
+
         $user = auth()->user();
-
-        // Check if the user has permission to create attributes
-        if (!$user || !$user->hasPermission('create_attributes')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        // Fetch product types for the current user's profile
         $types = ProductType::where('profile_id', $user->profiles->first()->id)->get();
 
-        // Pass types to the Inertia view
-        return inertia('Attributes/Create', compact('types'));
+        return Inertia::render('Attributes/Create', compact('types'));
     }
 
     /**
@@ -58,23 +47,16 @@ class AttributeController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth()->user();
+        $this->authorizeAction('create_attributes');
 
-        // Check if the user has permission to create attributes
-        if (!$user || !$user->hasPermission('create_attributes')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        // Validate the request data
         $validated = $request->validate([
             'name' => 'required|string',
             'type_id' => 'required|exists:product_types,id',
         ]);
 
-        // Create a new attribute
+        $user = auth()->user();
         $attribute = Attribute::create(array_merge($validated, ['profile_id' => $user->profiles->first()->id]));
 
-        // Redirect to the attributes index with a success message
         return redirect()->route('pim.attributes.index')->with('success', 'Attribute created successfully!')->with('newAttribute', $attribute);
     }
 
@@ -83,18 +65,12 @@ class AttributeController extends Controller
      */
     public function edit(Attribute $attribute)
     {
+        $this->authorizeAction('edit_attributes');
+
         $user = auth()->user();
-
-        // Check if the user has permission to edit attributes
-        if (!$user || !$user->hasPermission('edit_attributes')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        // Fetch product types for the current user's profile
         $types = ProductType::where('profile_id', $user->profiles->first()->id)->get();
 
-        // Pass attribute and types to the Inertia view
-        return inertia('Attributes/Edit', compact('attribute', 'types'));
+        return Inertia::render('Attributes/Edit', compact('attribute', 'types'));
     }
 
     /**
@@ -102,23 +78,15 @@ class AttributeController extends Controller
      */
     public function update(Request $request, Attribute $attribute)
     {
-        $user = auth()->user();
+        $this->authorizeAction('edit_attributes');
 
-        // Check if the user has permission to edit attributes
-        if (!$user || !$user->hasPermission('edit_attributes')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        // Validate the request data
         $validated = $request->validate([
             'name' => 'required|string',
             'type_id' => 'required|exists:product_types,id',
         ]);
 
-        // Update the attribute
         $attribute->update($validated);
 
-        // Redirect to the attributes index with a success message
         return redirect()->route('pim.attributes.index')->with('success', 'Attribute updated successfully!');
     }
 
@@ -127,17 +95,25 @@ class AttributeController extends Controller
      */
     public function destroy(Attribute $attribute)
     {
-        $user = auth()->user();
+        $this->authorizeAction('delete_attributes');
 
-        // Check if the user has permission to delete attributes
-        if (!$user || !$user->hasPermission('delete_attributes')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        // Delete the attribute
         $attribute->delete();
 
-        // Redirect to the attributes index with a success message
         return redirect()->route('pim.attributes.index')->with('success', 'Attribute deleted successfully!');
+    }
+
+    /**
+     * Check if the current user has permission to perform an action.
+     *
+     * @param string $permission
+     * @return void
+     */
+    private function authorizeAction(string $permission): void
+    {
+        $user = auth()->user();
+
+        if (!$user || !$user->hasPermission($permission)) {
+            abort(403, 'Unauthorized action.');
+        }
     }
 }

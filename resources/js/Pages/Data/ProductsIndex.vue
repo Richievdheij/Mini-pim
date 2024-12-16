@@ -16,7 +16,7 @@ const props = defineProps({
     canDeleteProduct: Boolean,
 });
 
-const { products, types } = usePage().props;
+const { products, types, attributes } = usePage().props;
 
 const showCreateModal = ref(false);
 const showEditModal = ref(false);
@@ -60,9 +60,11 @@ function closeModal(modalType) {
 
 // Search and Sorting
 const filteredProducts = computed(() => {
-    return products.filter((product) =>
-        product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
+    return products
+        .filter((product) => product && product.name) // Ensure product and product.name exist
+        .filter((product) =>
+            product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+        );
 });
 
 function sortColumn(column) {
@@ -100,7 +102,6 @@ const sortedProducts = computed(() => {
 
     return productsToSort;
 });
-
 </script>
 
 <template>
@@ -220,6 +221,7 @@ const sortedProducts = computed(() => {
                 :isOpen="showEditModal"
                 :product="productToEdit"
                 :types="types"
+                :attributes="attributes"
                 @close="closeModal('edit')"
             />
             <ProductDeleteModal

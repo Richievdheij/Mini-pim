@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,13 +15,11 @@ class AccountController extends Controller
     /**
      * Show the default account edit form.
      *
-     * @param Request $request
      * @return Response
      */
-    public function edit(Request $request): Response
+    public function edit(): Response
     {
         return Inertia::render('Account/Edit', [ // Default component
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
         ]);
     }
@@ -30,13 +27,11 @@ class AccountController extends Controller
     /**
      * Show the PIM-specific account edit form.
      *
-     * @param Request $request
      * @return Response
      */
-    public function editPim(Request $request): Response
+    public function editPim(): Response
     {
         return Inertia::render('Account/Pim-sidebar/PimEdit', [ // Account PIM component
-            'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
         ]);
     }

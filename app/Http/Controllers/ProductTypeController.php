@@ -15,10 +15,7 @@ class ProductTypeController extends Controller
     {
         $user = auth()->user();
 
-        // Check if the user has permission to view product types
-        if (!$user || !$user->hasPermission('view_types')) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorizeAction('view_types');
 
         // Fetch product types for the current user's profile
         $types = ProductType::where('profile_id', $user->profiles->first()->id)->get();
@@ -37,12 +34,7 @@ class ProductTypeController extends Controller
      */
     public function create()
     {
-        $user = auth()->user();
-
-        // Check if the user has permission to create product types
-        if (!$user || !$user->hasPermission('create_types')) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorizeAction('create_types');
 
         // Pass to the Inertia view for creating a new product type
         return inertia('ProductTypes/Create');
@@ -55,10 +47,7 @@ class ProductTypeController extends Controller
     {
         $user = auth()->user();
 
-        // Check if the user has permission to create product types
-        if (!$user || !$user->hasPermission('create_types')) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorizeAction('create_types');
 
         // Validate the request data
         $validated = $request->validate([
@@ -77,12 +66,7 @@ class ProductTypeController extends Controller
      */
     public function edit(ProductType $productType)
     {
-        $user = auth()->user();
-
-        // Check if the user has permission to edit product types
-        if (!$user || !$user->hasPermission('edit_types')) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorizeAction('edit_types');
 
         // Pass product type to the Inertia view for editing
         return inertia('ProductTypes/Edit', compact('productType'));
@@ -93,12 +77,7 @@ class ProductTypeController extends Controller
      */
     public function update(Request $request, ProductType $productType)
     {
-        $user = auth()->user();
-
-        // Check if the user has permission to edit product types
-        if (!$user || !$user->hasPermission('edit_types')) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorizeAction('edit_types');
 
         // Validate the request data
         $validated = $request->validate([
@@ -117,12 +96,7 @@ class ProductTypeController extends Controller
      */
     public function destroy(ProductType $productType)
     {
-        $user = auth()->user();
-
-        // Check if the user has permission to delete product types
-        if (!$user || !$user->hasPermission('delete_types')) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorizeAction('delete_types');
 
         // Check if the product type has any associated attributes
         if ($productType->attributes()->exists()) {
@@ -143,12 +117,7 @@ class ProductTypeController extends Controller
      */
     public function attributes($typeId)
     {
-        $user = auth()->user();
-
-        // Check if the user has permission to view attributes
-        if (!$user || !$user->hasPermission('view_types')) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorizeAction('view_types');
 
         // Fetch attributes for the given product type
         $attributes = Attribute::where('type_id', $typeId)->get();
@@ -157,5 +126,20 @@ class ProductTypeController extends Controller
         return response()->json([
             'attributes' => $attributes
         ]);
+    }
+    /**
+     * Check if the current user has permission to perform an action.
+     *
+     * @param string $permission
+     * @return void
+     */
+    private function authorizeAction(string $permission): void
+    {
+        $user = auth()->user();
+
+        // Abort with a 403 error if the user is unauthorized
+        if (!$user || !$user->hasPermission($permission)) {
+            abort(403, 'Unauthorized action.');
+        }
     }
 }

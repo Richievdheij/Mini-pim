@@ -34,7 +34,6 @@ function submit() {
         },
     });
 }
-
 // Close the modal
 function closeModal() {
     emit("close");
@@ -63,7 +62,7 @@ function closeModal() {
 
                 <!-- Type select input field -->
                 <Input
-                    label="Type"
+                    label="Select Type"
                     id="type"
                     type="selectType"
                     placeholder="Select Type"

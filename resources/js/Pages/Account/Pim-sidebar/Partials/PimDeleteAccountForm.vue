@@ -9,7 +9,6 @@ import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 import Modal from '@/Components/laravelWelcome/Modal.vue';
 
 const confirmingUserDeletion = ref(false);
-const passwordInput = ref(null);
 
 const form = useForm({
     password: '',
@@ -37,9 +36,7 @@ const deleteUser = () => {
         },
         onError: () => {
             error("Failed to delete account."); // Notify failure
-            if (form.errors.password) {
-                passwordInput.value.focus();
-            }
+            if (form.errors.password) {}
         },
         onFinish: () => {
             form.reset(); // Reset the form after submission
@@ -77,7 +74,6 @@ const deleteUser = () => {
                     input-type="password"
                     placeholder="Enter your Password"
                     v-model="form.password"
-                    ref="passwordInput"
                     :error="form.errors.password"
                     @keyup.enter="deleteUser"
                 />

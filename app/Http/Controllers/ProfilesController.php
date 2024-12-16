@@ -150,7 +150,6 @@ class ProfilesController extends Controller
         return back(); // Removed flash message
     }
 
-
     /**
      * Check if the current user has permission to perform an action.
      *

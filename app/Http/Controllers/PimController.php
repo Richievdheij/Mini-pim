@@ -40,12 +40,9 @@ class PimController extends Controller
      */
     public function index(): Response
     {
+        $this->authorizeAction('view_dashboard');
+
         $user = auth()->user();
-
-        if (!$user || !$user->hasPermission('view_dashboard')) {
-            abort(403, 'Unauthorized action.');
-        }
-
         return Inertia::render('Dashboard', ['user' => $user]);
     }
 
@@ -70,11 +67,7 @@ class PimController extends Controller
      */
     public function createUser(): Response
     {
-        $user = auth()->user();
-
-        if (!$user || !$user->hasPermission('create_users')) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorizeAction('create_users');
 
         $profiles = Profile::all();
         return Inertia::render('Users/Create', ['profiles' => $profiles]);
@@ -85,11 +78,7 @@ class PimController extends Controller
      */
     public function storeUser(Request $request)
     {
-        $user = auth()->user();
-
-        if (!$user || !$user->hasPermission('create_users')) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorizeAction('create_users');
 
         // Validate request
         $request->validate([
@@ -132,11 +121,7 @@ class PimController extends Controller
      */
     public function editUser(User $user): Response
     {
-        $currentUser = auth()->user();
-
-        if (!$currentUser || !$currentUser->hasPermission('edit_users')) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorizeAction('edit_users');
 
         $profiles = Profile::all();
         $userProfiles = $user->profiles->pluck('id')->toArray();
@@ -153,11 +138,7 @@ class PimController extends Controller
      */
     public function updateUser(Request $request, User $user)
     {
-        $currentUser = auth()->user();
-
-        if (!$currentUser || !$currentUser->hasPermission('edit_users')) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorizeAction('edit_users');
 
         $request->validate([
             'name' => 'required',
@@ -184,14 +165,25 @@ class PimController extends Controller
      */
     public function destroyUser(User $user)
     {
-        $currentUser = auth()->user();
-
-        if (!$currentUser || !$currentUser->hasPermission('delete_users')) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorizeAction('delete_users');
 
         $user->delete();
 
         return redirect()->route('users.index');
+    }
+
+    /**
+     * Check if the current user has permission to perform an action.
+     *
+     * @param string $permission
+     * @return void
+     */
+    private function authorizeAction(string $permission): void
+    {
+        $user = auth()->user();
+
+        if (!$user || !$user->hasPermission($permission)) {
+            abort(403, 'Unauthorized action.');
+        }
     }
 }

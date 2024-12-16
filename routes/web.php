@@ -67,15 +67,15 @@ Route::middleware(['auth', LoadUserProfiles::class])->group(function () {
         Route::get('/', [ProductController::class, 'dashboard'])->name('dashboard'); // PIM Dashboard
 
         Route::resource('products', ProductController::class) // Product Management
-            ->except(['show']) // No show page for products
-            ->names([
-                'index' => 'products.index',
-                'create' => 'products.create',
-                'store' => 'products.store',
-                'edit' => 'products.edit',
-                'update' => 'products.update',
-                'destroy' => 'products.destroy',
-            ]);
+        ->except(['show']) // No show page for products
+        ->names([
+            'index' => 'products.index',
+            'create' => 'products.create',
+            'store' => 'products.store',
+            'edit' => 'products.edit',
+            'update' => 'products.update',
+            'destroy' => 'products.destroy',
+        ]);
 
         // Product Types Management
         Route::resource('product-types', ProductTypeController::class)
@@ -112,6 +112,8 @@ Route::middleware(['auth', LoadUserProfiles::class])->group(function () {
                 'update' => 'attribute-values.update',
                 'destroy' => 'attribute-values.destroy',
             ]);
+
+        // Product Type-specific Attributes
         Route::get('/types/{typeId}/attributes', [ProductTypeController::class, 'attributes'])->name('types.attributes');
     });
 });
