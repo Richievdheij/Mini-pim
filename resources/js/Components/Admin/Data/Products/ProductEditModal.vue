@@ -14,7 +14,6 @@ const props = defineProps({
     product: Object, // The selected product to edit
     isOpen: Boolean, // Whether the modal is open or not
     types: Array, // List of product types
-    attributes: Array, // List of attributes related to the product type
 });
 
 const emit = defineEmits(["close", "productUpdated"]);
@@ -31,7 +30,6 @@ const form = useForm({
 });
 
 const attributes = ref([]);
-
 const attributeValues = ref({});
 
 // Watch for product changes and initialize form and attributes
@@ -47,14 +45,13 @@ watch(
             form.price = product.price || "";
             form.stock_quantity = product.stock_quantity || "";
 
-            // Initialize attribute values if attributes are available
             attributeValues.value = attributes.value.reduce((acc, attr) => {
                 acc[attr.id] = product.attributes?.find((a) => a.id === attr.id)?.value || "";
                 return acc;
             }, {});
         }
     },
-    { immediate: true }
+    {immediate: true}
 );
 
 // Watch for type_id changes to fetch related attributes dynamically
@@ -63,21 +60,31 @@ watch(
     async (typeId) => {
         if (typeId) {
             try {
-                const response = await axios.get(route("pim.types.attributes", { typeId }));
+                const response = await axios.get(route("pim.types.attributes", {typeId}));
                 const fetchedAttributes = response.data.attributes || [];
                 attributes.value = fetchedAttributes;
 
                 // Initialize attribute values for the fetched attributes
                 attributeValues.value = fetchedAttributes.reduce((acc, attr) => {
-                    acc[attr.id] = props.product?.attributes?.find(a => a.id === attr.id)?.value || "";
+                    acc[attr.id] = props.product?.attributes?.find((a) => a.id === attr.id)?.value || "";
                     return acc;
                 }, {});
-            } catch (error) {
-                console.error("Failed to fetch attributes:", error);
+            } catch (err) {
+                console.error("Failed to fetch attributes:", err);
             }
         }
     },
-    { immediate: true }
+    {immediate: true}
+);
+
+// Watch for modal open state and reset form if necessary
+watch(
+    () => props.isOpen,
+    (isOpen) => {
+        if (isOpen && props.product) {
+            form.fill(props.product);
+        }
+    }
 );
 
 // Close modal handler
@@ -85,6 +92,7 @@ function closeModal() {
     emit("close");
     form.reset();
     form.clearErrors();
+    attributes.value = [];
     attributeValues.value = {};
 }
 
@@ -98,17 +106,15 @@ function submit() {
         description: form.description,
         price: form.price,
         stock_quantity: form.stock_quantity,
-        attributes: Object.entries(attributeValues.value).map(([id, value]) => ({
-            id,
-            value,
-        })), // Send attribute ID and value
+        attributes: Object.entries(attributeValues.value).map(([id, value]) => ({id, value})),
     };
 
     form.put(route("pim.products.update", props.product.id), {
         data: payload,
         onSuccess: () => {
-            emit("productUpdated", { ...form, attributes: payload.attributes });
+            emit("productUpdated", {...form, attributes: payload.attributes});
             closeModal();
+            success("Product updated successfully.");
         },
         onError: () => {
             error("Failed to update product. Please try again.");
@@ -122,97 +128,64 @@ function submit() {
         <div class="edit-product-modal__overlay"></div>
         <div class="edit-product-modal__content">
             <h2 class="edit-product-modal__title">Edit Product</h2>
-            <h3 class="edit-product-modal__subtitle">General Information</h3>
 
             <form @submit.prevent="submit" class="edit-product-modal__form">
-                <!-- Product ID input field -->
-                <Input
-                    label="Product ID"
-                    id="product_id"
-                    inputType="text"
-                    placeholder="Enter product ID"
-                    type="field"
-                    v-model="form.product_id"
-                    :error="form.errors.product_id"
-                />
-                <!-- Name input field -->
-                <Input
-                    label="Name"
-                    id="name"
-                    inputType="text"
-                    placeholder="Enter product name"
-                    type="field"
-                    v-model="form.name"
-                    :error="form.errors.name"
-                />
-                <!-- Description input field -->
-                <Input
-                    label="Description"
-                    id="description"
-                    inputType="text"
-                    placeholder="Enter product description"
-                    type="field"
-                    v-model="form.description"
-                    :error="form.errors.description"
-                />
+                <div class="edit-product-modal__container">
+                    <div class="edit-product-modal__general">
+                        <h3 class="edit-product-modal__subtitle">General Information</h3>
+                        <!-- Product ID -->
+                        <Input
+                            label="Product ID"
+                            id="product_id"
+                            inputType="text"
+                            placeholder="Enter product ID"
+                            type="field"
+                            v-model="form.product_id"
+                            :error="form.errors.product_id"
+                        />
 
-                <!-- Component for product types -->
-                <ProductEditModalTypes
-                    :types="types"
-                />
+                        <!-- Name -->
+                        <Input
+                            label="Name"
+                            id="name"
+                            inputType="text"
+                            placeholder="Enter product name"
+                            type="field"
+                            v-model="form.name"
+                            :error="form.errors.name"
+                        />
 
-                <!-- Component for product info -->
-                <ProductEditModalInfo
+                        <!-- Description -->
+                        <Input
+                            label="Description"
+                            id="description"
+                            inputType="text"
+                            placeholder="Enter product description"
+                            type="field"
+                            v-model="form.description"
+                            :error="form.errors.description"
+                        />
+                    </div>
 
-                />
+                    <div class="edit-product-modal__additional">
+                        <h3 class="edit-product-modal__subtitle">Types</h3>
+                        <!-- Component for product types -->
+                        <ProductEditModalTypes
+                            :types="types"
+                            v-model="form.type_id"
+                        />
+                    </div>
 
-                <!-- Type select input field -->
-                <Input
-                    label="Type"
-                    id="type_id"
-                    type="selectType"
-                    v-model="form.type_id"
-                    :types="types"
-                    optionValue="id"
-                    optionLabel="name"
-                    placeholder="Select Type"
-                    :error="form.errors.type_id"
-                />
+                    <div class="edit-product-modal__info">
+                        <h3 class="edit-product-modal__subtitle">Additional Information</h3>
+                        <!-- Component for product info -->
+                        <ProductEditModalInfo
+                            v-model="form"
+                        />
+                    </div>
+                </div>
 
-                <!-- Weight input field -->
-                <Input
-                    label="Weight"
-                    id="weight"
-                    inputType="number"
-                    placeholder="Enter product weight"
-                    type="field"
-                    v-model="form.weight"
-                    :error="form.errors.weight"
-                />
-
-                <!-- Price input field -->
-                <Input
-                    label="Price"
-                    id="price"
-                    inputType="number"
-                    placeholder="Enter product price"
-                    type="field"
-                    v-model="form.price"
-                    :error="form.errors.price"
-                />
-
-                <!-- Stock Quantity input field -->
-                <Input
-                    label="Stock Quantity"
-                    id="stock_quantity"
-                    inputType="number"
-                    placeholder="Enter stock quantity"
-                    type="field"
-                    v-model="form.stock_quantity"
-                    :error="form.errors.stock_quantity"
-                />
-
-                <!-- Dynamic Attribute Fields -->
+                <!-- Dynamic Attributes -->
                 <div class="edit-product-modal__attributes">
                     <div
                         v-for="attribute in attributes"
@@ -236,11 +209,10 @@ function submit() {
                             v-model="attributeValues.value[attribute.id]"
                             :placeholder="`Enter ${attribute.name}`"
                         />
-                        <!-- Add more input types as necessary -->
                     </div>
                 </div>
 
-                <!-- Submit and Cancel Buttons -->
+                <!-- Actions -->
                 <div class="edit-product-modal__actions">
                     <TertiaryButton
                         label="Cancel"

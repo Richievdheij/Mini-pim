@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, computed, ref } from 'vue';
+import { defineProps, computed } from 'vue';
 
 // Define the props and emits
 const props = defineProps({
@@ -72,15 +72,15 @@ const computedPlaceholder = computed(() => {
 
         <!-- Select Field assign profiles -->
         <select
-            v-if="type === 'select' || type === 'selectType'"
+            v-if="type === 'select'"
             class="input__select"
             :multiple="false"
             :value="modelValue"
-            @change="$emit('update:modelValue', $event.target.value)"
+            @change="$emit('update:modelValue', Array.from($event.target.selectedOptions, option => option.value))"
         >
             <option value="" disabled selected>{{ computedPlaceholder }}</option>
             <option
-                v-for="option in (type === 'select' ? options : types)"
+                v-for="option in options"
                 :key="option.id || option"
                 :value="option.id || option"
             >

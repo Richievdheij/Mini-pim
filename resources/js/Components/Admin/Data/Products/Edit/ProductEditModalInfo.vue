@@ -1,55 +1,28 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import { watch } from "vue";
-import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from "@/Components/General/Input.vue";
 
 const props = defineProps({
     product: Object,
-    isOpen: Boolean,
 });
 
 const emit = defineEmits(["productUpdated"]);
 
-const { success, error } = useNotifications();
-
 const form = useForm({
+    weight: props.product?.weight || "",
+    height: props.product?.height || "",
+    width: props.product?.width || "",
+    depth: props.product?.depth || "",
     price: props.product?.price || "",
     stock_quantity: props.product?.stock_quantity || "",
     // Add Active/Inactive
 });
 
-watch(
-    () => props.isOpen,
-    (isOpen) => {
-        if (isOpen && props.product) {
-            form.fill(props.product);
-        }
-    }
-);
-
-function submit() {
-    form.put(route("pim.products.update", props.product.id), {
-        onSuccess: ({props}) => {
-            success("Product updated successfully!");
-            emit("productUpdated", props.flash.updatedProduct); // Emit de bijgewerkte product
-            closeModal();
-        },
-        onError: () => {
-            error("Failed to update product. Please try again.");
-        },
-    });
-}
 </script>
 
 <template>
-    <div v-if="isOpen" class="edit-product-modal">
-        <div class="edit-product-modal__overlay"></div>
-        <div class="edit-product-modal__content">
-            <h2 class="edit-product-modal__title"></h2>
-            <h3 class="edit-product-modal__subtitle">Additional information</h3>
-
-            <form @submit.prevent="submit" class="edit-product-modal__form">
+    <div class="edit-product-modal-info">
+            <form class="edit-product-modal-info__form">
                 <!-- Add dimensions & weight popup button -->
                 <!-- Weight input field -->
                 <Input
@@ -117,5 +90,4 @@ function submit() {
                 />
             </form>
         </div>
-    </div>
 </template>
