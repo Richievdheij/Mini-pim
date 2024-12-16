@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProductType;
-use App\Models\Attribute; // Add this line for attributes management
+use App\Models\Attribute;
 use Illuminate\Http\Request;
 
 class ProductTypeController extends Controller
@@ -117,10 +117,14 @@ class ProductTypeController extends Controller
      */
     public function attributes($typeId)
     {
+        $user = auth()->user();
+
         $this->authorizeAction('view_types');
 
-        // Fetch attributes for the given product type
-        $attributes = Attribute::where('type_id', $typeId)->get();
+        // Fetch attributes for the provided type_id and user's profile
+        $attributes = Attribute::where('type_id', $typeId)
+            ->where('profile_id', $user->profiles->first()->id)
+            ->get();
 
         // Return the attributes as a JSON response
         return response()->json([

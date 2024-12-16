@@ -72,15 +72,15 @@ const computedPlaceholder = computed(() => {
 
         <!-- Select Field assign profiles -->
         <select
-            v-if="type === 'select'"
+            v-if="type === 'select' || type === 'selectType'"
             class="input__select"
             :multiple="false"
             :value="modelValue"
-            @change="$emit('update:modelValue', Array.from($event.target.selectedOptions, option => option.value))"
+            @change="$emit('update:modelValue', $event.target.value)"
         >
             <option value="" disabled selected>{{ computedPlaceholder }}</option>
             <option
-                v-for="option in options"
+                v-for="option in (type === 'select' ? options : types)"
                 :key="option.id || option"
                 :value="option.id || option"
             >

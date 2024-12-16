@@ -9,7 +9,7 @@ import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 // Define props and events for the modal
 const props = defineProps({
     isOpen: Boolean, // Determines if the modal is open
-    types: Array,
+    types: Array, // List of product types
 });
 const emit = defineEmits(["close", "productCreated"]); // Emit events for closing and product creation
 const attributeValues = ref({}); // Attribute values for the product
@@ -50,6 +50,7 @@ watch(
             } catch (error) {
                 console.error("Failed to fetch attributes:", error);
                 form.attributes = [];
+                attributeValues.value = {};
             }
         } else {
             form.attributes = [];
@@ -65,7 +66,7 @@ function closeModal() {
     attributeValues.value = {}; // Clear attribute values
 }
 
-// Submit the form, including dynamic attributes, to the backend
+// Handle form submission (post the form data)
 function submit() {
     const payload = {
         product_id: form.product_id,
@@ -122,7 +123,6 @@ function submit() {
                     label="Type"
                     id="type_id"
                     type="selectType"
-                    placeholder="Select Type"
                     v-model="form.type_id"
                     optionValue="id"
                     optionLabel="name"
@@ -167,7 +167,7 @@ function submit() {
                         <!-- Add other input types as needed -->
                     </div>
                 </div>
-
+                <!-- Submit and Cancel Buttons -->
                 <div class="create-product-modal__actions">
                     <TertiaryButton
                         label="Cancel"

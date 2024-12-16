@@ -102,6 +102,7 @@ const sortedProducts = computed(() => {
 
     return productsToSort;
 });
+
 </script>
 
 <template>
