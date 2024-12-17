@@ -1,6 +1,6 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import { watch, ref } from "vue";
+import { watch } from "vue";
 import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
@@ -12,7 +12,6 @@ const props = defineProps({
     types: Array, // List of product types
 });
 const emit = defineEmits(["close", "productCreated"]); // Emit events for closing and product creation
-const attributeValues = ref({}); // Attribute values for the product
 
 // Initialize notifications system
 const { success, error } = useNotifications();
@@ -21,7 +20,6 @@ const { success, error } = useNotifications();
 const form = useForm({
     product_id: "",
     name: "",
-    attributes: [],
     type_id: "",
     description: "",
 });
@@ -33,27 +31,6 @@ watch(
         if (isOpen) {
             form.reset(); // Reset form fields
             form.clearErrors(); // Clear any existing form errors
-            attributeValues.value = {}; // Clear attribute values
-        }
-    }
-);
-
-// Watch for changes in `type_id` and fetch the related attributes
-watch(
-    () => form.type_id,
-    async (typeId) => {
-        if (typeId) {
-            try {
-                const url = route("pim.types.attributes", { typeId });
-                const response = await axios.get(url);
-                form.attributes = response.data.attributes || [];
-            } catch (error) {
-                console.error("Failed to fetch attributes:", error);
-                form.attributes = [];
-                attributeValues.value = {};
-            }
-        } else {
-            form.attributes = [];
         }
     }
 );
@@ -63,24 +40,11 @@ function closeModal() {
     emit("close"); // Emit the close event
     form.reset(); // Reset form fields
     form.clearErrors(); // Clear any existing errors
-    attributeValues.value = {}; // Clear attribute values
 }
 
 // Handle form submission (post the form data)
 function submit() {
-    const payload = {
-        product_id: form.product_id,
-        name: form.name,
-        type_id: form.type_id,
-        description: form.description,
-        attributes: Object.entries(attributeValues.value).map(([id, value]) => ({
-            id,
-            value,
-        })),
-    };
-
     form.post(route("pim.products.store"), {
-        data: payload,
         onSuccess: () => {
             success(`Product "${form.name}" created successfully!`); // Success message
             closeModal(); // Close the modal

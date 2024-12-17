@@ -22,6 +22,11 @@ class Product extends Model
     /**
      * Relationship to ProductType
      */
+    public function profiles()
+    {
+        return $this->belongsToMany(Profile::class, 'product_profile');
+    }
+
     public function type()
     {
         return $this->belongsTo(ProductType::class);

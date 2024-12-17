@@ -3,6 +3,10 @@ import { defineProps, computed } from 'vue';
 
 // Define the props and emits
 const props = defineProps({
+    disabled: {
+        type: Boolean,
+        default: false,
+    },
     error: String,
     inputType: String,
     label: String,
@@ -124,6 +128,7 @@ const computedPlaceholder = computed(() => {
             class="input__field"
             :class="{ 'has-value': modelValue }"
             :value="modelValue"
+            :disabled="props.disabled"
             @input="$emit('update:modelValue', $event.target.value)"
         />
 

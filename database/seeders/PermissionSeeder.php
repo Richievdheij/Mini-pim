@@ -41,6 +41,7 @@ class PermissionSeeder extends Seeder
 
             // Permission Management
             ['name' => 'manage_permissions', 'title' => 'Manage Permissions', 'description' => 'Manage permissions', 'category' => 'Rights/Security'],
+            ['name' => 'view_permissions', 'title' => 'View Permissions', 'description' => 'View permissions', 'category' => 'Rights/Security'],
 
             // Reports
             ['name' => 'view_reports', 'title' => 'View Reports', 'description' => 'View reports', 'category' => 'Reports'],

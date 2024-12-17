@@ -49,3 +49,19 @@
         }
     }
 }
+
+// Disable Product ID input
+.product-id-input {
+    input {
+        background-color: rgba(200, 200, 200, 0.3);
+        color: rgba(100, 100, 100, 0.6);
+        cursor: not-allowed;
+
+        &:disabled {
+            background-color: rgba(200, 200, 200, 0.3);
+            color: rgba(100, 100, 100, 0.6);
+            cursor: not-allowed;
+        }
+    }
+}
+

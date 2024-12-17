@@ -16,12 +16,12 @@ const props = defineProps({
     canDeleteProduct: Boolean,
 });
 
-const { products, types, attributes } = usePage().props;
+const { products, types } = usePage().props;
+const attributes = ref([]);
 
 const showCreateModal = ref(false);
 const showEditModal = ref(false);
 const showDeleteModal = ref(false);
-const productToEdit = ref(null);
 const productToDelete = ref(null);
 const selectedProduct = ref(null);
 const searchQuery = ref("");
@@ -34,13 +34,13 @@ const sortConfig = ref({
 
 // Open modal for create/edit/delete
 function openModal(modalType, product = null) {
-    selectedProduct.value = product;
-
-    if (modalType === "edit") {
+    if (modalType === 'edit') {
+        selectedProduct.value = product;
         showEditModal.value = true;
-    } else if (modalType === "delete") {
+    } else if (modalType === 'delete') {
+        productToDelete.value = product; // Fix: Set productToDelete
         showDeleteModal.value = true;
-    } else if (modalType === "create") {
+    } else if (modalType === 'create') {
         showCreateModal.value = true;
     }
 }
@@ -220,7 +220,7 @@ const sortedProducts = computed(() => {
             />
             <ProductEditModal
                 :isOpen="showEditModal"
-                :product="productToEdit"
+                :product="selectedProduct"
                 :types="types"
                 :attributes="attributes"
                 @close="closeModal('edit')"
