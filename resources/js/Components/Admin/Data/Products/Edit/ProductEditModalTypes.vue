@@ -1,69 +1,75 @@
 <script setup>
-import { ref, watch, defineEmits, defineProps } from "vue";
+import { ref, watch } from "vue";
 import axios from "axios";
 import Input from "@/Components/General/Input.vue";
+import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
 const props = defineProps({
-    types: Array, // List of available product types
-    modelValue: [String, Number], // Selected type_id
-    product: Object, // Product data to prepopulate attribute values
+    types: Array,
+    modelValue: [String, Number],
+    attributeValues: Object,
+    productId: Number,
+    attributes: Array,
+    errors: Object,
 });
 
 const emit = defineEmits(["update:modelValue", "attributesUpdated"]);
 
-// State for selected product type
 const typeId = ref(props.modelValue);
-
-// State to store fetched attributes for the selected type
 const attributes = ref([]);
+const errors = ref({});
 
-// State to store input values for each attribute
-const attributeValues = ref({});
-
-// Watch for changes in the selected product type to fetch its attributes
+// Watch for changes in typeId to fetch attributes
 watch(
     () => typeId.value,
     async (newTypeId) => {
+
         if (newTypeId) {
             try {
-                // Fetch the attributes for the selected type from the API
-                const response = await axios.get(route("pim.types.attributes", { typeId: newTypeId }));
+                const response = await axios.get(route("pim.types.attributes", {typeId: newTypeId}));
+                // console.log(response.data.attributes);
                 attributes.value = response.data.attributes || [];
-
-                // Prepopulate attribute values using product data if available
-                attributeValues.value = attributes.value.reduce((acc, attr) => {
-                    acc[attr.id] = props.product?.attributes?.find((a) => a.id === attr.id)?.value || "";
-                    return acc;
-                }, {});
-
-                // Emit updated attribute values to the parent component
-                emit("attributesUpdated", attributeValues.value);
             } catch (err) {
                 console.error("Failed to fetch attributes:", err);
             }
         } else {
-            // Reset attributes and values if no type is selected
             attributes.value = [];
-            attributeValues.value = {};
-            emit("attributesUpdated", {});
         }
     },
-    { immediate: true } // Trigger this watcher immediately on component mount
+    {immediate: true}
 );
 
-// Watch for changes in the selected type_id and emit to the parent component
-watch(
-    () => typeId.value,
-    (newVal) => {
-        emit("update:modelValue", newVal);
+// Save attributes
+const saveAttributes = async () => {
+    errors.value = {};
+
+    // Validate fields
+    attributes.value.forEach((attribute) => {
+        if (!props.attributeValues[attribute.id]) {
+            errors.value[attribute.id] = `${attribute.name} is required.`;
+        }
+    });
+
+    if (Object.keys(errors.value).length > 0) return;
+
+    try {
+        await axios.post(route("pim.attribute-values.store"), {
+            values: Object.entries(props.attributeValues).map(([id, value]) => ({
+                attribute_id: id,
+                value,
+            })),
+        });
+        emit("attributesUpdated", props.attributeValues);
+    } catch (err) {
+        console.error("Failed to save attributes:", err);
     }
-);
+};
 </script>
 
 <template>
     <div class="edit-product-modal-types">
-        <form class="edit-product-modal-types__form">
-            <!-- Select Product Type -->
+        <form class="edit-product-modal-types__form" @submit.prevent="saveAttributes">
+            <!-- Type Selection -->
             <Input
                 label="Type"
                 id="type_id"
@@ -76,23 +82,27 @@ watch(
                 required
             />
 
-            <!-- Dynamic Attribute Inputs -->
+            <!-- Dynamic Attributes -->
             <div v-if="attributes.length" class="edit-product-modal-types__attributes">
                 <div
                     v-for="attribute in attributes"
                     :key="attribute.id"
-                    class="edit-product-modal-types__attribute"
                 >
-                    <!-- Attribute Name and Input Field of type 'field' -->
                     <Input
-                        :label="attribute.name"
-                        :id="`attribute-${attribute.id}`"
                         type="field"
-                        v-model="attributeValues[attribute.id]"
-                        :placeholder="`Value`"
+                        :label="attribute.name"
+                        :id="`attribute_${attribute.id}`"
+                        v-model="props.attributeValues[attribute.id]"
+                        :error="errors[attribute.id]"
+                        required
                     />
                 </div>
             </div>
+
+            <TertiaryButton
+                type="cancel"
+                label="Save Attributes"
+            />
         </form>
     </div>
 </template>

@@ -13,6 +13,7 @@ class Product extends Model
         'product_id', // SKU
         'name',
         'type_id',
+        'profile_id',
         'weight',
         'description',
         'price',

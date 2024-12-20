@@ -12,7 +12,8 @@ class ProductAttributeValue extends Model
     protected $fillable = [
         'product_id', // Foreign key to Product
         'attribute_id', // Foreign key to Attribute
-        'value_id', // Foreign key to AttributeValue
+        'value', // Foreign key to AttributeValue
+        'profile_id', // Foreign key to Profile
     ];
 
     public function product()
@@ -28,5 +29,10 @@ class ProductAttributeValue extends Model
     public function value()
     {
         return $this->belongsTo(AttributeValue::class, 'value_id');
+    }
+
+    public function profile()
+    {
+        return $this->belongsTo(Profile::class);
     }
 }

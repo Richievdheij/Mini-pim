@@ -44,10 +44,6 @@ class ProductController extends Controller
         ]);
     }
 
-
-
-
-
     public function create()
     {
         $user = auth()->user();
@@ -92,6 +88,8 @@ class ProductController extends Controller
         $product = Product::create(array_merge($validated, [
             'weight' => 0,
             'stock_quantity' => 0,
+            'price' => 0,
+            'profile_id' => $user->profiles->first()->id,
         ]));
 
         // Attach profiles: the user's current profile and the admin profile (id=1)
@@ -101,21 +99,28 @@ class ProductController extends Controller
         return redirect()->route('pim.products.index')->with('success', 'Product created successfully!');
     }
 
-
     public function edit($id)
     {
         $this->authorizeAction('edit_products');
 
+        // Retrieve the product with the associated type and attributes
         $product = Product::with(['type', 'attributes'])->findOrFail($id);
+
         // Ensure ownership or admin access
         $this->authorizeOwnership($product);
 
-        $product = Product::with(['type', 'attributes'])->findOrFail($id);
+        // Fetch the product's existing attribute values
+        $attributeValues = $product->attributes->mapWithKeys(function ($attribute) {
+            return [$attribute->id => $attribute->pivot->value];
+        });
+
+        // Fetch attributes based on the product's type
         $attributes = Attribute::where('type_id', $product->type_id)->get();
 
         return inertia('Data/ProductEdit', [
             'product' => $product,
             'attributes' => $attributes,
+            'attributeValues' => $attributeValues, // Pass existing values
         ]);
     }
 
@@ -167,7 +172,6 @@ class ProductController extends Controller
                     ],
                     [
                         'value' => $attribute['value'],
-                        'updated_at' => now(),
                     ]
                 );
             }

@@ -51,7 +51,7 @@ class ProductTypeController extends Controller
 
         // Validate the request data
         $validated = $request->validate([
-            'name' => 'required|string|unique:product_types,name',
+            'name' => 'required|string|unique:product_types,name,NULL,id,profile_id,' . $user->profiles->first()->id,
         ]);
 
         // Create a new product type
@@ -77,11 +77,12 @@ class ProductTypeController extends Controller
      */
     public function update(Request $request, ProductType $productType)
     {
+        $user = auth()->user();
         $this->authorizeAction('edit_types');
 
-        // Validate the request data
+        // Validate the request data, ensuring 'name' is unique for the specific profile_id, except for the current product type
         $validated = $request->validate([
-            'name' => 'required|string|unique:product_types,name,' . $productType->id,
+            'name' => 'required|string|unique:product_types,name,' . $productType->id . ',id,profile_id,' . $user->profiles->first()->id,
         ]);
 
         // Update the product type
@@ -112,25 +113,6 @@ class ProductTypeController extends Controller
         return redirect()->route('pim.types.index')->with('success', 'Product type deleted successfully!');
     }
 
-    /**
-     * Fetch the attributes associated with a given product type.
-     */
-    public function attributes($typeId)
-    {
-        $user = auth()->user();
-
-        $this->authorizeAction('view_types');
-
-        // Fetch attributes for the provided type_id and user's profile
-        $attributes = Attribute::where('type_id', $typeId)
-            ->where('profile_id', $user->profiles->first()->id)
-            ->get();
-
-        // Return the attributes as a JSON response
-        return response()->json([
-            'attributes' => $attributes
-        ]);
-    }
     /**
      * Check if the current user has permission to perform an action.
      *

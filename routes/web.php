@@ -114,7 +114,8 @@ Route::middleware(['auth', LoadUserProfiles::class])->group(function () {
             ]);
 
         // Product Type-specific Attributes
-        Route::get('/types/{typeId}/attributes', [ProductTypeController::class, 'attributes'])->name('types.attributes');
+        Route::get('/types/{typeId}/attributes', [AttributeValueController::class, 'getAttributesWithValues'])->name('types.attributes');
+
     });
 });
 

@@ -2,42 +2,75 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AttributeValue;
 use App\Models\Attribute;
+use App\Models\AttributeValue;
+use App\Models\ProductAttributeValue;
 use Illuminate\Http\Request;
 
 class AttributeValueController extends Controller
 {
     public function index()
     {
-        $values = AttributeValue::where('profile_id', auth()->user()->profiles->first()->id)->with('attribute')->get();
+        $values = ProductAttributeValue::where('profile_id', auth()->user()->profiles->first()->id)
+            ->with('attribute')
+            ->get();
+
         return inertia('Attributes/AttributesValuesIndex', compact('values'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'attribute_id' => 'required|exists:attributes,id',
-            'value' => 'required|string',
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'values' => 'required|array',
+            'values.*.attribute_id' => 'required|exists:attributes,id',
+            'values.*.value' => 'required|string',
         ]);
 
-        AttributeValue::create(array_merge($validated, ['profile_id' => auth()->user()->profiles->first()->id]));
+        foreach ($request->values as $valueData) {
+            ProductAttributeValue::updateOrCreate(
+                [
+                    'product_id' => $request->product_id,
+                    'attribute_id' => $valueData['attribute_id'],
+                ],
+                [
+                    'value' => $valueData['value'],
+                    'profile_id' => auth()->user()->profiles->first()->id,
+                ]
+            );
+        }
 
-        return redirect()->route('attribute-values.index')->with('success', 'Attribute value created successfully!');
+        return response()->json(['success' => true, 'message' => 'Attribute values saved successfully!']);
     }
 
-    public function destroy(AttributeValue $attributeValue)
+    public function destroy(ProductAttributeValue $productAttributeValue)
     {
-        $this->authorizeOwnership($attributeValue);
+        $this->authorizeOwnership($productAttributeValue);
 
-        $attributeValue->delete();
+        $productAttributeValue->delete();
 
-        return redirect()->route('attribute-values.index')->with('success', 'Attribute value deleted successfully!');
+        return redirect()->route('pim.attribute-values.index')->with('success', 'Attribute value deleted successfully!');
     }
 
-    private function authorizeOwnership(AttributeValue $attributeValue)
+    public function getAttributesWithValues($typeId)
     {
-        if ($attributeValue->profile_id !== auth()->user()->profiles->first()->id) {
+        try {
+            $attributes = Attribute::where('type_id', $typeId)
+                ->with(['attributeValues' => function ($query) {
+                    $query->where('profile_id', auth()->user()->profiles->first()->id);
+                }])
+                ->get();
+
+            return response()->json(['attributes' => $attributes]);
+        } catch (\Exception $e) {
+            \Log::error('Error fetching attributes with values: ' . $e->getMessage());
+            return response()->json(['error' => 'Something went wrong.'], 500);
+        }
+    }
+
+    private function authorizeOwnership(ProductAttributeValue $productAttributeValue)
+    {
+        if ($productAttributeValue->profile_id !== auth()->user()->profiles->first()->id) {
             abort(403, 'Unauthorized action.');
         }
     }

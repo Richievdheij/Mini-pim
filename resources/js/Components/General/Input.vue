@@ -13,7 +13,7 @@ const props = defineProps({
     message: String,
     modelValue: [
         String,
-        Array
+        Array,
     ],
     multiple: Boolean,
     types: {

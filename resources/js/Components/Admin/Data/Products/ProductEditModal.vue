@@ -1,5 +1,5 @@
 <script setup>
-import { watch } from "vue";
+import { watch, ref } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from "@/Components/General/Input.vue";
@@ -11,10 +11,12 @@ import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 const { success, error } = useNotifications();
 
 const props = defineProps({
-    attributes: Array, // List of product attributes
-    product: Object, // The selected product to edit
-    isOpen: Boolean, // Whether the modal is open or not
-    types: Array, // List of product types
+    attributes: Array,
+    attributeValues: Object,
+    product: Object,
+    productId: Number,
+    isOpen: Boolean,
+    types: Array,
 });
 
 const emit = defineEmits(["close", "productUpdated"]);
@@ -31,9 +33,15 @@ const form = useForm({
     depth: "",
     price: "",
     stock_quantity: "",
+    attributes: {},
 });
 
-// Watch for modal open state and reset form if necessary
+// Attributes and validation
+const attributes = ref([]);
+const attributeValues = ref({});
+const errors = ref({});
+
+// Watch for modal open state
 watch(
     () => props.isOpen,
     (isOpen) => {
@@ -48,6 +56,13 @@ watch(
             form.depth = props.product.depth;
             form.price = props.product.price;
             form.stock_quantity = props.product.stock_quantity;
+
+            // Prepopulate attributes
+            attributes.value = props.attributes || [];
+            attributeValues.value = attributes.value.reduce((acc, attr) => {
+                acc[attr.id] = props.product?.attributes?.find((a) => a.id === attr.id)?.value || "";
+                return acc;
+            }, {});
         }
     }
 );
@@ -57,12 +72,26 @@ function closeModal() {
     emit("close");
     form.reset();
     form.clearErrors();
-    attributes.value = [];
     attributeValues.value = {};
+    errors.value = {};
 }
 
 // Submit form data
 function submit() {
+    // Validate attributes
+    errors.value = {}; // Clear previous errors
+    attributes.value.forEach((attribute) => {
+        if (!attributeValues.value[attribute.id]) {
+            errors.value[attribute.id] = `${attribute.name} is required.`;
+        }
+    });
+
+    if (Object.keys(errors.value).length > 0) {
+        error("Please fill in all required fields.");
+        return;
+    }
+
+    // Submit the form data to the correct table, ensuring attributes are linked with product_id
     form.put(route("pim.products.update", props.product.id), {
         onSuccess: () => {
             closeModal();
@@ -71,8 +100,17 @@ function submit() {
         onError: () => {
             error("Failed to update product. Please try again.");
         },
+        data: {
+            ...form,
+            attributes: Object.entries(attributeValues.value).map(([attribute_id, value]) => ({
+                attribute_id,
+                value,
+                product_id: props.product.id,  // Include the product_id to correctly associate the attributes
+            })),
+        },
     });
 }
+
 </script>
 
 <template>
@@ -129,16 +167,16 @@ function submit() {
                         <ProductEditModalTypes
                             :types="types"
                             v-model="form.type_id"
-                            :product="product"
+                            :attributes="attributes"
+                            :attributeValues="attributeValues"
+                            :errors="form.errors"
                         />
                     </div>
 
                     <div class="edit-product-modal__info">
                         <h3 class="edit-product-modal__subtitle">Additional Information</h3>
                         <!-- Component for product info -->
-                        <ProductEditModalInfo
-                            v-model="form"
-                        />
+                        <ProductEditModalInfo v-model="form" />
                     </div>
                 </div>
 
