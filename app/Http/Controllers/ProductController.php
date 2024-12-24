@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\ProductType;
 use App\Models\Attribute;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProductController extends Controller
 {
@@ -96,8 +97,22 @@ class ProductController extends Controller
         $profileIds = [$user->profiles->first()->id, 1]; // User's profile + admin profile
         $product->profiles()->attach($profileIds);
 
-        return redirect()->route('pim.products.index')->with('success', 'Product created successfully!');
+        // Get the user's profile ID and product types
+        $profileId = $user->profiles->first()->id;
+        $products = Product::with('type')->get();
+        $types = ProductType::where('profile_id', $profileId)->get();
+
+        // Return an Inertia response with updated data
+        return Inertia::render('Data/ProductsIndex', [
+            'products' => $products,
+            'types' => $types,
+            'canCreateProduct' => $user->hasPermission('create_products'),
+            'canEditProduct' => $user->hasPermission('edit_products'),
+            'canDeleteProduct' => $user->hasPermission('delete_products'),
+            'successMessage' => 'Product created successfully!',
+        ]);
     }
+
 
     public function edit($id)
     {

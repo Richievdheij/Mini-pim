@@ -44,16 +44,12 @@ class AccountController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $validatedData = $request->validated();
 
-        // Reset email verification if email is changed
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+        $request->user()->fill($validatedData);
 
         $request->user()->save();
 
-        // Determine where to redirect based on the route name
         $route = $request->routeIs('pim.account.*') ? 'pim.account.edit' : 'account.edit';
 
         return Redirect::route($route);
