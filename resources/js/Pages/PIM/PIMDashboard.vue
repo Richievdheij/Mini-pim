@@ -1,6 +1,10 @@
 <script setup>
 import PIMLayout from '@/Layouts/PIMLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
+
+// Get the user and roles from Inertia's props
+const { props } = usePage();
+const user = props.auth.user;
 
 </script>
 
@@ -18,7 +22,8 @@ import { Head } from '@inertiajs/vue3';
                 <div class="dashboard__main-content">
                     <h1 class="dashboard__welcome">Welcome to the PIM Dashboard!</h1>
                     <p class="dashboard__user-info">
-                        lorem ipsum dolor sit amet
+                        You are logged in as: <strong>{{ user.name }}</strong> <br>
+                        Your email adress is: <strong>{{ user.email }}</strong>.
                     </p>
                 </div>
             </main>

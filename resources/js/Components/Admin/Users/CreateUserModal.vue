@@ -1,6 +1,6 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import { watch } from "vue";
+import { watch, computed } from "vue";
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
@@ -42,6 +42,7 @@ function closeModal() {
     form.clearErrors();
 }
 
+// Submit the form
 function submit() {
     form.post("/users", {
         preserveScroll: true,

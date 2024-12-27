@@ -15,6 +15,17 @@ use Illuminate\Validation\Rules\Password as PasswordRules;
 class PimController extends Controller
 {
     /**
+     * Display the dashboard for authenticated users with the appropriate permission.
+     */
+    public function index(): Response
+    {
+        $this->authorizeAction('view_dashboard');
+        $user = auth()->user();
+
+        return Inertia::render('Dashboard', ['user' => $user]);
+    }
+
+    /**
      * Handle user login.
      */
     public function login(Request $request)
@@ -36,32 +47,34 @@ class PimController extends Controller
     }
 
     /**
-     * Display the dashboard for authenticated users with the appropriate permission.
-     */
-    public function index(): Response
-    {
-        $this->authorizeAction('view_dashboard');
-
-        $user = auth()->user();
-        return Inertia::render('Dashboard', ['user' => $user]);
-    }
-
-    /**
      * Display a listing of users (for users with manage_users permission only).
      */
     public function showUsers(): Response
     {
         $user = auth()->user();
 
-        // Make sure permissions match what you have in the database
+        // Admin users (profile_id === 1) can view all users
+        if ($user->profiles->first()->id === 1) {
+            // Admin can see all users
+            $users = User::with('profiles')->get();
+        } else {
+            // Non-admin users can only see users with the same profile_id
+            $users = User::with('profiles')
+                ->whereHas('profiles', function ($query) use ($user) {
+                    $query->where('id', $user->profiles->first()->id);
+                })
+                ->get();
+        }
+
         return Inertia::render('Users/Index', [
-            'users' => User::with('profiles')->get(),
+            'users' => $users,
             'profiles' => Profile::all(), // Add this to pass all profiles
             'canEditUser' => $user->hasPermission('edit_users'),
             'canDeleteUser' => $user->hasPermission('delete_users'),
             'canCreateUser' => $user->hasPermission('create_users'),
         ]);
     }
+
     /**
      * Show the form for creating a new user.
      */
@@ -69,7 +82,17 @@ class PimController extends Controller
     {
         $this->authorizeAction('create_users');
 
-        $profiles = Profile::all();
+        $user = auth()->user();
+
+        // Admin users can see all profiles, others can only see their own profile
+        if ($user->profiles->first()->id === 1) {
+            // Admin can see all profiles
+            $profiles = Profile::all();
+        } else {
+            // Non-admin users can only see their own profile
+            $profiles = $user->profiles;
+        }
+
         return Inertia::render('Users/Create', ['profiles' => $profiles]);
     }
 
@@ -103,11 +126,14 @@ class PimController extends Controller
             'profiles.*' => 'exists:profiles,id', // Validate profile IDs
         ]);
 
+        $user = auth()->user();
+
         // Create the user
         $newUser = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'profile_id' => $user->profile_id, // Set the profile_id of the logged-in user
         ]);
 
         // Assign profiles

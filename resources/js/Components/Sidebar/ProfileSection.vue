@@ -29,6 +29,8 @@ const props = defineProps({
                     ? user.profiles.map(profile => profile.name).join(', ')
                     : 'No Profile Assigned' }}
                 </span>
+                <!-- Display version release -->
+                <span class="sidebar-profile-section__version">v2.0.0</span>
             </div>
         </div>
     </div>

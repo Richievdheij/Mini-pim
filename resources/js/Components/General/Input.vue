@@ -82,7 +82,7 @@ const computedPlaceholder = computed(() => {
             :value="modelValue"
             @change="$emit('update:modelValue', Array.from($event.target.selectedOptions, option => option.value))"
         >
-            <option value="" disabled selected>{{ computedPlaceholder }}</option>
+            <option value="" selected>{{ computedPlaceholder }}</option>
             <option
                 v-for="option in options"
                 :key="option.id || option"
@@ -100,7 +100,7 @@ const computedPlaceholder = computed(() => {
             :value="modelValue"
             @change="$emit('update:modelValue',  $event.target.value)"
         >
-            <option value="" disabled selected>{{ computedPlaceholder }}</option>
+            <option value="" selected>{{ computedPlaceholder }}</option>
             <option
                 v-for="option in types"
                 :key="option.id || option"

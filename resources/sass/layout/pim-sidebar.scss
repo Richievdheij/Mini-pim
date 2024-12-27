@@ -34,6 +34,15 @@
     &--collapsed {
         width: 4rem;
 
+        // Adjust styles when sidebar is collapsed
+        .sidebar-profile-section {
+
+            &__info {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
         // Adjust padding for main section when collapsed
         .sidebar-main-section {
             overflow: hidden;
@@ -375,6 +384,9 @@
 
     // Container for user info in the profile section
     &__info {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
         display: flex;
         flex-direction: column;
     }
@@ -389,6 +401,11 @@
     &__rank {
         color: rgba(100, 100, 100, 1);
         font-size: 0.875rem;
+    }
+
+    &__version {
+        color: rgba(100, 100, 100, 1);
+        font-size: 0.8rem;
     }
 }
 

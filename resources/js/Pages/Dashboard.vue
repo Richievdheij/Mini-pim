@@ -22,7 +22,8 @@ const user = props.auth.user;
                 <div class="dashboard__main-content">
                     <h1 class="dashboard__welcome">Welcome to the Dashboard!</h1>
                     <p class="dashboard__user-info">
-                        You are logged in as: <strong>{{ user.name }}</strong>
+                        You are logged in as: <strong>{{ user.name }}</strong> <br>
+                        Your email address is: <strong>{{ user.email }}</strong>
                     </p>
                 </div>
             </main>
