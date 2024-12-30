@@ -2,6 +2,7 @@
 import { useForm } from "@inertiajs/vue3";
 import { watch } from "vue";
 import { useNotifications } from "@/plugins/notificationPlugin";
+import { generateProductId } from "@/Components/Helpers/GenerateProductId.vue";
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
@@ -16,6 +17,7 @@ const emit = defineEmits(["close", "productCreated"]); // Emit events for closin
 // Initialize notifications system
 const { success, error } = useNotifications();
 
+
 // Initialize form with default values
 const form = useForm({
     product_id: "",
@@ -24,13 +26,14 @@ const form = useForm({
     description: "",
 });
 
-// Watch for changes to the `isOpen` prop to reset form when modal opens
+// Watch for changes to the `isOpen` prop to reset form and generate Product ID when modal opens
 watch(
     () => props.isOpen,
     (isOpen) => {
         if (isOpen) {
             form.reset(); // Reset form fields
             form.clearErrors(); // Clear any existing form errors
+            form.product_id = generateProductId(); // Set the generated Product ID
         }
     }
 );
@@ -67,10 +70,12 @@ function submit() {
                     label="Product ID"
                     id="product_id"
                     inputType="text"
-                    placeholder="Enter product ID"
+                    placeholder="Generated product ID"
                     type="field"
                     v-model="form.product_id"
+                    class="product-id-input input"
                     :error="form.errors.product_id"
+                    readonly
                 />
                 <!-- Name input field -->
                 <Input
@@ -104,33 +109,6 @@ function submit() {
                     :error="form.errors.description"
                 />
 
-                <!-- Dynamic Attribute Fields -->
-                <div class="create-product-modal__attributes">
-                    <div
-                        v-for="attribute in form.attributes"
-                        :key="attribute.id"
-                        class="create-product-modal__attribute"
-                    >
-                        <label :for="`attribute-${attribute.id}`">{{ attribute.name }}</label>
-                        <input
-                            v-if="attribute.type === 'text'"
-                            class="create-product-modal__attribute-input"
-                            type="text"
-                            :id="`attribute-${attribute.id}`"
-                            v-model="attributeValues.value[attribute.id]"
-                            :placeholder="`Enter ${attribute.name}`"
-                        />
-                        <input
-                            v-else-if="attribute.type === 'number'"
-                            class="create-product-modal__attribute-input"
-                            type="number"
-                            :id="`attribute-${attribute.id}`"
-                            v-model="attributeValues.value[attribute.id]"
-                            :placeholder="`Enter ${attribute.name}`"
-                        />
-                        <!-- Add other input types as needed -->
-                    </div>
-                </div>
                 <!-- Submit and Cancel Buttons -->
                 <div class="create-product-modal__actions">
                     <TertiaryButton

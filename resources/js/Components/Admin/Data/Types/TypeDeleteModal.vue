@@ -12,6 +12,7 @@ const props = defineProps({
     type: Object,
     isOpen: Boolean,
 });
+
 const emit = defineEmits(['close']);
 
 // Use Inertia's form helper for making the delete request

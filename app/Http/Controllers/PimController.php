@@ -51,6 +51,8 @@ class PimController extends Controller
      */
     public function showUsers(): Response
     {
+        $this->authorizeAction('view_users');
+
         $user = auth()->user();
 
         // Admin users (profile_id === 1) can view all users

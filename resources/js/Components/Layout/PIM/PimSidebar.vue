@@ -51,6 +51,7 @@ const toggleSection = (section) => {
 
         <!-- Manage Section -->
         <PimManageSection
+            v-if="false"
             :isManageExpanded="isManageExpanded"
             :isSidebarExpanded="isSidebarExpanded"
             @toggle-section="toggleSection"

@@ -89,8 +89,8 @@ const sortedProducts = computed(() => {
 
     if (column && direction !== "none") {
         productsToSort.sort((a, b) => {
-            const aValue = column === "type" ? a[column].name : a[column];
-            const bValue = column === "type" ? b[column].name : b[column];
+            const aValue = column === "type" ? (a[column] ? a[column].name : '') : a[column];
+            const bValue = column === "type" ? (b[column] ? b[column].name : '') : b[column];
 
             if (direction === "asc") {
                 return aValue.localeCompare(bValue);
@@ -102,6 +102,7 @@ const sortedProducts = computed(() => {
 
     return productsToSort;
 });
+
 
 </script>
 
@@ -183,7 +184,7 @@ const sortedProducts = computed(() => {
                     <tr v-for="product in sortedProducts" :key="product.id" class="products__table-row">
                         <td class="products__table-cell">{{ product.product_id }}</td>
                         <td class="products__table-cell">{{ product.name }}</td>
-                        <td class="products__table-cell">{{ product.type.name }}</td>
+                        <td class="products__table-cell">{{ product.type ? product.type.name : 'No Type' }}</td>
                         <td v-if="props.canEditProduct || props.canDeleteProduct" class="products__table-cell">
                             <div class="products__actions">
                                 <SecondaryButton

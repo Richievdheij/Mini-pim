@@ -45,6 +45,7 @@ const toggleSection = (section) => {
 
         <!-- Manage Section -->
         <ManageSection
+            v-if="false"
             :isManageExpanded="isManageExpanded"
             :isSidebarExpanded="isSidebarExpanded"
             @toggle-section="toggleSection"

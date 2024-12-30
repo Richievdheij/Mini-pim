@@ -67,22 +67,6 @@ class ProductController extends Controller
             'name' => 'required|string',
             'type_id' => 'required|exists:product_types,id',
             'description' => 'nullable|string',
-            'height' => 'nullable|numeric',
-            'width' => 'nullable|numeric',
-            'depth' => 'nullable|numeric',
-            // Custom validation rule for dimensions
-            'dimensions' => function ($attribute, $value, $fail) use ($request) {
-                if (
-                    ($request->has('height') && !$request->has('width')) ||
-                    ($request->has('height') && !$request->has('depth')) ||
-                    ($request->has('width') && !$request->has('height')) ||
-                    ($request->has('width') && !$request->has('depth')) ||
-                    ($request->has('depth') && !$request->has('height')) ||
-                    ($request->has('depth') && !$request->has('width'))
-                ) {
-                    $fail('All dimensions (height, width, depth) must be filled when one dimension is provided.');
-                }
-            },
         ]);
 
         // Create the product
@@ -95,7 +79,7 @@ class ProductController extends Controller
 
         // Attach profiles: the user's current profile and the admin profile (id=1)
         $profileIds = [$user->profiles->first()->id, 1]; // User's profile + admin profile
-        $product->profiles()->attach($profileIds);
+        $product->profiles()->sync($profileIds);
 
         // Get the user's profile ID and product types
         $profileId = $user->profiles->first()->id;
@@ -109,7 +93,6 @@ class ProductController extends Controller
             'canCreateProduct' => $user->hasPermission('create_products'),
             'canEditProduct' => $user->hasPermission('edit_products'),
             'canDeleteProduct' => $user->hasPermission('delete_products'),
-            'successMessage' => 'Product created successfully!',
         ]);
     }
 
@@ -201,11 +184,12 @@ class ProductController extends Controller
         // Ensure ownership or admin access
         $this->authorizeOwnership($product);
 
-        // Detach the product from attributes
-        $product->attributes()->detach();  // Assuming a many-to-many relationship
+        // Dissociate the product from its type
+        $product->type_id = null;
+        $product->save();
 
-        // Optionally: Detach the product from other related models (e.g., product_type)
-        // $product->type()->dissociate();
+        // Dissociate the product from its attributes
+        $product->attributes()->detach();
 
         // Now delete the product
         $product->delete();
@@ -218,16 +202,20 @@ class ProductController extends Controller
     {
         $user = auth()->user();
 
-        // Allow access if the user has the admin profile (profile_id = 1)
+        // Check if the user is an admin (profile_id = 1)
         if ($user->profiles->first()->id === 1) {
-            return;
+            return;  // Admin has access to everything
         }
 
-        // Check if the product belongs to the user's profile
-        if ($product->profile_id !== $user->profiles->first()->id) {
+        // Get all profile_ids of the user
+        $userProfileIds = $user->profiles->pluck('id')->toArray();
+
+        // Check if the product's profile_id exists in the list of user's profiles
+        if (!in_array($product->profile_id, $userProfileIds)) {
             abort(403, 'Unauthorized action.');
         }
     }
+
 
     /**
      * Check if the current user has permission to perform an action.
