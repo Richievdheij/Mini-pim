@@ -14,18 +14,19 @@ class AttributeController extends Controller
      */
     public function index()
     {
+        // Check if the current user has permission to view attributes
         $this->authorizeAction('view_attributes');
 
-        $user = auth()->user();
-        $attributes = Attribute::where('profile_id', $user->profiles->first()->id)->with('type')->get();
-        $types = ProductType::where('profile_id', $user->profiles->first()->id)->get();
+        $user = auth()->user(); // Get the authenticated user
+        $attributes = Attribute::where('profile_id', $user->profiles->first()->id)->with('type')->get(); // Get all attributes for the user's profile
+        $types = ProductType::where('profile_id', $user->profiles->first()->id)->get(); // Get all product types for the user's profile
 
         return Inertia::render('Attributes/Index', [
-            'attributes' => $attributes,
-            'types' => $types,
-            'canCreateAttribute' => $user->hasPermission('create_attributes'),
-            'canEditAttribute' => $user->hasPermission('edit_attributes'),
-            'canDeleteAttribute' => $user->hasPermission('delete_attributes'),
+            'attributes' => $attributes, // Pass attributes to the view
+            'types' => $types, // Pass product types to the view
+            'canCreateAttribute' => $user->hasPermission('create_attributes'), // Check if the user can create attributes
+            'canEditAttribute' => $user->hasPermission('edit_attributes'), // Check if the user can edit attributes
+            'canDeleteAttribute' => $user->hasPermission('delete_attributes'), // Check if the user can delete attributes
         ]);
     }
 
@@ -34,12 +35,12 @@ class AttributeController extends Controller
      */
     public function create()
     {
-        $this->authorizeAction('create_attributes');
+        $this->authorizeAction('create_attributes'); // Check if the current user has permission to create attributes
 
-        $user = auth()->user();
-        $types = ProductType::where('profile_id', $user->profiles->first()->id)->get();
+        $user = auth()->user(); // Get the authenticated user
+        $types = ProductType::where('profile_id', $user->profiles->first()->id)->get(); // Get all product types for the user's profile
 
-        return Inertia::render('Attributes/Create', compact('types'));
+        return Inertia::render('Attributes/Create', compact('types')); // Render the create attribute form
     }
 
     /**
@@ -47,7 +48,7 @@ class AttributeController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorizeAction('create_attributes');
+        $this->authorizeAction('create_attributes'); // Check if the current user has permission to create attributes
 
         $validated = $request->validate([
             'name' => 'required|string',

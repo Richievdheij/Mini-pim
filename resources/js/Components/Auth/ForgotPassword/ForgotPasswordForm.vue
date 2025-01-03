@@ -5,7 +5,7 @@ import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 import GoBackLoginLink from "@/Components/Auth/GoBackLoginLink.vue";
 import { useNotifications } from "@/plugins/notificationPlugin";
 
-const { success, error } = useNotifications(); // Destructure success and error notifications
+const { success, error, info } = useNotifications(); // Destructure info, success and error notifications
 
 // Initialize the form with the email field
 const form = useForm({
@@ -16,7 +16,7 @@ const form = useForm({
 const submit = () => {
     form.post(route('password.email'), {
         onSuccess: () => {
-            success('We have emailed your password reset link!'); // Show success notification
+            info('We have emailed your password reset link!'); // Show info notification
             form.reset();
         },
         onError: () => {

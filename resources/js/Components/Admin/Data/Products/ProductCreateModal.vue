@@ -102,9 +102,9 @@ function submit() {
                 <Input
                     label="Description"
                     id="description"
-                    inputType="text"
+                    inputType="textarea"
                     placeholder="Enter product description"
-                    type="field"
+                    type="description"
                     v-model="form.description"
                     :error="form.errors.description"
                 />

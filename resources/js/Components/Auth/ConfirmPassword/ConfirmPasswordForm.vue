@@ -31,7 +31,7 @@ const form = useForm({
 const submit = () => {
     form.post(route('password.store'), {
         onSuccess: () => {
-            success('Password reset successfully! 🎉');
+            success('Password reset successfully!');
         },
         onError: () => {
             error('Failed to reset password. Please try again.');

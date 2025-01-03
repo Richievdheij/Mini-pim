@@ -11,6 +11,7 @@ class Role extends Model
 
     protected $fillable = ['name'];
 
+    // Define the relationship between Role and User
     public function users()
     {
         return $this->belongsToMany(User::class, 'role_user', 'role_id', 'user_id');

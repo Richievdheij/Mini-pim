@@ -1,6 +1,6 @@
 <script setup>
 import { defineProps, defineEmits } from "vue";
-import { useForm } from "@inertiajs/inertia-vue3";
+import { useForm } from "@inertiajs/vue3";
 import { useNotifications } from "@/plugins/notificationPlugin";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
@@ -20,6 +20,8 @@ const form = useForm({
 
 function closeModal() {
     emit("close");
+    form.reset();
+    form.clearErrors();
 }
 
 // Submit function to handle product deletion
@@ -27,6 +29,7 @@ function submit() {
     form.delete(route("pim.products.destroy", props.product.id), {
         onSuccess: () => {
             success(`Product "${props.product.name}" deleted successfully!`);
+
             closeModal();
         },
         onError: () => {

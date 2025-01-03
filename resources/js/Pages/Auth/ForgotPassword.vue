@@ -35,6 +35,7 @@ const triggerNotification = (message, type) => {
 
         <!-- Forgot Password Form -->
         <ForgotPasswordForm
+            @info= "triggerNotification($event, 'info')"
             @success="triggerNotification($event, 'success')"
             @error="triggerNotification($event, 'error')"
         />

@@ -44,13 +44,13 @@ class AccountController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $validatedData = $request->validated();
+        $validatedData = $request->validated(); // Get validated data
 
-        $request->user()->fill($validatedData);
+        $request->user()->fill($validatedData); // Fill user with validated data
 
-        $request->user()->save();
+        $request->user()->save(); // Save user
 
-        $route = $request->routeIs('pim.account.*') ? 'pim.account.edit' : 'account.edit';
+        $route = $request->routeIs('pim.account.*') ? 'pim.account.edit' : 'account.edit'; // Redirect to the correct route
 
         return Redirect::route($route);
     }
@@ -63,8 +63,11 @@ class AccountController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $request->validate([
-            'password' => ['required', 'current_password'],
+        $request->validate([ // Validate password before deleting account
+            'password' => [
+                'required',
+                'current_password'
+            ],
         ]);
 
         $user = $request->user();
@@ -73,7 +76,7 @@ class AccountController extends Controller
         Auth::logout();
         $user->delete();
         $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $request->session()->regenerateToken(); // Regenerate CSRF token
 
         return Redirect::to('/login')->with('status', 'Your account has been deleted successfully.');
     }

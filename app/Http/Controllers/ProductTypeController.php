@@ -15,6 +15,7 @@ class ProductTypeController extends Controller
     {
         $user = auth()->user();
 
+        // Check if the user is authorized to view product types
         $this->authorizeAction('view_types');
 
         // Fetch product types for the current user's profile
@@ -66,6 +67,7 @@ class ProductTypeController extends Controller
      */
     public function edit(ProductType $productType)
     {
+        // Check if the user is authorized to edit the product type
         $this->authorizeAction('edit_types');
 
         // Pass product type to the Inertia view for editing

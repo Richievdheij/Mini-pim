@@ -16,21 +16,25 @@ class ProductAttributeValue extends Model
         'profile_id', // Foreign key to Profile
     ];
 
+    // Product and ProductAttributeValue are related to each other
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
 
+    // Attribute and Value are related to each other
     public function attribute()
     {
         return $this->belongsTo(Attribute::class);
     }
 
+    // AttributeValue and Value are related to each other
     public function value()
     {
         return $this->belongsTo(AttributeValue::class, 'value_id');
     }
 
+    // Profile and ProductAttributeValue are related to each other
     public function profile()
     {
         return $this->belongsTo(Profile::class);

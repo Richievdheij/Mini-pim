@@ -10,11 +10,20 @@ use Inertia\Inertia;
 
 class ProductController extends Controller
 {
+    /**
+     * Display the PIM dashboard.
+     *
+     */
     public function dashboard()
     {
+        // Check if the user has permission to view the dashboard
         return inertia('PIM/PIMDashboard');
     }
 
+    /**
+     * Display the products index page.
+     *
+     */
     public function index()
     {
         $user = auth()->user();
@@ -45,6 +54,10 @@ class ProductController extends Controller
         ]);
     }
 
+    /**
+     * Display the product creation page.
+     *
+     */
     public function create()
     {
         $user = auth()->user();
@@ -56,6 +69,10 @@ class ProductController extends Controller
         return inertia('Data/ProductCreate', compact('types', 'attributes'));
     }
 
+    /**
+     * Store a newly created product in storage.
+     *
+     */
     public function store(Request $request)
     {
         $user = auth()->user();
@@ -96,7 +113,10 @@ class ProductController extends Controller
         ]);
     }
 
-
+    /**
+     * Display the specified product.
+     *
+     */
     public function edit($id)
     {
         $this->authorizeAction('edit_products');
@@ -122,6 +142,10 @@ class ProductController extends Controller
         ]);
     }
 
+    /**
+     * Update the specified product in storage.
+     *
+     */
     public function update(Request $request, Product $product)
     {
         $this->authorizeAction('edit_products');
@@ -145,6 +169,7 @@ class ProductController extends Controller
             'depth' => 'nullable|numeric',
             'dimensions' => function ($attribute, $value, $fail) use ($request) {
                 if (
+                    // Check if one dimension is provided without the others
                     ($request->has('height') && !$request->has('width')) ||
                     ($request->has('height') && !$request->has('depth')) ||
                     ($request->has('width') && !$request->has('height')) ||
@@ -178,6 +203,10 @@ class ProductController extends Controller
         return redirect()->route('pim.products.index')->with('success', 'Product updated successfully!');
     }
 
+    /**
+     * Delete the specified product
+     *
+     */
     public function destroy(Product $product)
     {
         $this->authorizeAction('delete_products');
@@ -194,10 +223,13 @@ class ProductController extends Controller
         // Now delete the product
         $product->delete();
 
-        return redirect()->route('pim.products.index')->with('success', 'Product deleted successfully!');
+        return redirect()->route('pim.products.index');
     }
 
-
+    /**
+     * Check if the current user owns the product or is an admin within profile
+     *
+     */
     private function authorizeOwnership(Product $product)
     {
         $user = auth()->user();
@@ -216,7 +248,6 @@ class ProductController extends Controller
         }
     }
 
-
     /**
      * Check if the current user has permission to perform an action.
      *
@@ -225,8 +256,10 @@ class ProductController extends Controller
      */
     private function authorizeAction(string $permission): void
     {
+        // Get the authenticated user
         $user = auth()->user();
 
+        // Check if the user has the required permission
         if (!$user || !$user->hasPermission($permission)) {
             abort(403, 'Unauthorized action.');
         }

@@ -52,6 +52,9 @@ const inputClass = computed(() => {
     if (props.type === 'selectType') {
         type += ' input__body--select';
     }
+    if (props.type === 'description') {
+        type += ' input__body--description';
+    }
 
     return type;
 });
@@ -131,6 +134,15 @@ const computedPlaceholder = computed(() => {
             :disabled="props.disabled"
             @input="$emit('update:modelValue', $event.target.value)"
         />
+
+        <!-- Description Input -->
+        <textarea
+            v-if="type === 'description'"
+            :placeholder="placeholder"
+            class="input__description"
+            :value="modelValue"
+            @input="$emit('update:modelValue', $event.target.value)"
+        ></textarea>
 
         <!-- Error or Success Message Container -->
         <div class="input__message-container">
