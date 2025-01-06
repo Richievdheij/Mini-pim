@@ -67,6 +67,7 @@ const filteredTypes = computed(() => {
     );
 });
 
+// Sorting function
 function sortColumn(column) {
     const { direction } = sortConfig.value;
     let newDirection = "asc";
@@ -83,6 +84,7 @@ function sortColumn(column) {
     };
 }
 
+// Sorted Types
 const sortedTypes = computed(() => {
     const { column, direction } = sortConfig.value;
     let typesToSort = [...filteredTypes.value];

@@ -2,7 +2,7 @@
 import PIMLayout from '@/Layouts/PIMLayout.vue';
 import { Head, usePage } from '@inertiajs/vue3';
 
-// Get the user and roles from Inertia's props
+// Get the authenticated user
 const { props } = usePage();
 const user = props.auth.user;
 

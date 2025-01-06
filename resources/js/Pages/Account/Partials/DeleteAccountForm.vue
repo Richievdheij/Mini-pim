@@ -8,9 +8,11 @@ import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 import Modal from '@/Components/laravelWelcome/Modal.vue';
 
+// Data properties and methods for the component
 const confirmingUserDeletion = ref(false);
 const passwordInput = ref(null);
 
+// Form initialization
 const form = useForm({
     password: '',
 });
@@ -30,6 +32,7 @@ const closeModal = () => {
 // Initialize notifications system
 const { success, error } = useNotifications();
 
+// Delete user account
 const deleteUser = () => {
     form.delete(route('account.destroy'), {
         preserveScroll: true,
@@ -92,9 +95,9 @@ const deleteUser = () => {
                     />
                     <SecondaryButton
                         label="Delete Account"
+                        type="delete"
                         @click="deleteUser"
                         :disabled="form.processing"
-                        type="delete"
                     />
                 </div>
             </div>

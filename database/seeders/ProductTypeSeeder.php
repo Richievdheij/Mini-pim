@@ -12,6 +12,7 @@ class ProductTypeSeeder extends Seeder
      */
     public function run(): void
     {
+        // Define product types
         $productTypes = [
             ['name' => 'Electronics'],
             ['name' => 'Clothing'],
@@ -20,6 +21,7 @@ class ProductTypeSeeder extends Seeder
             ['name' => 'Toys'],
         ];
 
+        // Insert product types
         foreach ($productTypes as $type) {
             ProductType::firstOrCreate(['name' => $type['name']]);
         }

@@ -1,25 +1,26 @@
 <script setup>
 import { watch, ref } from "vue";
-import { useForm } from "@inertiajs/vue3";
 import { useNotifications } from "@/plugins/notificationPlugin";
+import { useForm } from "@inertiajs/vue3";
 import Input from "@/Components/General/Input.vue";
 import ProductEditModalInfo from "@/Components/Admin/Data/Products/Edit/ProductEditModalInfo.vue";
 import ProductEditModalTypes from "@/Components/Admin/Data/Products/Edit/ProductEditModalTypes.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
-const { success, error } = useNotifications();
+const { success, error } = useNotifications(); // Notification plugin
 
+// Props and emits
 const props = defineProps({
     attributes: Array,
+    types: Array,
     attributeValues: Object,
     product: Object,
     productId: Number,
     isOpen: Boolean,
-    types: Array,
 });
 
-const emit = defineEmits(["close", "productUpdated"]);
+const emit = defineEmits(["close", "productUpdated"]); // Emit events
 
 // Reactive form state
 const form = useForm({
@@ -57,11 +58,11 @@ watch(
             form.price = props.product.price;
             form.stock_quantity = props.product.stock_quantity;
 
-            // Prepopulate attributes
-            attributes.value = props.attributes || [];
-            attributeValues.value = attributes.value.reduce((acc, attr) => {
-                acc[attr.id] = props.product?.attributes?.find((a) => a.id === attr.id)?.value || "";
-                return acc;
+            // Set attributes and attribute values
+            attributes.value = props.attributes || []; // Set attributes
+            attributeValues.value = attributes.value.reduce((acc, attr) => { // Set attribute values
+                acc[attr.id] = props.product?.attributes?.find((a) => a.id === attr.id)?.value || ""; // Set attribute value if exists
+                return acc; // Starts with empty object, if attribute value exists, add it to the object
             }, {});
         }
     }
@@ -86,6 +87,7 @@ function submit() {
         }
     });
 
+    // Check if there are any errors
     if (Object.keys(errors.value).length > 0) {
         error("Please fill in all required fields.");
         return;
@@ -101,7 +103,7 @@ function submit() {
             error("Failed to update product. Please try again.");
         },
         data: {
-            ...form,
+            ...form, // Include all form data
             attributes: Object.entries(attributeValues.value).map(([attribute_id, value]) => ({
                 attribute_id,
                 value,
@@ -117,7 +119,7 @@ function submit() {
     <div v-if="isOpen" class="edit-product-modal">
         <div class="edit-product-modal__overlay"></div>
         <div class="edit-product-modal__content">
-            <h2 class="edit-product-modal__title">Edit Product</h2>
+            <h2 class="edit-product-modal__title">Edit Product "{{ props.product.name }}" </h2>
 
             <form @submit.prevent="submit" class="edit-product-modal__form">
                 <div class="edit-product-modal__container">
@@ -176,7 +178,9 @@ function submit() {
                     <div class="edit-product-modal__info">
                         <h3 class="edit-product-modal__subtitle">Additional Information</h3>
                         <!-- Component for product info -->
-                        <ProductEditModalInfo v-model="form" />
+                        <ProductEditModalInfo
+                            v-model="form"
+                        />
                     </div>
                 </div>
 

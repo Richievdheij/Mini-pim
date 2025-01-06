@@ -20,7 +20,7 @@ const triggerNotification = (message, type) => {
     // Automatically hide the notification after 5 seconds
     setTimeout(() => {
         notification.value.show = false;
-    }, 5000);
+    }, 5000); // 5 seconds
 };
 </script>
 
@@ -35,7 +35,7 @@ const triggerNotification = (message, type) => {
 
         <!-- Forgot Password Form -->
         <ForgotPasswordForm
-            @info= "triggerNotification($event, 'info')"
+            @info="triggerNotification($event, 'info')"
             @success="triggerNotification($event, 'success')"
             @error="triggerNotification($event, 'error')"
         />

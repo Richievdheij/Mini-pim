@@ -42,7 +42,10 @@ const submit = () => {
                 />
 
                 <!-- Reset Password Button -->
-                <PrimaryButton label="Reset password" type="submit"/>
+                <PrimaryButton
+                    label="Reset password"
+                    type="submit"
+                />
 
                 <!-- Go back to login -->
                 <div class="forgot-password-form__links">
@@ -53,8 +56,11 @@ const submit = () => {
 
         <!-- Image Section -->
         <div class="forgot-password-form__image-box">
-            <img src="/images/pim/authenticationImage.png" alt="Forgot Password Image"
-                 class="forgot-password-form__image"/>
+            <img
+                src="/images/pim/authenticationImage.png"
+                alt="Forgot Password Image"
+                class="forgot-password-form__image"
+            />
         </div>
     </div>
 </template>

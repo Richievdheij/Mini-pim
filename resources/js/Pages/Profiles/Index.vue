@@ -36,6 +36,7 @@ const sortConfig = ref({
 function openModal(modalType, profile = null) {
     selectedProfile.value = profile;
 
+    // Open modal based on type
     if (modalType === "edit") {
         isEditModalOpen.value = true;
     } else if (modalType === "delete") {
@@ -49,6 +50,7 @@ function openModal(modalType, profile = null) {
 function closeModal(modalType) {
     selectedProfile.value = null;
 
+    // Close modal based on type
     if (modalType === "edit") {
         isEditModalOpen.value = false;
     } else if (modalType === "delete") {
@@ -78,7 +80,7 @@ function sortColumn(column) {
 
     sortConfig.value = {
         column,
-        direction: newDirection,
+        direction: newDirection, // 'none', 'asc', or 'desc'
     };
 }
 
@@ -87,6 +89,7 @@ const sortedProfiles = computed(() => {
     const { column, direction } = sortConfig.value;
     let profilesToSort = [...filteredProfiles.value];
 
+    // Sort profiles based on column and direction
     if (column && direction !== 'none') {
         profilesToSort.sort((a, b) => {
             const aValue = a[column];

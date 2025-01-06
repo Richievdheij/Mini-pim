@@ -4,6 +4,9 @@ import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from '@/Components/General/Input.vue';
 import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 
+// Initialize notifications system
+const { success, error } = useNotifications();
+
 // Initialize form
 const form = useForm({
     current_password: '',
@@ -11,12 +14,7 @@ const form = useForm({
     password_confirmation: '',
 });
 
-// Initialize notifications system
-const { success, error } = useNotifications();
-
 // Handle form submission (patch the form data)
-
-
 const submit = () => {
     form.post(route('password.update'), {
         preserveScroll: true,

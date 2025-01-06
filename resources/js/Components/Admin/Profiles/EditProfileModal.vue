@@ -61,7 +61,7 @@ function submit() {
     <div v-if="isOpen" class="edit-profile-modal">
         <div class="edit-profile-modal__overlay"></div>
         <div class="edit-profile-modal__content">
-            <h2 class="edit-profile-modal__title">Edit Profile</h2>
+            <h2 class="edit-profile-modal__title">Edit Profile "{{ props.profile.name }}"</h2>
 
             <!-- Form for editing the profile -->
             <form @submit.prevent="submit" class="edit-profile-modal__form">

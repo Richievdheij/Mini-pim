@@ -1,9 +1,9 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
 import { defineProps, defineEmits } from "vue";
+import { useNotifications } from "@/plugins/notificationPlugin";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
-import { useNotifications } from "@/plugins/notificationPlugin";
 
 const { success, error } = useNotifications();
 

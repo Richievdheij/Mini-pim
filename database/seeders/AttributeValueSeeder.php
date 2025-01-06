@@ -26,6 +26,7 @@ class AttributeValueSeeder extends Seeder
             ['attribute' => 'Brand', 'value' => 'Adidas'],
         ];
 
+        // Insert attribute values
         foreach ($values as $value) {
             $attribute = Attribute::where('name', $value['attribute'])->first();
             if ($attribute) {

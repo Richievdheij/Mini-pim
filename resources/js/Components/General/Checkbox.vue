@@ -11,20 +11,21 @@ const emit = defineEmits(['update:modelValue']);
 
 // Computed property to generate the class string
 const checkboxClass = computed(() => {
-  return `checkbox checkbox__body ${props.extraClass || ''}`.trim();
+  return `checkbox checkbox__body ${props.extraClass || ''}`.trim(); // Trim to remove extra space
 });
 </script>
 
 <template>
   <div :class="checkboxClass">
-    <input
-      class="checkbox__input"
-      type="checkbox"
-      :checked="modelValue"
-      @input="$emit('update:modelValue', $event.target.checked)"
-    />
-    <label class="checkbox__label" for="agreement">
-      {{ label }}
-    </label>
+        <input
+          class="checkbox__input"
+          type="checkbox"
+          :checked="modelValue"
+          @input="$emit('update:modelValue', $event.target.checked)"
+        />
+
+        <label class="checkbox__label" for="agreement">
+          {{ label }}
+        </label>
   </div>
 </template>

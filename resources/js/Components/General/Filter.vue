@@ -20,7 +20,9 @@ const selectOption = (option) => {
     <div class="filter">
         <!-- Filter Button -->
         <button @click="toggleDropdown" class="filter__button">
-            <i class="fas fa-sliders filter__icon"></i>
+            <i
+                class="fas fa-sliders filter__icon">
+            </i>
         </button>
 
         <!-- Dropdown -->

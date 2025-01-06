@@ -18,6 +18,7 @@ const props = defineProps({
     canCreateUser: Boolean,
 });
 
+// Modals state
 const isEditModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
 const isCreateModalOpen = ref(false);

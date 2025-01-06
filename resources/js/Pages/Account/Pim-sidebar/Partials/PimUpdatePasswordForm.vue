@@ -14,8 +14,6 @@ const form = useForm({
 const { success, error } = useNotifications();
 
 // Handle form submission (patch the form data)
-
-
 const submit = () => {
     form.post(route('password.update'), {
         preserveScroll: true,
@@ -78,7 +76,11 @@ const submit = () => {
             />
 
             <!-- Submit Button -->
-            <PrimaryButton label="Save" type="submit" :disabled="form.processing"/>
+            <PrimaryButton
+                label="Save"
+                type="submit"
+                :disabled="form.processing"
+            />
         </form>
     </div>
 </template>

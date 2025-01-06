@@ -6,14 +6,14 @@ import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
+const { success, error } = useNotifications(); // Notifications
+
+// Define props and emits from parent component
 const props = defineProps({
     types: Object,
     isOpen: Boolean,
 });
-const emit = defineEmits(["close", "typeCreated"]);
-
-// Destructure success and error notifications
-const { success, error } = useNotifications();
+const emit = defineEmits(["close", "typeCreated"]); // Define emits for closing the modal and emitting the created types
 
 const form = useForm({
     name: "",
@@ -37,6 +37,7 @@ function closeModal() {
     form.clearErrors();
 }
 
+// Submit the form
 function submit() {
     form.post(route("pim.types.store"), {
         onSuccess: () => {

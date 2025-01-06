@@ -66,11 +66,11 @@ function closeModal(modalType) {
 // Watch for changes in the search query to filter the attributes
 watch(searchQuery, (newQuery) => {
     if (newQuery) {
-        attributes.value = page?.props?.attributes.filter(attribute =>
+        attributes.value = page?.props?.attributes.filter(attribute => // Filter attributes based on the search query
             attribute.name.toLowerCase().includes(newQuery.toLowerCase())
         ) || [];
     } else {
-        attributes.value = page?.props?.attributes || [];
+        attributes.value = page?.props?.attributes || []; // Reset the attributes to the original list
     }
 });
 
@@ -91,6 +91,7 @@ function sortColumn(column) {
     };
 }
 
+// Filtered attributes based on the search query
 const filteredAttributes = computed(() => {
     return attributes.value.filter(attribute =>
         attribute.name.toLowerCase().includes(searchQuery.value.toLowerCase())
@@ -102,6 +103,7 @@ const sortedAttributes = computed(() => {
     const { column, direction } = sortConfig.value;
     let attributesToSort = [...filteredAttributes.value];
 
+    // Sort the attributes based on the column and direction
     if (column && direction !== "none") {
         attributesToSort.sort((a, b) => {
             const aValue = column === 'type' ? a[column]?.name : a[column];
@@ -188,6 +190,7 @@ const sortedAttributes = computed(() => {
                         <td class="attributes__table-cell">{{ attribute.name }}</td>
                         <td class="attributes__table-cell">{{ attribute.type.name }}</td>
                         <td v-if="props.canEditAttribute || props.canDeleteAttribute" class="attributes__table-cell">
+                            <!-- Actions -->
                             <div class="attributes__actions">
                                 <SecondaryButton
                                     v-if="props.canEditAttribute"

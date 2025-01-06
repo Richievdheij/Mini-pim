@@ -15,6 +15,7 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue", "attributesUpdated"]);
 
+// Local state
 const typeId = ref(props.modelValue);
 const attributes = ref([]);
 const errors = ref({});
@@ -24,6 +25,7 @@ watch(
     () => typeId.value,
     async (newTypeId) => {
 
+        // Fetch attributes
         if (newTypeId) {
             try {
                 const response = await axios.get(route("pim.types.attributes", {typeId: newTypeId}));
@@ -32,6 +34,7 @@ watch(
             } catch (err) {
                 console.error("Failed to fetch attributes:", err);
             }
+            // Reset attribute values
         } else {
             attributes.value = [];
         }
@@ -45,13 +48,14 @@ const saveAttributes = async () => {
 
     // Validate fields
     attributes.value.forEach((attribute) => {
-        if (!props.attributeValues[attribute.id]) {
+        if (!props.attributeValues[attribute.id]) { // Check if value is empty
             errors.value[attribute.id] = `${attribute.name} is required.`;
         }
     });
 
-    if (Object.keys(errors.value).length > 0) return;
+    if (Object.keys(errors.value).length > 0) return; // Stop if there are errors
 
+    // Save attributes
     try {
         await axios.post(route("pim.attribute-values.store"), {
             values: Object.entries(props.attributeValues).map(([id, value]) => ({

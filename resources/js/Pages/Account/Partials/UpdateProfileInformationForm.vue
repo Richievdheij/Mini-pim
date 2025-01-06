@@ -13,6 +13,7 @@ defineProps({
     },
 });
 
+// Get the authenticated user
 const user = usePage().props.auth.user;
 
 const form = useForm({

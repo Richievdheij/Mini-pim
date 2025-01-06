@@ -1,10 +1,10 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
-import { watch, computed } from "vue";
+import { watch } from "vue";
+import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
-import { useNotifications } from "@/plugins/notificationPlugin";
 
 const { success, error } = useNotifications();
 
@@ -14,6 +14,7 @@ const props = defineProps({
     profiles: Array,
     isOpen: Boolean,
 });
+
 const emit = defineEmits(["close"]);
 
 // Set up form with default values

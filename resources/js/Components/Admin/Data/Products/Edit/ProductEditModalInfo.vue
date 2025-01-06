@@ -2,12 +2,14 @@
 import { useForm } from "@inertiajs/vue3";
 import Input from "@/Components/General/Input.vue";
 
+// Define props and emit
 const props = defineProps({
     product: Object,
 });
 
 const emit = defineEmits(["productUpdated"]);
 
+// Form
 const form = useForm({
     weight: props.product?.weight || "",
     height: props.product?.height || "",
@@ -17,7 +19,6 @@ const form = useForm({
     stock_quantity: props.product?.stock_quantity || "",
     // Add Active/Inactive
 });
-
 </script>
 
 <template>

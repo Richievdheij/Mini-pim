@@ -39,6 +39,7 @@ function closeModal() {
     form.clearErrors();
 }
 
+// Submit form
 function submit() {
     form.put(route('pim.types.update', props.type.id), {
         preserveScroll: true,
@@ -57,7 +58,7 @@ function submit() {
     <div v-if="isOpen" class="edit-type-modal">
         <div class="edit-type-modal__overlay"></div>
         <div class="edit-type-modal__content">
-            <h2 class="edit-type-modal__title">Edit Product Type</h2>
+            <h2 class="edit-type-modal__title">Edit Product Type "{{ props.type.name }}"</h2>
             <form @submit.prevent="submit" class="edit-type-modal__form">
                 <!-- Name -->
                 <Input

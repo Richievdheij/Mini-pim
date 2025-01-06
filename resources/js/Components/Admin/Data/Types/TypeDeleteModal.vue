@@ -1,7 +1,7 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue';
-import { useForm } from '@inertiajs/vue3';
 import { useNotifications } from '@/plugins/notificationPlugin';
+import { useForm } from '@inertiajs/vue3';
 import SecondaryButton from '@/Components/General/SecondaryButton.vue';
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
@@ -15,7 +15,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
-// Use Inertia's form helper for making the delete request
+// Form handling
 const form = useForm({
     name: '',
 });

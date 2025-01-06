@@ -77,7 +77,11 @@ const submit = () => {
 
         <!-- Image Box -->
         <div class="confirm-password-form__image-box">
-            <img src="/images/pim/authenticationImage.png" alt="Confirm Password Image" class="confirm-password-form__image" />
+            <img
+                src="/images/pim/authenticationImage.png"
+                alt="Confirm Password Image"
+                class="confirm-password-form__image"
+            />
         </div>
     </div>
 </template>

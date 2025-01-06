@@ -15,6 +15,7 @@ const isGeneralExpanded = ref(true);
 const isManageExpanded = ref(true);
 const isAccountExpanded = ref(true);
 
+// Get User Data
 const { props } = usePage();
 const user = props.auth.user || {
     name: '',

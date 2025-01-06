@@ -13,6 +13,7 @@ class AttributeSeeder extends Seeder
      */
     public function run(): void
     {
+        // Attributes to be added
         $attributes = [
             ['name' => 'Color', 'type' => 'Clothing'],
             ['name' => 'Size', 'type' => 'Clothing'],
@@ -21,9 +22,11 @@ class AttributeSeeder extends Seeder
             ['name' => 'Brand', 'type' => 'Sports'],
         ];
 
+        // Add attributes
         foreach ($attributes as $attribute) {
             $type = ProductType::where('name', $attribute['type'])->first();
             if ($type) {
+                // Create attribute
                 Attribute::firstOrCreate([
                     'name' => $attribute['name'],
                     'type_id' => $type->id,

@@ -1,13 +1,14 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
 import { defineProps, defineEmits, watch } from 'vue';
+import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
-import { useNotifications } from "@/plugins/notificationPlugin";
 
 const { success, error } = useNotifications(); // success and error notifications
 
+// Define the props for the component
 const props = defineProps({
     isOpen: Boolean,
     attribute: Object,
@@ -38,6 +39,7 @@ function closeModal() {
     form.clearErrors();
 }
 
+// Function to submit the form
 function submit() {
     form.put(route('pim.attributes.update', props.attribute.id), {
         onSuccess: () => {
@@ -55,7 +57,7 @@ function submit() {
     <div v-if="isOpen" class="edit-attribute-modal">
         <div class="edit-attribute-modal__overlay"></div>
         <div class="edit-attribute-modal__content">
-            <h2 class="edit-attribute-modal__title">Edit Attribute</h2>
+            <h2 class="edit-attribute-modal__title">Edit Attribute "{{ props.attribute.name }}"</h2>
             <form @submit.prevent="submit" class="edit-attribute-modal__form">
                 <!-- Name input field -->
                 <Input

@@ -1,28 +1,31 @@
 <script setup>
 import { ref } from 'vue';
 import { usePage } from '@inertiajs/vue3';
-
 import MainSection from '@/Components/Sidebar/Manager/MainSection.vue';
 import GeneralSection from '@/Components/Sidebar/Manager/GeneralSection.vue';
 import ManageSection from '@/Components/Sidebar/Manager/ManageSection.vue';
 import AccountSection from '@/Components/Sidebar/Manager/AccountSection.vue';
 import ProfileSection from '@/Components/Sidebar/ProfileSection.vue';
 
+// Sidebar State
 const isSidebarExpanded = ref(true);
 const isGeneralExpanded = ref(true);
 const isManageExpanded = ref(true);
 const isAccountExpanded = ref(true);
 
+// Get the user from the page props
 const { props } = usePage();
 const user = props.auth.user || {
     name: '',
     profiles: [],
 };
 
+// Toggle Sidebar
 const toggleSidebar = () => {
     isSidebarExpanded.value = !isSidebarExpanded.value;
 };
 
+// Toggle Section
 const toggleSection = (section) => {
     if (section === 'general') isGeneralExpanded.value = !isGeneralExpanded.value;
     if (section === 'manage') isManageExpanded.value = !isManageExpanded.value;
@@ -70,7 +73,7 @@ const toggleSection = (section) => {
         <!-- Profile Section -->
         <ProfileSection
             :isSidebarExpanded="isSidebarExpanded"
-            :user="user"
+            :user="user" s
         />
     </aside>
 </template>

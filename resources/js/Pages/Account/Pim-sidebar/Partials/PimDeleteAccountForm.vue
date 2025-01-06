@@ -8,25 +8,30 @@ import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 import Modal from '@/Components/laravelWelcome/Modal.vue';
 
+// Initialize notifications system
+const { info, error } = useNotifications();
+
+// Define the component props
 const confirmingUserDeletion = ref(false);
 
+// Define the form
 const form = useForm({
     password: '',
 });
 
+// Handle form submission (delete the account)
 const confirmUserDeletion = () => {
     confirmingUserDeletion.value = true;
 };
 
+// Close the modal
 const closeModal = () => {
     confirmingUserDeletion.value = false;
     form.clearErrors();
     form.reset();
 };
 
-// Initialize notifications system
-const { info, error } = useNotifications();
-
+// Handle form submission (delete the account)
 const deleteUser = () => {
     form.delete(route('pim.account.destroy'), {
         preserveScroll: true,
