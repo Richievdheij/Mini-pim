@@ -2,19 +2,23 @@
 import { defineProps, defineEmits } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
+// Define props and emit
 const props = defineProps(['isGeneralExpanded', 'isSidebarExpanded']);
 const emit = defineEmits(['toggle-section']);
 </script>
 
-
 <template>
-    <div class="sidebar-general-section">
-        <h3 class="sidebar-general-section__title" @click="$emit('toggle-section', 'general')" :class="{ 'sidebar-general-section__title--disabled': !isSidebarExpanded }">
+    <div :class="['sidebar-general-section', { open: isGeneralExpanded }]">
+        <h3
+            class="sidebar-general-section__title"
+            @click="$emit('toggle-section', 'general')"
+            :class="{ 'sidebar-general-section__title--disabled': !isSidebarExpanded }"
+        >
             <span class="sidebar-general-section-title">General</span>
-            <i class="sidebar-general-section__chevron fas" :class="isGeneralExpanded ? 'fa-chevron-down' : 'fa-chevron-right'"></i>
+            <i class="sidebar-general-section__chevron fas fa-chevron-down"></i>
         </h3>
 
-        <div class="sidebar-general-section__button-container" v-show="isGeneralExpanded">
+        <div :class="['sidebar-general-section__button-container', { open: isGeneralExpanded }]">
             <!-- USERS LINK -->
             <Link
                 class="sidebar-general-section__button"

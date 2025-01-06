@@ -22,6 +22,7 @@ class AssignPermissionCategoriesSeeder extends Seeder
 
             // Rights/Security Permissions
             ['name' => 'manage_permissions', 'category' => 'Rights/Security'],
+            ['name' => 'view_permissions', 'category' => 'Rights/Security'],
 
             // Reports Permissions
             ['name' => 'view_reports', 'category' => 'Reports'],

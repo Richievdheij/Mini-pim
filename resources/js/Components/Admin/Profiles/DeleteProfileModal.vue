@@ -1,16 +1,16 @@
 <script setup>
 import { useForm } from '@inertiajs/vue3';
 import { defineProps, defineEmits } from "vue";
+import { useNotifications } from "@/plugins/notificationPlugin";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
-import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
 
-const { success, error } = useNotifications(); // Use notifications
+const { success, error } = useNotifications();
 
-
+// Define the props the component will accept
 const props = defineProps({
-    isOpen: Boolean,
-    profile: Object,
+    isOpen: Boolean, // Indicates whether the modal is open
+    profile: Object, // Profile data to be deleted
 });
 
 const emit = defineEmits(["close", "delete"]);
@@ -24,15 +24,15 @@ function closeModal() {
     emit("close");
 }
 
-function deleteProfile() {
+function submit() {
     // Send delete request
     form.delete(route("profiles.destroy", props.profile.id), {
         onSuccess: () => {
-            success("Profile deleted successfully!"); // Success notification
+            success(`Profile "${props.profile.name}" deleted successfully!`); // Success message
             closeModal("delete");
         },
         onError: () => {
-            error("Failed to delete profile."); // Error notification
+            error("Failed to delete profile, there are users still linked to this profile."); // Error notification
         },
     });
 }
@@ -44,18 +44,19 @@ function deleteProfile() {
         <div class="delete-profile-modal__content">
             <h2 class="delete-profile-modal__title">Delete Profile</h2>
             <p class="delete-profile-modal__description">
-                Are you sure you want to delete the profile "{{ props.profile.name }}"?
+                Are you sure you want to delete the profile <strong>"{{ props.profile.name }}"?</strong>
             </p>
-            <form @submit.prevent="deleteProfile" class="delete-profile-modal__actions">
+            <form @submit.prevent="submit" class="delete-profile-modal__actions">
+                <!-- Cancel button to close the modal -->
                 <TertiaryButton
                     label="Cancel"
                     type="cancel"
                     @click="closeModal"
                 />
+                <!-- Delete button to confirm the deletion -->
                 <SecondaryButton
                     label="Delete"
                     type="delete"
-                    @click="deleteProfile"
                 />
             </form>
         </div>

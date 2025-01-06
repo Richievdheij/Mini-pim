@@ -3,9 +3,9 @@ import { useForm } from '@inertiajs/vue3';
 import ForgotPasswordFormInput from '@/Components/Auth/ForgotPassword/ForgotPasswordFormInput.vue';
 import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 import GoBackLoginLink from "@/Components/Auth/GoBackLoginLink.vue";
-import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
+import { useNotifications } from "@/plugins/notificationPlugin";
 
-const { success, error } = useNotifications(); // Destructure success and error notifications
+const { success, error, info } = useNotifications(); // Destructure info, success and error notifications
 
 // Initialize the form with the email field
 const form = useForm({
@@ -16,11 +16,11 @@ const form = useForm({
 const submit = () => {
     form.post(route('password.email'), {
         onSuccess: () => {
-            success('We have emailed your password reset link! 🎉'); // Show success notification
+            info('We have emailed your password reset link!'); // Show info notification
             form.reset();
         },
         onError: () => {
-            error('Unable to send the reset password link. Please check the email address. ❌'); // Show error notification
+            error('Unable to send the reset password link. Please check the email address.'); // Show error notification
         },
     });
 };
@@ -42,7 +42,10 @@ const submit = () => {
                 />
 
                 <!-- Reset Password Button -->
-                <PrimaryButton label="Reset password" type="submit"/>
+                <PrimaryButton
+                    label="Reset password"
+                    type="submit"
+                />
 
                 <!-- Go back to login -->
                 <div class="forgot-password-form__links">
@@ -53,8 +56,11 @@ const submit = () => {
 
         <!-- Image Section -->
         <div class="forgot-password-form__image-box">
-            <img src="/images/pim/authenticationImage.png" alt="Forgot Password Image"
-                 class="forgot-password-form__image"/>
+            <img
+                src="/images/pim/authenticationImage.png"
+                alt="Forgot Password Image"
+                class="forgot-password-form__image"
+            />
         </div>
     </div>
 </template>

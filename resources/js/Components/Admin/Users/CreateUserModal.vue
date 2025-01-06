@@ -1,20 +1,23 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
 import { watch } from "vue";
+import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
-import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
 
-const { success, error } = useNotifications(); // Destructure success and error notifications
+const { success, error } = useNotifications();
 
+// Define props and emit events
 const props = defineProps({
     user: Object,
     profiles: Array,
     isOpen: Boolean,
 });
+
 const emit = defineEmits(["close"]);
 
+// Set up form with default values
 const form = useForm({
     name: "",
     email: "",
@@ -22,6 +25,7 @@ const form = useForm({
     profiles: [],
 });
 
+// Watch for changes to the `isOpen` prop and reset form when modal opens
 watch(
     () => props.isOpen,
     (isOpen) => {
@@ -32,17 +36,19 @@ watch(
     }
 );
 
+// Close the modal and reset the form
 function closeModal() {
     emit("close");
     form.reset();
     form.clearErrors();
 }
 
+// Submit the form
 function submit() {
     form.post("/users", {
         preserveScroll: true,
         onSuccess: () => {
-            success("User created successfully!");
+            success(`User "${form.name}" created successfully!`); // Success message
             closeModal();
         },
         onError: () => {
@@ -58,6 +64,7 @@ function submit() {
         <div class="create-user-modal__content">
             <h2 class="create-user-modal__title">Create User</h2>
             <form @submit.prevent="submit" class="create-user-modal__form">
+                <!-- Name input field -->
                 <Input
                     label="Name"
                     id="name"
@@ -67,6 +74,7 @@ function submit() {
                     v-model="form.name"
                     :error="form.errors.name"
                 />
+                <!-- Email input field -->
                 <Input
                     label="Email"
                     id="email"
@@ -76,6 +84,7 @@ function submit() {
                     v-model="form.email"
                     :error="form.errors.email"
                 />
+                <!-- Password input field -->
                 <Input
                     label="Password"
                     id="password"
@@ -85,6 +94,7 @@ function submit() {
                     v-model="form.password"
                     :error="form.errors.password"
                 />
+                <!-- Assign profiles select field -->
                 <Input
                     label="Assign Profiles"
                     id="profiles"
@@ -95,6 +105,7 @@ function submit() {
                     :options="profiles"
                     :error="form.errors.profiles"
                 />
+                <!-- Model actions -->
                 <div class="create-user-modal__actions">
                     <TertiaryButton
                         label="Cancel"

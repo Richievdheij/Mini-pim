@@ -1,39 +1,39 @@
 <script setup>
-import {useForm} from '@inertiajs/vue3';
-import {ref, computed} from 'vue';
+import { useForm } from '@inertiajs/vue3';
+import { useNotifications } from "@/plugins/notificationPlugin";
 import Input from '@/Components/General/Input.vue';
 import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 
-const passwordInput = ref(null);
-const currentPasswordInput = ref(null);
+// Initialize notifications system
+const { success, error } = useNotifications();
 
+// Initialize form
 const form = useForm({
     current_password: '',
     password: '',
     password_confirmation: '',
 });
 
-// Computed property to check if passwords match
-const passwordMatchSuccess = computed(() => {
-    return form.password === form.password_confirmation && form.password_confirmation !== '';
-});
-
-const updatePassword = () => {
+// Handle form submission (patch the form data)
+const submit = () => {
     form.post(route('password.update'), {
         preserveScroll: true,
-        onSuccess: () => form.reset(),
+        onSuccess: () => {
+            form.reset();
+            success("Password updated successfully!"); // Notify success
+        },
         onError: () => {
+            error("Failed to update password."); // Notify failure
             if (form.errors.password) {
                 form.reset('password', 'password_confirmation');
-                passwordInput.value.focus();
             }
             if (form.errors.current_password) {
                 form.reset('current_password');
-                currentPasswordInput.value.focus();
             }
         },
     });
 };
+
 </script>
 
 <template>
@@ -44,14 +44,13 @@ const updatePassword = () => {
         </p>
 
         <!-- Update Password Form -->
-        <form class="update-password-form__form" @submit.prevent="updatePassword">
+        <form class="update-password-form__form" @submit.prevent="submit">
             <Input
                 type="field"
                 label="Current Password"
                 input-type="password"
                 placeholder="Current Password"
                 v-model="form.current_password"
-                ref="currentPasswordInput"
                 :error="form.errors.current_password"
             />
 
@@ -62,7 +61,6 @@ const updatePassword = () => {
                 input-type="password"
                 placeholder="Enter your new password"
                 v-model="form.password"
-                ref="passwordInput"
                 :error="form.errors.password"
             />
 
@@ -77,7 +75,11 @@ const updatePassword = () => {
             />
 
             <!-- Submit Button -->
-            <PrimaryButton label="Save" type="submit" :disabled="form.processing"/>
+            <PrimaryButton
+                label="Save"
+                type="submit"
+                :disabled="form.processing"
+            />
         </form>
     </div>
 </template>

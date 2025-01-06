@@ -3,9 +3,9 @@ import { useForm } from '@inertiajs/vue3';
 import ConfirmPasswordFormInput from '@/Components/Auth/ConfirmPassword/ConfirmPasswordFormInput.vue';
 import PrimaryButton from '@/Components/General/PrimaryButton.vue';
 import GoBackLoginLink from "@/Components/Auth/GoBackLoginLink.vue";
-import { useNotifications } from "@/plugins/notificationPlugin"; // Import notifications
+import { useNotifications } from "@/plugins/notificationPlugin";
 
-const { success, error } = useNotifications(); // Destructure success and error notifications
+const { success, error } = useNotifications();
 
 // Props for email and token
 const props = defineProps({
@@ -31,10 +31,10 @@ const form = useForm({
 const submit = () => {
     form.post(route('password.store'), {
         onSuccess: () => {
-            success('Password reset successfully! 🎉');
+            success('Password reset successfully!');
         },
         onError: () => {
-            error('Failed to reset password. Please try again. ❌');
+            error('Failed to reset password. Please try again.');
         },
         onFinish: () => form.reset('password', 'password_confirmation'),
     });
@@ -77,7 +77,11 @@ const submit = () => {
 
         <!-- Image Box -->
         <div class="confirm-password-form__image-box">
-            <img src="/images/pim/authenticationImage.png" alt="Confirm Password Image" class="confirm-password-form__image" />
+            <img
+                src="/images/pim/authenticationImage.png"
+                alt="Confirm Password Image"
+                class="confirm-password-form__image"
+            />
         </div>
     </div>
 </template>

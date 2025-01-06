@@ -16,6 +16,7 @@ import { Head } from '@inertiajs/vue3';
                 <h1 class="profile__title">Account settings</h1>
             </div>
 
+            <!-- Profile information -->
             <div class="profile__section">
                 <UpdateProfileInformationForm />
                 <UpdatePasswordForm />

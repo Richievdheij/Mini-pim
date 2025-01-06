@@ -18,6 +18,8 @@ class PermissionController extends Controller
      */
     public function index(): Response
     {
+        $this->authorizeAction('view_permissions');
+
         // Fetch all profiles with their associated permissions
         $profiles = Profile::with('permissions')->get();
 
@@ -51,6 +53,8 @@ class PermissionController extends Controller
      */
     public function togglePermission(Request $request): RedirectResponse
     {
+        $this->authorizeAction('manage_permissions');
+
         // Validate the incoming request
         $request->validate([
             'profile_id' => 'required|exists:profiles,id',
@@ -102,5 +106,21 @@ class PermissionController extends Controller
 
         // Redirect to the profiles index
         return redirect()->route('profiles.index');
+    }
+
+    /**
+     * Check if the current user has permission to perform an action.
+     *
+     * @param string $permission
+     * @return void
+     */
+    private function authorizeAction(string $permission): void
+    {
+        $user = auth()->user();
+
+        // Check if the user is authenticated and has the required permission
+        if (!$user || !$user->hasPermission($permission)) {
+            abort(403, 'Unauthorized action.');
+        }
     }
 }

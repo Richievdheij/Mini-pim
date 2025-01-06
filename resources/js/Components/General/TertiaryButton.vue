@@ -9,7 +9,7 @@ const props = defineProps({
     },
     icon: String,
 });
-
+// Compute the button class based on the type
 const buttonType = computed(() => {
     let type = 'button button__body button__body--tertiary';
 

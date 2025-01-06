@@ -9,6 +9,7 @@ const notification = ref({
     type: 'success', // Can be 'success' or 'error'
 });
 
+// Function to trigger the notification
 const triggerNotification = (message, type) => {
     notification.value = {
         show: true,
@@ -19,7 +20,7 @@ const triggerNotification = (message, type) => {
     // Automatically hide the notification after 5 seconds
     setTimeout(() => {
         notification.value.show = false;
-    }, 5000);
+    }, 5000); // 5 seconds
 };
 </script>
 
@@ -30,11 +31,11 @@ const triggerNotification = (message, type) => {
             v-if="notification.show"
             :message="notification.message"
             :type="notification.type"
-            @close="notification.show = false"
         />
 
         <!-- Forgot Password Form -->
         <ForgotPasswordForm
+            @info="triggerNotification($event, 'info')"
             @success="triggerNotification($event, 'success')"
             @error="triggerNotification($event, 'error')"
         />

@@ -40,8 +40,10 @@ class LoginRequest extends FormRequest
      */
     public function authenticate(): void
     {
+        // Ensure the login request is not rate limited
         $this->ensureIsNotRateLimited();
 
+        // Attempt to authenticate the user
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
@@ -50,6 +52,7 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        // Clear the rate limiter
         RateLimiter::clear($this->throttleKey());
     }
 
@@ -60,6 +63,7 @@ class LoginRequest extends FormRequest
      */
     public function ensureIsNotRateLimited(): void
     {
+        // If the request is not rate limited, return
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }

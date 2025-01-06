@@ -6,9 +6,9 @@ import EditUserModal from "@/Components/Admin/Users/EditUserModal.vue";
 import DeleteUserModal from "@/Components/Admin/Users/DeleteUserModal.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/General/PrimaryButton.vue";
-import Input from "@/Components/General/Input.vue";
 import Filter from '@/Components/General/Filter.vue';
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
+import Searchbar from "@/Components/General/Searchbar.vue";
 
 const props = defineProps({
     users: Array,
@@ -18,6 +18,7 @@ const props = defineProps({
     canCreateUser: Boolean,
 });
 
+// Modals state
 const isEditModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
 const isCreateModalOpen = ref(false);
@@ -66,15 +67,17 @@ const filteredUsers = computed(() => {
 
 // Sorting function
 function sortColumn(column) {
-    const { direction } = sortConfig.value;
+    const {direction} = sortConfig.value;
     let newDirection = 'asc';
 
+    // If the column is already sorted, change the direction
     if (direction === 'asc') {
         newDirection = 'desc';
     } else if (direction === 'desc') {
         newDirection = 'none';
     }
 
+    // Update the sort configuration
     sortConfig.value = {
         column,
         direction: newDirection,
@@ -83,14 +86,22 @@ function sortColumn(column) {
 
 // Sorted users
 const sortedUsers = computed(() => {
-    const { column, direction } = sortConfig.value;
+    const {column, direction} = sortConfig.value;
     let usersToSort = [...filteredUsers.value];
 
+    // Sort the users based on the column and direction
     if (column && direction !== 'none') {
         usersToSort.sort((a, b) => {
-            const aValue = a[column];
-            const bValue = b[column];
+            let aValue = a[column];
+            let bValue = b[column];
 
+            // Special handling for the 'profiles' column
+            if (column === "profiles") {
+                aValue = a.profiles && a.profiles.length > 0 ? a.profiles[0].name : ""; // Get the first profile name
+                bValue = b.profiles && b.profiles.length > 0 ? b.profiles[0].name : "";
+            }
+
+            // Sort the values based on the direction
             if (direction === 'asc') {
                 return aValue > bValue ? 1 : -1;
             } else {
@@ -126,17 +137,15 @@ const sortedUsers = computed(() => {
                     </div>
 
                     <div class="users__search-bar">
-                        <Input
-                            type="search"
+                        <Searchbar
                             id="search"
                             placeholder="Search..."
                             v-model="searchQuery"
-                            icon="fas fa-search"
                         />
                     </div>
 
                     <div class="users__filter">
-                        <Filter />
+                        <Filter/>
                     </div>
                 </div>
 
@@ -149,21 +158,31 @@ const sortedUsers = computed(() => {
                             @click="sortColumn('name')"
                         >
                             Name
-                            <i :class="{'fas fa-sort-up': sortConfig.column === 'name' && sortConfig.direction === 'asc', 'fas fa-sort-down': sortConfig.column === 'name' && sortConfig.direction === 'desc'}"></i>
+                            <i :class="{'fas fa-sort-up'
+                               :sortConfig.column === 'name' && sortConfig.direction === 'asc', 'fas fa-sort-down'
+                               :sortConfig.column === 'name' && sortConfig.direction === 'desc'}">
+                            </i>
                         </th>
                         <th
                             class="users__table-header-cell"
                             @click="sortColumn('email')"
                         >
                             Email
-                            <i :class="{'fas fa-sort-up': sortConfig.column === 'email' && sortConfig.direction === 'asc', 'fas fa-sort-down': sortConfig.column === 'email' && sortConfig.direction === 'desc'}"></i>
+                            <i :class="{'fas fa-sort-up'
+                               :sortConfig.column === 'email' && sortConfig.direction === 'asc', 'fas fa-sort-down'
+                               :sortConfig.column === 'email' && sortConfig.direction === 'desc'}">
+                            </i>
                         </th>
                         <th
                             class="users__table-header-cell"
                             @click="sortColumn('profiles')"
                         >
                             Profiles
-                            <i :class="{'fas fa-sort-up': sortConfig.column === 'profiles' && sortConfig.direction === 'asc', 'fas fa-sort-down': sortConfig.column === 'profiles' && sortConfig.direction === 'desc'}"></i>
+                            <i
+                                :class="{'fas fa-sort-up'
+                                :sortConfig.column === 'profiles' && sortConfig.direction === 'asc', 'fas fa-sort-down'
+                                :sortConfig.column === 'profiles' && sortConfig.direction === 'desc'}">
+                            </i>
                         </th>
                         <th v-if="props.canEditUser || props.canDeleteUser" class="users__table-header-cell"></th>
                     </tr>

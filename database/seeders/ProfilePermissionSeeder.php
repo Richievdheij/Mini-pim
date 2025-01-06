@@ -10,10 +10,10 @@ class ProfilePermissionSeeder extends Seeder
 {
     public function run()
     {
-        // Zorg ervoor dat het Admin-profiel bestaat
+        // Create the Admin profile
         $adminProfile = Profile::firstOrCreate(['name' => 'Admin']);
 
-        // Haal alle permissies op en koppel ze aan het Admin-profiel
+        // Get all permissions
         $permissions = Permission::all();
         $adminProfile->permissions()->sync($permissions->pluck('id'));
     }

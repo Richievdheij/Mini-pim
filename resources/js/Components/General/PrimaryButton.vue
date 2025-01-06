@@ -1,6 +1,7 @@
 <script setup>
 import { defineProps, computed } from 'vue';
 
+// Define the props and emits
 const props = defineProps({
     label: String,
     type: {
@@ -10,6 +11,7 @@ const props = defineProps({
     icon: String,
 });
 
+// Compute the button class based on the type
 const buttonType = computed(() => {
     let type = 'button button__body';
 

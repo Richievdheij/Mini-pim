@@ -15,38 +15,42 @@ use Illuminate\Validation\Rules\Password as PasswordRules;
 class PimController extends Controller
 {
     /**
+     * Display the dashboard for authenticated users with the appropriate permission.
+     */
+    public function index(): Response
+    {
+        // Ensure the user has permission to view the dashboard
+        $this->authorizeAction('view_dashboard');
+
+        $user = auth()->user();
+
+        // Render the dashboard view and pass the authenticated user data
+        return Inertia::render('Dashboard', ['user' => $user]);
+    }
+
+    /**
      * Handle user login.
      */
     public function login(Request $request)
     {
+        // Validate login request data
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
+        // Attempt to log in the user
         $credentials = $request->only('email', 'password');
 
+        // Redirect to the dashboard if the login is successful
         if (Auth::attempt($credentials)) {
             return redirect()->intended('dashboard');
         }
 
+        // Redirect back with an error message if the login fails
         return back()->withErrors([
             'email' => 'The provided credentials are incorrect.',
         ]);
-    }
-
-    /**
-     * Display the dashboard for authenticated users with the appropriate permission.
-     */
-    public function index(): Response
-    {
-        $user = auth()->user();
-
-        if (!$user || !$user->hasPermission('view_dashboard')) {
-            abort(403, 'Unauthorized action.');
-        }
-
-        return Inertia::render('Dashboard', ['user' => $user]);
     }
 
     /**
@@ -54,29 +58,54 @@ class PimController extends Controller
      */
     public function showUsers(): Response
     {
+        // Ensure the user has permission to view users
+        $this->authorizeAction('view_users');
+
         $user = auth()->user();
 
-        // Make sure permissions match what you have in the database
+        // Admin users (profile_id === 1) can view all users
+        if ($user->profiles->first()->id === 1) {
+            // Admin can see all users
+            $users = User::with('profiles')->get();
+        } else {
+            // Non-admin users can only see users with the same profile_id
+            $users = User::with('profiles')
+                ->whereHas('profiles', function ($query) use ($user) {
+                    $query->where('id', $user->profiles->first()->id);
+                })
+                ->get();
+        }
+
+        // Render the users view and pass the users data
         return Inertia::render('Users/Index', [
-            'users' => User::with('profiles')->get(),
+            'users' => $users,
             'profiles' => Profile::all(), // Add this to pass all profiles
             'canEditUser' => $user->hasPermission('edit_users'),
             'canDeleteUser' => $user->hasPermission('delete_users'),
             'canCreateUser' => $user->hasPermission('create_users'),
         ]);
     }
+
     /**
      * Show the form for creating a new user.
      */
     public function createUser(): Response
     {
+        // Ensure the user has permission to create users
+        $this->authorizeAction('create_users');
+
         $user = auth()->user();
 
-        if (!$user || !$user->hasPermission('create_users')) {
-            abort(403, 'Unauthorized action.');
+        // Admin users can see all profiles, others can only see their own profile
+        if ($user->profiles->first()->id === 1) {
+            // Admin can see all profiles
+            $profiles = Profile::all();
+        } else {
+            // Non-admin users can only see their own profile
+            $profiles = $user->profiles;
         }
 
-        $profiles = Profile::all();
+        // Render the create user view and pass the profiles data
         return Inertia::render('Users/Create', ['profiles' => $profiles]);
     }
 
@@ -85,11 +114,7 @@ class PimController extends Controller
      */
     public function storeUser(Request $request)
     {
-        $user = auth()->user();
-
-        if (!$user || !$user->hasPermission('create_users')) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorizeAction('create_users');
 
         // Validate request
         $request->validate([
@@ -114,16 +139,20 @@ class PimController extends Controller
             'profiles.*' => 'exists:profiles,id', // Validate profile IDs
         ]);
 
+        $user = auth()->user();
+
         // Create the user
         $newUser = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'profile_id' => $user->profile_id, // Set the profile_id of the logged-in user
         ]);
 
         // Assign profiles
         $newUser->profiles()->sync($request->profiles);
 
+        // Redirect to the users index page with a success message
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
@@ -132,15 +161,13 @@ class PimController extends Controller
      */
     public function editUser(User $user): Response
     {
-        $currentUser = auth()->user();
+        $this->authorizeAction('edit_users');
 
-        if (!$currentUser || !$currentUser->hasPermission('edit_users')) {
-            abort(403, 'Unauthorized action.');
-        }
-
+        // Get all profiles and the profiles of the user
         $profiles = Profile::all();
         $userProfiles = $user->profiles->pluck('id')->toArray();
 
+        // Render the edit user view and pass the user and profiles data
         return Inertia::render('Users/Edit', [
             'user' => $user,
             'profiles' => $profiles,
@@ -153,12 +180,9 @@ class PimController extends Controller
      */
     public function updateUser(Request $request, User $user)
     {
-        $currentUser = auth()->user();
+        $this->authorizeAction('edit_users');
 
-        if (!$currentUser || !$currentUser->hasPermission('edit_users')) {
-            abort(403, 'Unauthorized action.');
-        }
-
+        // Validate request
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email,' . $user->id,
@@ -166,16 +190,19 @@ class PimController extends Controller
             'profiles' => 'array',
         ]);
 
+        // Update the user data
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password ? bcrypt($request->password) : $user->password,
         ]);
 
+        // Update the user's profiles if provided
         if ($request->has('profiles')) {
             $user->profiles()->sync($request->profiles);
         }
 
+        // Redirect to the users index page with a success message
         return redirect()->route('users.index');
     }
 
@@ -184,14 +211,30 @@ class PimController extends Controller
      */
     public function destroyUser(User $user)
     {
-        $currentUser = auth()->user();
+        // Ensure the user has permission to delete users
+        $this->authorizeAction('delete_users');
 
-        if (!$currentUser || !$currentUser->hasPermission('delete_users')) {
-            abort(403, 'Unauthorized action.');
-        }
-
+        // Delete the user
         $user->delete();
 
+        // Redirect to the users index page with a success message
         return redirect()->route('users.index');
+    }
+
+    /**
+     * Check if the current user has permission to perform an action.
+     *
+     * @param string $permission
+     * @return void
+     */
+    private function authorizeAction(string $permission): void
+    {
+        // Get the authenticated user
+        $user = auth()->user();
+
+        // Check if the user has the required permission
+        if (!$user || !$user->hasPermission($permission)) {
+            abort(403, 'Unauthorized action.');
+        }
     }
 }

@@ -11,38 +11,38 @@
     padding: 1rem;
     border-radius: 0.5rem;
     font-size: 1rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
     animation: fade-in 0.3s ease-out, fade-out 0.5s ease-in 2.5s;
     animation-fill-mode: both;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.5s ease;
 
     /* Success Toast */
     &.Vue-Toastification__toast--success {
         background-color: rgba(72, 199, 116, 1); /* Green */
         color: #fff;
-        border-left: 5px solid #28a745;
+        border-left: .4rem solid #28a745;
     }
 
     /* Error Toast */
     &.Vue-Toastification__toast--error {
-        background-color: rgba(233, 30, 99, 1); /* Red */
+        background-color: rgb(255, 0, 0); /* Red */
         color: #fff;
-        border-left: 5px solid #dc3545;
+        border-left: .4rem solid #AD0F0FFF;
     }
 
     /* Warning Toast */
     &.Vue-Toastification__toast--warning {
         background-color: rgba(255, 193, 7, 1); /* Yellow */
         color: #000;
-        border-left: 5px solid #ffc107;
+        border-left: .4rem solid #ffc107;
     }
 
     /* Info Toast */
     &.Vue-Toastification__toast--info {
-        background-color: rgba(0, 123, 255, 1); /* Blue */
+        background-color: #567AC5; /* Blue */
         color: #fff;
-        border-left: 5px solid #17a2b8;
+        border-left: .4rem solid #2859A6;
     }
 
     /* Toast body */
@@ -57,26 +57,25 @@
         background: none;
         border: none;
         color: inherit;
-        font-size: 1.2rem;
+        font-size: 1.5rem;
         cursor: pointer;
         margin-left: 1rem;
-        transition: color 0.3s;
+        transition: all 0.3s;
 
         &:hover {
-            color: rgba(255, 255, 255, 0.7);
+            color: rgb(255, 255, 255);
         }
     }
 
     /* Progress bar */
     .Vue-Toastification__progress-bar {
-        height: 4px;
+        height: .25rem;
         background-color: rgba(255, 255, 255, 0.7); /* Match toast theme */
     }
 }
 
 /* Add hover effect for the toast */
 .Vue-Toastification__toast:hover {
-    transform: translateY(-2px);
     box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15);
 }
 
@@ -84,7 +83,7 @@
 @keyframes fade-in {
     from {
         opacity: 0;
-        transform: translateY(-10%);
+        transform: translateY(10%);
     }
     to {
         opacity: 1;

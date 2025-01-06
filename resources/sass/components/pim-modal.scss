@@ -3,7 +3,16 @@
 .create-user-modal,
 .create-profile-modal,
 .delete-profile-modal,
-.edit-profile-modal, {
+.edit-profile-modal,
+.create-product-modal,
+.edit-product-modal,
+.delete-product-modal,
+.create-type-modal,
+.edit-type-modal,
+.delete-type-modal,
+.create-attribute-modal,
+.edit-attribute-modal,
+.delete-attribute-modal, {
     position: fixed;
     inset: 0;
     z-index: 50;
@@ -11,7 +20,7 @@
     &__overlay {
         position: fixed;
         inset: 0;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.5); // Semi-transparent background
     }
 
     &__content {
@@ -19,25 +28,55 @@
         margin: auto;
         padding: 1rem;
         background-color: #fff;
-        border-radius: 0.375rem;
-        box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.15);
-        max-width: 25%;
+        border-radius: 0.375rem; // Rounded corners
+        box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.15); // Subtle shadow
+        max-width: 25%; // Adjust modal width
         top: 50%;
-        transform: translateY(-50%);
+        transform: translateY(-50%); // Center vertically
     }
 
     &__title {
         font-size: 1.5rem;
         font-weight: bold;
+        margin-bottom: 1rem;
+        color: rgba(0, 0, 0, 0.85); // Dark title text
     }
 
-    &__description {
-        margin: 0 0 0.5rem 0;
+    &__form {
+        display: flex;
+        flex-direction: column;
     }
 
     &__actions {
         display: flex;
         justify-content: flex-end;
-        gap: 1rem;
+        gap: 1rem; // Space between buttons
     }
+
+    &__description {
+        margin: 0 0 0.5rem 0;
+        font-size: 1rem;
+        color: rgba(0, 0, 0, 0.7); // Lighter text for descriptions
+    }
+
+    &__container {
+        display: flex;
+        gap: 4rem;
+    }
+
+    .edit-product-modal__content {
+        max-width: 80%; // Ensures the input takes the full width of the modal
+    }
+
+    .edit-product-modal__subtitle {
+        font-size: 1.3rem;
+        font-weight: bold;
+        color: rgba(0, 0, 0, 0.85);
+    }
+}
+
+.edit-product-modal-general,
+.edit-product-modal-types,
+.edit-product-modal-info {
+
 }

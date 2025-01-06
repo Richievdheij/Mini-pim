@@ -77,7 +77,8 @@ class ProfilesController extends Controller
             $profile->permissions()->sync($request->permissions);
         }
 
-        return redirect()->route('profiles.index'); // Removed flash message
+        // Redirect to the profiles index page
+        return redirect()->route('profiles.index');
     }
 
     /**
@@ -94,6 +95,7 @@ class ProfilesController extends Controller
         $permissions = Permission::all();
         $assignedPermissions = $profile->permissions->pluck('id')->toArray();
 
+        // Return the edit profile page
         return Inertia::render('Profiles/EditProfile', [
             'profile' => $profile,
             'permissions' => $permissions,
@@ -139,17 +141,18 @@ class ProfilesController extends Controller
     {
         $this->authorizeAction('delete_profiles');
 
+        // Check if the profile is assigned to any users
         if ($profile->users()->exists()) {
             return back()->withErrors([
                 'error' => 'This profile cannot be deleted because it is assigned to one or more users.',
             ]);
         }
 
+        // Delete the profile
         $profile->delete();
 
-        return back(); // Removed flash message
+        return back();
     }
-
 
     /**
      * Check if the current user has permission to perform an action.

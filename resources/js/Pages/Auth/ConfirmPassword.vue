@@ -21,7 +21,11 @@ const props = defineProps({
 <template>
     <GuestLayout>
         <Head title="Mini-pim | Reset Password" />
+
         <!-- Pass email and token to the form -->
-        <ConfirmPasswordForm :email="props.email" :token="props.token" />
+        <ConfirmPasswordForm
+            :email="props.email"
+            :token="props.token"
+        />
     </GuestLayout>
 </template>

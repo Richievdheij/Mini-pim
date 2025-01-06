@@ -1,9 +1,11 @@
 <script setup>
 import { ref, computed } from "vue";
 import { Head, useForm } from "@inertiajs/vue3";
-import { useNotifications } from "@/plugins/notificationPlugin"; // Import notification plugin
+import { useNotifications } from "@/plugins/notificationPlugin";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import Input from "@/Components/General/Input.vue";
+import Searchbar from "@/Components/General/Searchbar.vue";
+
+const { success, error } = useNotifications(); // Use notification plugin
 
 const props = defineProps({
     profiles: {
@@ -16,11 +18,11 @@ const props = defineProps({
     },
 });
 
-const { success, error } = useNotifications(); // Use notification plugin
-
+// Search query to filter permissions
 const searchQuery = ref("");
 const expandedCategories = ref([]); // Track which categories are expanded
 
+// Filter permissions based on search querys
 const filteredPermissions = computed(() => {
     const result = {};
     Object.keys(props.permissions).forEach((category) => {
@@ -34,24 +36,29 @@ const filteredPermissions = computed(() => {
     return result;
 });
 
+// Check if a profile has a permission
 function hasPermission(profile, permission) {
     return profile.permissions.some((p) => p.id === permission.id);
 }
 
+// Form to update user rights
 const form = useForm({
     profile_id: null,
     permission_id: null,
 });
 
+// Toggle permission for a profile
 function togglePermission(profileId, permissionId) {
     form.profile_id = profileId;
     form.permission_id = permissionId;
 
+    // Find the profile and permission
     const profile = props.profiles.find((p) => p.id === profileId);
     const permission = Object.values(props.permissions)
         .flat()
         .find((p) => p.id === permissionId);
 
+    // Check if permission is already assigned to the profile
     const action = hasPermission(profile, permission) ? "removed from" : "added to";
 
     form.post(route("user-rights.update"), {
@@ -60,11 +67,12 @@ function togglePermission(profileId, permissionId) {
             form.reset("profile_id", "permission_id");
         },
         onError: () => {
-            error("Failed to update permission. Please try again. ❌");
+            error("Failed to update permission. Please try again.");
         },
     });
 }
 
+// Toggle category to expand/collapse
 function toggleCategory(category) {
     if (expandedCategories.value.includes(category)) {
         expandedCategories.value = expandedCategories.value.filter((c) => c !== category);
@@ -86,16 +94,15 @@ function toggleCategory(category) {
             <div class="user-rights__section">
                 <div class="user-rights__top-bar">
                     <div class="user-rights__search-bar">
-                        <Input
-                            type="search"
+                        <Searchbar
                             id="search"
                             placeholder="Search..."
                             v-model="searchQuery"
-                            icon="fas fa-search"
                         />
                     </div>
                 </div>
 
+                <!-- Table to display user rights -->
                 <table class="user-rights__table">
                     <thead>
                     <tr class="user-rights__table-header">
@@ -156,6 +163,11 @@ function toggleCategory(category) {
                     </template>
                     </tbody>
                 </table>
+
+                <!-- Show message if no permissions match the search -->
+                <div v-if="Object.keys(filteredPermissions).length === 0" class="user-rights__no-results">
+                    <p>No results found</p>
+                </div>
             </div>
         </div>
     </AuthenticatedLayout>

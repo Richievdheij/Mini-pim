@@ -1,15 +1,15 @@
 <script setup>
-import {ref, computed} from "vue";
-import {Head, usePage} from "@inertiajs/vue3";
+import { ref, computed } from "vue";
+import { Head } from "@inertiajs/vue3";
 import { useNotifications } from "@/plugins/notificationPlugin";
 import CreateProfileModal from "@/Components/Admin/Profiles/CreateProfileModal.vue";
 import EditProfileModal from "@/Components/Admin/Profiles/EditProfileModal.vue";
 import DeleteProfileModal from "@/Components/Admin/Profiles/DeleteProfileModal.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/General/PrimaryButton.vue";
-import Input from "@/Components/General/Input.vue";
 import Filter from '@/Components/General/Filter.vue';
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
+import Searchbar from "@/Components/General/Searchbar.vue";
 
 const props = defineProps({
     profiles: Array,
@@ -18,9 +18,7 @@ const props = defineProps({
     canCreateProfile: Boolean,
 });
 
-const page = usePage();
 const { success, error } = useNotifications(); // Use notifications
-const flash = page.props.flash;
 
 const isEditModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
@@ -38,6 +36,7 @@ const sortConfig = ref({
 function openModal(modalType, profile = null) {
     selectedProfile.value = profile;
 
+    // Open modal based on type
     if (modalType === "edit") {
         isEditModalOpen.value = true;
     } else if (modalType === "delete") {
@@ -51,6 +50,7 @@ function openModal(modalType, profile = null) {
 function closeModal(modalType) {
     selectedProfile.value = null;
 
+    // Close modal based on type
     if (modalType === "edit") {
         isEditModalOpen.value = false;
     } else if (modalType === "delete") {
@@ -80,7 +80,7 @@ function sortColumn(column) {
 
     sortConfig.value = {
         column,
-        direction: newDirection,
+        direction: newDirection, // 'none', 'asc', or 'desc'
     };
 }
 
@@ -89,6 +89,7 @@ const sortedProfiles = computed(() => {
     const { column, direction } = sortConfig.value;
     let profilesToSort = [...filteredProfiles.value];
 
+    // Sort profiles based on column and direction
     if (column && direction !== 'none') {
         profilesToSort.sort((a, b) => {
             const aValue = a[column];
@@ -131,12 +132,10 @@ const sortedProfiles = computed(() => {
 
                     <!-- Search Bar -->
                     <div class="profiles__search-bar">
-                        <Input
-                            type="search"
+                        <Searchbar
                             id="search"
                             placeholder="Search..."
                             v-model="searchQuery"
-                            icon="fas fa-search"
                         />
                     </div>
 
@@ -156,7 +155,10 @@ const sortedProfiles = computed(() => {
                             Name
                             <i :class="{'fas fa-sort-up': sortConfig.column === 'name' && sortConfig.direction === 'asc', 'fas fa-sort-down': sortConfig.column === 'name' && sortConfig.direction === 'desc'}"></i>
                         </th>
-                        <th v-if="props.canEditProfile || props.canDeleteProfile" class="profiles__table-header-cell"></th>
+                        <th
+                            v-if="props.canEditProfile || props.canDeleteProfile"
+                            class="profiles__table-header-cell">
+                        </th>
                     </tr>
                     </thead>
                     <tbody class="profiles__table-body">
