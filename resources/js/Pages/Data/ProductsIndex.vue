@@ -139,7 +139,7 @@ const sortedProducts = computed(() => {
 
                     <!-- Filter -->
                     <div class="products__filter">
-                        <Filter/>
+                        <Filter />
                     </div>
                 </div>
 

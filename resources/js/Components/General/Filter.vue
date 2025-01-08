@@ -14,6 +14,7 @@ const selectOption = (option) => {
     selectedOption.value = option;
     dropdownVisible.value = false;
 };
+
 </script>
 
 <template>
@@ -25,8 +26,9 @@ const selectOption = (option) => {
             </i>
         </button>
 
+        <!-- Removed v-if="dropdownVisible" to disable -->
         <!-- Dropdown -->
-        <div v-if="dropdownVisible" class="filter__dropdown">
+        <div class="filter__dropdown">
             <label
                 v-for="option in ['Profile', 'Creation Date', 'Last Modified']"
                 :key="option"

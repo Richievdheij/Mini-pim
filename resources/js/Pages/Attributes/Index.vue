@@ -153,7 +153,7 @@ const sortedAttributes = computed(() => {
                     </div>
 
                     <div class="attributes__filter">
-                        <Filter/>
+                        <Filter />
                     </div>
                 </div>
 

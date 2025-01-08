@@ -1,5 +1,7 @@
 <?php
 
+// php artisan test --filter=AuthenticationTest
+
 use App\Models\User;
 
 test('login screen can be rendered', function () {
