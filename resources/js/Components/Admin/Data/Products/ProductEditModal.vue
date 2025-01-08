@@ -134,8 +134,6 @@ function submit() {
                             type="field"
                             v-model="form.product_id"
                             :error="form.errors.product_id"
-                            class="product-id-input input"
-                            :disabled="true"
                             required
                         />
 

@@ -88,7 +88,7 @@ function submit() {
                 <Input
                     label="Password"
                     id="password"
-                    inputType="password"
+                    inputType="text"
                     placeholder="Enter a secure password"
                     type="field"
                     v-model="form.password"

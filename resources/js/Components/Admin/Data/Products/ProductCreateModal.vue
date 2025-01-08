@@ -2,7 +2,6 @@
 import { useForm } from "@inertiajs/vue3";
 import { watch } from "vue";
 import { useNotifications } from "@/plugins/notificationPlugin";
-import { generateProductId } from "@/Components/Helpers/GenerateProductId.vue";
 import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
@@ -16,7 +15,6 @@ const emit = defineEmits(["close", "productCreated"]); // Emit events for closin
 
 // Initialize notifications system
 const { success, error } = useNotifications();
-
 
 // Initialize form with default values
 const form = useForm({
@@ -33,7 +31,6 @@ watch(
         if (isOpen) {
             form.reset(); // Reset form fields
             form.clearErrors(); // Clear any existing form errors
-            form.product_id = generateProductId(); // Set the generated Product ID
         }
     }
 );
@@ -70,10 +67,9 @@ function submit() {
                     label="Product ID"
                     id="product_id"
                     inputType="text"
-                    placeholder="Generated product ID"
+                    placeholder="Enter product ID"
                     type="field"
                     v-model="form.product_id"
-                    class="product-id-input input"
                     :error="form.errors.product_id"
                     readonly
                 />
