@@ -12,7 +12,7 @@ class CreateProductAttributeValuesTable extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained('products'); // Product reference
             $table->foreignId('attribute_id')->constrained('attributes'); // Attribute reference
-            $table->foreignId('value_id')->constrained('attribute_values'); // Specific value reference
+            $table->string('value'); // Specific value
             $table->timestamps();
         });
     }

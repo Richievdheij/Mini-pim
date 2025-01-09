@@ -19,6 +19,9 @@ class CreateAttributesTable extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('attributes');
+        // Compatible with SQLite
+        if (Schema::hasTable('attributes')) {
+            Schema::dropIfExists('attributes');
+        }
     }
 }

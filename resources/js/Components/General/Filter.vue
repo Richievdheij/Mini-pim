@@ -20,15 +20,14 @@ const selectOption = (option) => {
 <template>
     <div class="filter">
         <!-- Filter Button -->
-        <button @click="toggleDropdown" class="filter__button">
+        <button class="filter__button">
             <i
                 class="fas fa-sliders filter__icon">
             </i>
         </button>
 
-        <!-- Removed v-if="dropdownVisible" to disable -->
         <!-- Dropdown -->
-        <div class="filter__dropdown">
+        <div v-if="dropdownVisible" class="filter__dropdown">
             <label
                 v-for="option in ['Profile', 'Creation Date', 'Last Modified']"
                 :key="option"
