@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\UpdatePasswordRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
@@ -12,8 +12,10 @@ class PasswordController extends Controller
 {
     /**
      * Update the user's password.
+     * @param UpdatePasswordRequest $request
+     * @return RedirectResponse
      */
-    public function update(Request $request): RedirectResponse
+    public function update(UpdatePasswordRequest $request): RedirectResponse
     {
         // Validate the current password, new password, and confirmation
         $validated = $request->validate([
