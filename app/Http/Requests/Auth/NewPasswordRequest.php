@@ -2,14 +2,14 @@
 
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password as PasswordRules;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Validation\ValidationException;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
+/**
+ * Handle an incoming new password request.
+ */
 class NewPasswordRequest extends FormRequest
 {
     /**
@@ -40,6 +40,7 @@ class NewPasswordRequest extends FormRequest
                     ->numbers()
                     ->symbols(),
                 function ($attribute, $value, $fail) {
+                    // Check if the new password is different from the current password
                     $user = User::where('email', $this->input('email'))->first();
                     if ($user && Hash::check($value, $user->password)) {
                         $fail(__('The new password cannot be the same as your current password.'));
@@ -48,39 +49,5 @@ class NewPasswordRequest extends FormRequest
             ],
             'token' => 'required',
         ];
-    }
-
-    /**
-     * Reset the user's password.
-     *
-     * @throws ValidationException
-     * @return void
-     */
-    public function resetPassword(): void
-    {
-        $user = User::where('email', $this->input('email'))->first();
-
-        if (!$user) {
-            throw ValidationException::withMessages([
-                'email' => __('No user found with the provided email address.'),
-            ]);
-        }
-
-        $status = Password::reset(
-            $this->only('email', 'password', 'password_confirmation', 'token'),
-            static function ($user, $password) {
-                $user->forceFill([
-                    'password' => Hash::make($password),
-                ])->save();
-
-                event(new PasswordReset($user));
-            }
-        );
-
-        if ($status !== Password::PASSWORD_RESET) {
-            throw ValidationException::withMessages([
-                'email' => __('Password reset failed. Please try again.'),
-            ]);
-        }
     }
 }

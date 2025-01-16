@@ -2,119 +2,127 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AttributeRequest;
+use App\Http\Services\AttributeService;
+use App\Http\Traits\AuthorizesActions;
 use App\Models\Attribute;
-use App\Models\ProductType;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
+/**
+ * Handle the incoming request for attributes.
+ */
 class AttributeController extends Controller
 {
+    // Use the AuthorizesActions trait
+    use AuthorizesActions;
+    // Inject the AttributeService
+    protected AttributeService $attributeService;
+
+    public function __construct(AttributeService $attributeService)
+    {
+        $this->attributeService = $attributeService;
+    }
+
     /**
      * Display a listing of the attributes.
+     *
+     * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         // Check if the current user has permission to view attributes
         $this->authorizeAction('view_attributes');
 
-        $user = auth()->user(); // Get the authenticated user
-        $attributes = Attribute::where('profile_id', $user->profiles->first()->id)->with('type')->get(); // Get all attributes for the user's profile
-        $types = ProductType::where('profile_id', $user->profiles->first()->id)->get(); // Get all product types for the user's profile
+        // Retrieve the attributes for the authenticated user
+        $attributes = $this->attributeService->getAttributesForUser();
+        $types = $this->attributeService->getProductTypesForUser();
+        $user = $this->attributeService->getAuthenticatedUser();
 
         return Inertia::render('Attributes/Index', [
-            'attributes' => $attributes, // Pass attributes to the view
-            'types' => $types, // Pass product types to the view
-            'canCreateAttribute' => $user->hasPermission('create_attributes'), // Check if the user can create attributes
-            'canEditAttribute' => $user->hasPermission('edit_attributes'), // Check if the user can edit attributes
-            'canDeleteAttribute' => $user->hasPermission('delete_attributes'), // Check if the user can delete attributes
+            'attributes' => $attributes,
+            'types' => $types,
+            'canCreateAttribute' => $user->hasPermission('create_attributes'),
+            'canEditAttribute' => $user->hasPermission('edit_attributes'),
+            'canDeleteAttribute' => $user->hasPermission('delete_attributes'),
         ]);
     }
 
     /**
      * Show the form for creating a new attribute.
+     * @return Response
      */
-    public function create()
+    public function create(): Response
     {
-        $this->authorizeAction('create_attributes'); // Check if the current user has permission to create attributes
+        $this->authorizeAction('create_attributes');
 
-        $user = auth()->user(); // Get the authenticated user
-        $types = ProductType::where('profile_id', $user->profiles->first()->id)->get(); // Get all product types for the user's profile
-
-        return Inertia::render('Attributes/Create', compact('types')); // Render the create attribute form
+        // Retrieve the attribute types
+        $types = $this->attributeService->getProductTypesForUser();
+        return Inertia::render('Attributes/Create', compact('types'));
     }
 
     /**
      * Store a newly created attribute in storage.
+     * @param AttributeRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(AttributeRequest $request): RedirectResponse
     {
-        $this->authorizeAction('create_attributes'); // Check if the current user has permission to create attributes
+        $this->authorizeAction('create_attributes');
 
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'type_id' => 'required|exists:product_types,id',
-        ]);
+        // Validate the request
+        $validated = $request->validated();
+        $attribute = $this->attributeService->createAttribute($validated);
 
-        $user = auth()->user();
-        $attribute = Attribute::create(array_merge($validated, ['profile_id' => $user->profiles->first()->id]));
-
-        return redirect()->route('pim.attributes.index')->with('success', 'Attribute created successfully!')->with('newAttribute', $attribute);
+        return redirect()->route('pim.attributes.index')
+            ->with('success', 'Attribute created successfully!')
+            ->with('newAttribute', $attribute);
     }
 
     /**
-     * Show the form for editing the specified attribute.
+     * Display the specified attribute.
+     * @param Attribute $attribute
+     * @return Response
      */
-    public function edit(Attribute $attribute)
+    public function edit(Attribute $attribute): Response
     {
         $this->authorizeAction('edit_attributes');
 
-        $user = auth()->user();
-        $types = ProductType::where('profile_id', $user->profiles->first()->id)->get();
-
+        // Retrieve the attribute types
+        $types = $this->attributeService->getProductTypesForUser();
         return Inertia::render('Attributes/Edit', compact('attribute', 'types'));
     }
 
     /**
-     * Update the specified attribute in storage.
+     * Update the specified attribute.
+     * @param AttributeRequest $request
+     * @param Attribute $attribute
+     * @return RedirectResponse
      */
-    public function update(Request $request, Attribute $attribute)
+    public function update(AttributeRequest $request, Attribute $attribute): RedirectResponse
     {
         $this->authorizeAction('edit_attributes');
 
-        $validated = $request->validate([
-            'name' => 'required|string',
-            'type_id' => 'required|exists:product_types,id',
-        ]);
-
-        $attribute->update($validated);
+        // Validate the request
+        $validated = $request->validated();
+        $this->attributeService->updateAttribute($attribute, $validated);
 
         return redirect()->route('pim.attributes.index')->with('success', 'Attribute updated successfully!');
     }
 
     /**
      * Remove the specified attribute from storage.
+     * @param Attribute $attribute
+     * @return RedirectResponse
      */
-    public function destroy(Attribute $attribute)
+    public function destroy(Attribute $attribute): RedirectResponse
     {
         $this->authorizeAction('delete_attributes');
 
-        $attribute->delete();
+        // Delete the attribute
+        $this->attributeService->deleteAttribute($attribute);
 
         return redirect()->route('pim.attributes.index')->with('success', 'Attribute deleted successfully!');
-    }
-
-    /**
-     * Check if the current user has permission to perform an action.
-     *
-     * @param string $permission
-     * @return void
-     */
-    private function authorizeAction(string $permission): void
-    {
-        $user = auth()->user();
-
-        if (!$user || !$user->hasPermission($permission)) {
-            abort(403, 'Unauthorized action.');
-        }
     }
 }

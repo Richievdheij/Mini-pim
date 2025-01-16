@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\AccountUpdateRequest;
+use App\Http\Requests\DeleteUpdateRequest;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 
+/**
+ * Handles account settings actions (edit, update, delete).
+ */
 class AccountController extends Controller
 {
     /**
@@ -19,7 +22,7 @@ class AccountController extends Controller
      */
     public function edit(): Response
     {
-        return Inertia::render('Account/Edit', [ // Default component
+        return Inertia::render('Account/Edit', [
             'status' => session('status'),
         ]);
     }
@@ -31,7 +34,7 @@ class AccountController extends Controller
      */
     public function editPim(): Response
     {
-        return Inertia::render('Account/Pim-sidebar/PimEdit', [ // Account PIM component
+        return Inertia::render('Account/Pim-sidebar/PimEdit', [
             'status' => session('status'),
         ]);
     }
@@ -39,18 +42,19 @@ class AccountController extends Controller
     /**
      * Update account information (shared logic).
      *
-     * @param ProfileUpdateRequest $request
+     * @param AccountUpdateRequest $request
      * @return RedirectResponse
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(AccountUpdateRequest $request): RedirectResponse
     {
-        $validatedData = $request->validated(); // Get validated data
+        $validated = $request->validated();
 
-        $request->user()->fill($validatedData); // Fill user with validated data
+        // Update user account information
+        $request->user()->fill($validated);
+        $request->user()->save();
 
-        $request->user()->save(); // Save user
-
-        $route = $request->routeIs('pim.account.*') ? 'pim.account.edit' : 'account.edit'; // Redirect to the correct route
+        // Determine route to redirect to after update
+        $route = $request->routeIs('pim.account.*') ? 'pim.account.edit' : 'account.edit';
 
         return Redirect::route($route);
     }
@@ -58,26 +62,23 @@ class AccountController extends Controller
     /**
      * Delete the user's account (shared logic).
      *
-     * @param Request $request
+     * @param DeleteUpdateRequest $request
      * @return RedirectResponse
      */
-    public function destroy(Request $request): RedirectResponse
+    public function destroy(DeleteUpdateRequest $request): RedirectResponse
     {
-        $request->validate([ // Validate password before deleting account
-            'password' => [
-                'required',
-                'current_password'
-            ],
-        ]);
+        // Validate the password before allowing deletion
+        $request->validated();
 
         $user = $request->user();
 
-        // Log out, delete user, and clear session
+        // Log out the user, delete account, and clear session
         Auth::logout();
         $user->delete();
         $request->session()->invalidate();
-        $request->session()->regenerateToken(); // Regenerate CSRF token
+        $request->session()->regenerateToken();
 
+        // Redirect to login page with a success message
         return Redirect::to('/login')->with('status', 'Your account has been deleted successfully.');
     }
 }

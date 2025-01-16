@@ -3,11 +3,17 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 
+/**
+ * Class ConfirmPasswordRequest
+ */
 class ConfirmPasswordRequest extends FormRequest
 {
+    /**
+     * @var mixed
+     */
+    public mixed $password;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -20,19 +26,16 @@ class ConfirmPasswordRequest extends FormRequest
     }
 
     /**
-     * Validate the request data and confirm the password.
+     * Get the validation rules that apply to the request.
      *
-     * @throws ValidationException
+     * @return array
      */
-    public function confirmPassword(): void
+    public function rules(): array
     {
-        // Validate the password
-        if (!Auth::guard('web')->validate([
-            'email' => $this->user()->email,
-            'password' => $this->input('password'),
-        ])) {
-            // Throw a validation exception if the password is incorrect
-            throw ValidationException::withMessages(['password' => trans('auth.password')]);
-        }
+        // Define the validation rules for the password confirmation
+        return [
+            'email' => ['required', 'email', 'exists:users,email'],
+            'password' => ['required', 'string'],
+        ];
     }
 }

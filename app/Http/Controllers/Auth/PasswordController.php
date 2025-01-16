@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\UpdatePasswordRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 
+/**
+ * Controller for updating the user's password.
+ */
 class PasswordController extends Controller
 {
     /**
@@ -17,15 +19,12 @@ class PasswordController extends Controller
      */
     public function update(UpdatePasswordRequest $request): RedirectResponse
     {
-        // Validate the current password, new password, and confirmation
-        $validated = $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Password::defaults()],
-        ]);
+        // Validate the request
+        $request->validated();
 
         // Update the user's password in the database
         $request->user()->update([
-            'password' => Hash::make($validated['password']),
+            'password' => Hash::make($request->input('password')),
         ]);
 
         // Redirect back after updating the password

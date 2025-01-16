@@ -3,11 +3,23 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
+/**
+ * UpdatePasswordRequest to handle password update validation.
+ */
 class UpdatePasswordRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize(): bool
+    {
+        return true; // Always authorized if user is authenticated
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -16,7 +28,6 @@ class UpdatePasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
             'current_password' => [
                 'required',
                 'current_password',
@@ -31,18 +42,5 @@ class UpdatePasswordRequest extends FormRequest
                     ->symbols(),
             ],
         ];
-    }
-
-    /**
-     * Update the user's password.
-     *
-     * @return void
-     */
-    public function updatePassword(): void
-    {
-        // Update the user's password
-        $this->user()->update([
-            'password' => Hash::make($this->input('password')),
-        ]);
     }
 }

@@ -10,6 +10,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Notifications\CustomResetPassword;
 
 
+/**
+ * @method static where(string $string, mixed $input)
+ * @method static create(array $array)
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable;
