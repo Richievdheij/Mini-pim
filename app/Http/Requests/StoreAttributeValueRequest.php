@@ -5,9 +5,9 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Handle the incoming request for updating an account.
+ * Validate incoming request to store a new product attribute value.
  */
-class AccountUpdateRequest extends FormRequest
+class StoreAttributeValueRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,11 @@ class AccountUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        // The `unique` rule is used to ignore the current user's email address
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $this->user()->id,
-            'password' => 'nullable|string|min:8|confirmed',
+            'product_id' => 'required|exists:products,id',
+            'values' => 'required|array',
+            'values.*.attribute_id' => 'required|exists:attributes,id',
+            'values.*.value' => 'required|string',
         ];
     }
 }

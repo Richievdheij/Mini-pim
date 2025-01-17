@@ -15,7 +15,7 @@ class  ProfileUpdateRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @return array
      */
     public function rules(): array
     {
@@ -28,10 +28,10 @@ class  ProfileUpdateRequest extends FormRequest
                 'min:8',
                 'confirmed',
                 // Custom regex for password rules
-                'regex:/[a-z]/', // at least one lowercase letter
-                'regex:/[A-Z]/', // at least one uppercase letter
-                'regex:/[0-9]/', // at least one number
-                'regex:/[@$!%*?&]/', // at least one special character
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/[0-9]/',
+                'regex:/[@$!%*?&]/',
                 // Ensure the new password is different from the current password
                 function ($attribute, $value, $fail) {
                     if (Hash::check($value, $this->user()->password)) {

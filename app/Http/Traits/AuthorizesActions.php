@@ -17,6 +17,7 @@ trait AuthorizesActions
     {
         $user = auth()->user();
 
+        // Check if the user is authenticated and has the required permission
         if (!$user || !$user->hasPermission($permission)) {
             abort(403, 'Unauthorized action.');
         }

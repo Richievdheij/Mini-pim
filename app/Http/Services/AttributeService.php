@@ -28,8 +28,7 @@ class AttributeService
     public function getAttributesForUser(): Collection
     {
         $user = Auth::user();
-        return Attribute::where('profile_id',
-            $user->profiles->first()->id)
+        return Attribute::where('profile_id', $user->profiles->first()->id)
             ->with('type')
             ->get();
     }

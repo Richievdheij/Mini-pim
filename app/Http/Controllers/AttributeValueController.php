@@ -2,21 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attribute;
+use App\Http\Requests\StoreAttributeValueRequest;
+use App\Http\Services\AttributeValueService;
+use App\Http\Traits\AuthorizesActions;
+use App\Http\Traits\AuthorizesOwnership;
 use App\Models\ProductAttributeValue;
-use Illuminate\Http\Request;
+use Exception;
+use Illuminate\Support\Facades\Log;
+use Inertia\Response;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
+/**
+ * Handles requests related to product attribute values.
+ */
 class AttributeValueController extends Controller
 {
+    use AuthorizesActions;
+    use AuthorizesOwnership;
+
+    protected AttributeValueService $attributeValueService;
+
+    public function __construct(AttributeValueService $attributeValueService)
+    {
+        $this->attributeValueService = $attributeValueService;
+    }
+
     /**
      * Display a listing of the product attribute values.
+     *
+     * @return Response
      */
-    public function index()
+    public function index(): Response
     {
-        // Retrieve product attribute values for the authenticated user's profile and include their associated attributes
-        $values = ProductAttributeValue::where('profile_id', auth()->user()->profiles->first()->id)
-            ->with('attribute')
-            ->get();
+        // Retrieve product attribute values for the authenticated user's profile
+        $values = $this->attributeValueService->getProductAttributeValuesForUser();
 
         // Render the inertia page with the product attribute values
         return inertia('Attributes/AttributesValuesIndex', compact('values'));
@@ -24,30 +44,17 @@ class AttributeValueController extends Controller
 
     /**
      * Store new or update existing product attribute values.
+     *
+     * @param StoreAttributeValueRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(StoreAttributeValueRequest $request): JsonResponse
     {
-        // Validate
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'values' => 'required|array',
-            'values.*.attribute_id' => 'required|exists:attributes,id',
-            'values.*.value' => 'required|string',
-        ]);
+        // Validate the request
+        $validated = $request->validated();
 
-        // Loop through the attribute values and update or create them
-        foreach ($request->values as $valueData) {
-            ProductAttributeValue::updateOrCreate(
-                [
-                    'product_id' => $request->product_id,
-                    'attribute_id' => $valueData['attribute_id'],
-                ],
-                [
-                    'value' => $valueData['value'],
-                    'profile_id' => auth()->user()->profiles->first()->id,
-                ]
-            );
-        }
+        // Store or update the product attribute values
+        $this->attributeValueService->storeOrUpdateProductAttributeValues($validated['values'], $validated['product_id']);
 
         // Return a success response
         return response()->json(['success' => true, 'message' => 'Attribute values saved successfully!']);
@@ -55,14 +62,20 @@ class AttributeValueController extends Controller
 
     /**
      * Delete a specific product attribute value.
+     *
+     * @param ProductAttributeValue $productAttributeValue
+     * @return RedirectResponse
      */
-    public function destroy(ProductAttributeValue $productAttributeValue)
+    public function destroy(ProductAttributeValue $productAttributeValue): RedirectResponse
     {
-        // Authorize the ownership of the product attribute value
-        $this->authorizeOwnership($productAttributeValue);
+        // Check if the authenticated user owns the product attribute value
+        if (!$this->authorizeOwnership($productAttributeValue)) {
+            // If the user is not authorized, redirect back with an error message
+            return redirect()->route('pim.attribute-values.index')->with('error', 'You are not authorized to delete this attribute value!');
+        }
 
         // Delete the product attribute value
-        $productAttributeValue->delete();
+        $this->attributeValueService->deleteProductAttributeValue($productAttributeValue);
 
         // Redirect back with a success message
         return redirect()->route('pim.attribute-values.index')->with('success', 'Attribute value deleted successfully!');
@@ -70,33 +83,22 @@ class AttributeValueController extends Controller
 
     /**
      * Fetch attributes and their values for a specific product type.
+     *
+     * @param int $typeId
+     * @throws Exception
+     * @return JsonResponse
      */
-    public function getAttributesWithValues($typeId)
+    public function getAttributesWithValues($typeId): JsonResponse
     {
         try {
             // Fetch attributes with their values for the authenticated user's profile
-            $attributes = Attribute::where('type_id', $typeId)
-                ->with(['attributeValues' => function ($query) {
-                    $query->where('profile_id', auth()->user()->profiles->first()->id);
-                }])
-                ->get();
+            $attributes = $this->attributeValueService->getAttributesWithValues($typeId);
 
             // Return the attributes with their values
             return response()->json(['attributes' => $attributes]);
-        } catch (\Exception $e) {
-            \Log::error('Error fetching attributes with values: ' . $e->getMessage());
+        } catch (Exception $e) {
+            Log::error('Error fetching attributes with values: ' . $e->getMessage());
             return response()->json(['error' => 'Something went wrong.'], 500);
-        }
-    }
-
-    /**
-     * Authorize the ownership of the product attribute value.
-     */
-    private function authorizeOwnership(ProductAttributeValue $productAttributeValue)
-    {
-        // Check if the authenticated user owns the product attribute value
-        if ($productAttributeValue->profile_id !== auth()->user()->profiles->first()->id) {
-            abort(403, 'Unauthorized action.');
         }
     }
 }

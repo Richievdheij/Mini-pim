@@ -15,9 +15,8 @@ use Inertia\Response;
  */
 class AttributeController extends Controller
 {
-    // Use the AuthorizesActions trait
     use AuthorizesActions;
-    // Inject the AttributeService
+
     protected AttributeService $attributeService;
 
     public function __construct(AttributeService $attributeService)

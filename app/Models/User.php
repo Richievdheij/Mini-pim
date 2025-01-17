@@ -7,16 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Http\Traits\AuthorizesActions;
 use App\Notifications\CustomResetPassword;
 
-
 /**
- * @method static where(string $string, mixed $input)
- * @method static create(array $array)
+ * Represents a user of the application.
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, AuthorizesActions;
 
     /**
      * The table associated with the model.
@@ -72,7 +71,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param string $permissionName
      * @return bool
      */
-    public function hasPermission($permissionName)
+    public function hasPermission(string $permissionName): bool
     {
         foreach ($this->profiles as $profile) {
             if ($profile->permissions->contains('name', $permissionName)) {
@@ -88,7 +87,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @param string $token
      * @return void
      */
-    public function sendPasswordResetNotification($token)
+    public function sendPasswordResetNotification($token): void
     {
         $this->notify(new CustomResetPassword($token));
     }
