@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * Handle account-related logic.
+ */
 class Account extends Model
 {
     use HasFactory;
@@ -20,7 +23,7 @@ class Account extends Model
     /**
      * Get the permissions associated with the profile.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function permissions(): BelongsToMany
     {
@@ -29,7 +32,7 @@ class Account extends Model
     /**
      * Get the users associated with the profile.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function users(): BelongsToMany
     {

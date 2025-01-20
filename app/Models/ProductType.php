@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @method static where(string $string, $id)
+ * Handles product types (e.g., Electronics, Clothing).
  */
 class ProductType extends Model
 {
@@ -19,24 +21,30 @@ class ProductType extends Model
 
     /**
      * Relationship to Profile
+     *
+     * @return BelongsTo
      */
-    public function profile()
+    public function profile(): belongsTo
     {
         return $this->belongsTo(Profile::class);
     }
 
     /**
      * Relationship to Products
+     *
+     * @return hasMany
      */
-    public function products()
+    public function products(): hasMany
     {
         return $this->hasMany(Product::class);
     }
 
     /**
      * Relationship to Attributes
+     *
+     * @return hasMany
      */
-    public function attributes()
+    public function attributes(): hasMany
     {
         return $this->hasMany(Attribute::class, 'type_id');
     }

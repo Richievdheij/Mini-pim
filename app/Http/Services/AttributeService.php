@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 class AttributeService
 {
     /**
+     * Get the authenticated user.
      * @return Authenticatable
      */
     public function getAuthenticatedUser(): Authenticatable
@@ -41,8 +42,7 @@ class AttributeService
     public function getProductTypesForUser(): Collection
     {
         $user = Auth::user();
-        return ProductType::where('profile_id',
-            $user->profiles->first()->id)
+        return ProductType::where('profile_id', $user->profiles->first()->id)
             ->get();
     }
 

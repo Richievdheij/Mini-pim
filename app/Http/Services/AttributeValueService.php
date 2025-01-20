@@ -35,18 +35,21 @@ class AttributeValueService
     public function storeOrUpdateProductAttributeValues(array $values, int $productId): void
     {
         $user = Auth::user();
-        foreach ($values as $valueData) {
-            ProductAttributeValue::updateOrCreate(
-                [
+        $profileId = $user->profiles->first()->id;
+
+        // Insert or update the product attribute values
+        ProductAttributeValue::upsert(
+            collect($values)->map(function ($valueData) use ($productId, $profileId) {
+                return [
                     'product_id' => $productId,
                     'attribute_id' => $valueData['attribute_id'],
-                ],
-                [
+                    'profile_id' => $profileId,
                     'value' => $valueData['value'],
-                    'profile_id' => $user->profiles->first()->id,
-                ]
-            );
-        }
+                ];
+            })->toArray(),
+            ['product_id', 'attribute_id'],
+            ['value']
+        );
     }
 
     /**

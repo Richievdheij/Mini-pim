@@ -9,9 +9,9 @@ use App\Http\Traits\AuthorizesOwnership;
 use App\Models\ProductAttributeValue;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
 
 /**
  * Handles requests related to product attribute values.
@@ -39,7 +39,7 @@ class AttributeValueController extends Controller
         $values = $this->attributeValueService->getProductAttributeValuesForUser();
 
         // Render the inertia page with the product attribute values
-        return inertia('Attributes/AttributesValuesIndex', compact('values'));
+        return inertia::render('Attributes/Index', compact('values')); // Corrected component name
     }
 
     /**
@@ -57,38 +57,47 @@ class AttributeValueController extends Controller
         $this->attributeValueService->storeOrUpdateProductAttributeValues($validated['values'], $validated['product_id']);
 
         // Return a success response
-        return response()->json(['success' => true, 'message' => 'Attribute values saved successfully!']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Attribute values saved successfully!'
+        ]);
     }
 
     /**
      * Delete a specific product attribute value.
      *
      * @param ProductAttributeValue $productAttributeValue
-     * @return RedirectResponse
+     * @return Response
      */
-    public function destroy(ProductAttributeValue $productAttributeValue): RedirectResponse
+    public function destroy(ProductAttributeValue $productAttributeValue): Response
     {
         // Check if the authenticated user owns the product attribute value
         if (!$this->authorizeOwnership($productAttributeValue)) {
-            // If the user is not authorized, redirect back with an error message
-            return redirect()->route('pim.attribute-values.index')->with('error', 'You are not authorized to delete this attribute value!');
+            // If the user is not authorized, return inertia with an error message
+            return inertia::render('Attributes/Index', [
+                'error' => 'You are not authorized to delete this attribute value!',
+                'values' => $this->attributeValueService->getProductAttributeValuesForUser()
+            ]);
         }
 
         // Delete the product attribute value
         $this->attributeValueService->deleteProductAttributeValue($productAttributeValue);
 
-        // Redirect back with a success message
-        return redirect()->route('pim.attribute-values.index')->with('success', 'Attribute value deleted successfully!');
+        // Return inertia with a success message
+        return inertia::render('Attributes/Index', [
+            'success' => 'Attribute value deleted successfully!',
+            'values' => $this->attributeValueService->getProductAttributeValuesForUser()
+        ]);
     }
 
     /**
      * Fetch attributes and their values for a specific product type.
      *
      * @param int $typeId
-     * @throws Exception
      * @return JsonResponse
+     * @throws Exception
      */
-    public function getAttributesWithValues($typeId): JsonResponse
+    public function getAttributesWithValues(int $typeId): JsonResponse
     {
         try {
             // Fetch attributes with their values for the authenticated user's profile
