@@ -5,7 +5,7 @@ namespace App\Http\Requests\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class ConfirmPasswordRequest
+ * Class ConfirmPasswordRequest handles the validation of the password confirmation request.
  */
 class ConfirmPasswordRequest extends FormRequest
 {

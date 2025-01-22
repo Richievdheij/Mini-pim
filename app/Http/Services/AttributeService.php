@@ -3,24 +3,14 @@ namespace App\Http\Services;
 
 use App\Models\ProductType;
 use App\Models\Attribute;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 /**
- * Handle attribute-related logic.
+ * Handles attribute-related actions, such as creating, updating, and deleting attributes.
  */
 class AttributeService
 {
-    /**
-     * Get the authenticated user.
-     * @return Authenticatable
-     */
-    public function getAuthenticatedUser(): Authenticatable
-    {
-        return Auth::user();
-    }
-
     /**
      * Get all attributes for the current user's profile.
      *

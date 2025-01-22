@@ -17,7 +17,7 @@ class UpdatePasswordRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // Always authorized if user is authenticated
+        return true;
     }
 
     /**

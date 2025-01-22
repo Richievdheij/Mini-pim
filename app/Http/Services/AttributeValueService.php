@@ -20,6 +20,7 @@ class AttributeValueService
     public function getProductAttributeValuesForUser(): Collection
     {
         $user = Auth::user();
+
         return ProductAttributeValue::where('profile_id', $user->profiles->first()->id)
             ->with('attribute')
             ->get();
@@ -35,6 +36,7 @@ class AttributeValueService
     public function storeOrUpdateProductAttributeValues(array $values, int $productId): void
     {
         $user = Auth::user();
+
         $profileId = $user->profiles->first()->id;
 
         // Insert or update the product attribute values
@@ -67,11 +69,14 @@ class AttributeValueService
      * Get attributes with their values for a specific product type.
      *
      * @param int $typeId
+     *
      * @return Collection
      */
     public function getAttributesWithValues(int $typeId): Collection
     {
         $user = Auth::user();
+
+        // Retrieve attributes with their values for the specified product type
         return Attribute::where('type_id', $typeId)
             ->with(['attributeValues' => function ($query) use ($user) {
                 $query->where('profile_id', $user->profiles->first()->id);

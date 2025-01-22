@@ -1,6 +1,6 @@
 <script setup>
-import { ref, computed } from "vue";
-import { Head, usePage } from "@inertiajs/vue3";
+import {ref, computed} from "vue";
+import {Head, router, usePage} from "@inertiajs/vue3";
 import ProductCreateModal from "@/Components/Admin/Data/Products/ProductCreateModal.vue";
 import ProductEditModal from "@/Components/Admin/Data/Products/ProductEditModal.vue";
 import ProductDeleteModal from "@/Components/Admin/Data/Products/ProductDeleteModal.vue";
@@ -16,7 +16,7 @@ const props = defineProps({
     canDeleteProduct: Boolean,
 });
 
-const { products, types } = usePage().props;
+const {products, types} = usePage().props;
 const attributes = ref([]);
 
 const showCreateModal = ref(false);
@@ -38,7 +38,7 @@ function openModal(modalType, product = null) {
         selectedProduct.value = product;
         showEditModal.value = true;
     } else if (modalType === 'delete') {
-        productToDelete.value = product; // Fix: Set productToDelete
+        productToDelete.value = product;
         showDeleteModal.value = true;
     } else if (modalType === 'create') {
         showCreateModal.value = true;
@@ -49,12 +49,23 @@ function openModal(modalType, product = null) {
 function closeModal(modalType) {
     selectedProduct.value = null;
 
+    // Close specific modals
     if (modalType === "edit") {
         showEditModal.value = false;
     } else if (modalType === "delete") {
         showDeleteModal.value = false;
     } else if (modalType === "create") {
         showCreateModal.value = false;
+    }
+
+    console.log("Modal closed!");
+
+    // Reload the products from the server and verify
+    try {
+        router.reload({only: ['products']});
+        console.log("Products reloaded", products);
+    } catch (error) {
+        console.error("Error reloading products:", error);
     }
 }
 
@@ -68,7 +79,7 @@ const filteredProducts = computed(() => {
 });
 
 function sortColumn(column) {
-    const { direction } = sortConfig.value;
+    const {direction} = sortConfig.value;
     let newDirection = "asc";
 
     if (direction === "asc") {
@@ -84,7 +95,7 @@ function sortColumn(column) {
 }
 
 const sortedProducts = computed(() => {
-    const { column, direction } = sortConfig.value;
+    const {column, direction} = sortConfig.value;
     let productsToSort = [...filteredProducts.value];
 
     if (column && direction !== "none") {
@@ -139,7 +150,7 @@ const sortedProducts = computed(() => {
 
                     <!-- Filter -->
                     <div class="products__filter">
-                        <Filter />
+                        <Filter/>
                     </div>
                 </div>
 
@@ -177,7 +188,8 @@ const sortedProducts = computed(() => {
                                     'fas fa-sort-down': sortConfig.column === 'type' && sortConfig.direction === 'desc'}">
                             </i>
                         </th>
-                        <th v-if="props.canEditProduct || props.canDeleteProduct" class="products__table-header-cell"></th>
+                        <th v-if="props.canEditProduct || props.canDeleteProduct"
+                            class="products__table-header-cell"></th>
                     </tr>
                     </thead>
                     <tbody class="products__table-body">

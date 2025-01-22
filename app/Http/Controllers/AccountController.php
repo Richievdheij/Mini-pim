@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AccountUpdateRequest;
 use App\Http\Requests\DeleteUpdateRequest;
+use App\Http\Services\AccountService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -15,6 +15,13 @@ use Inertia\Response;
  */
 class AccountController extends Controller
 {
+    private AccountService $accountService;
+
+    public function __construct(AccountService $accountService)
+    {
+        $this->accountService = $accountService;
+    }
+
     /**
      * Show the default account edit form.
      *
@@ -43,15 +50,15 @@ class AccountController extends Controller
      * Update account information (shared logic).
      *
      * @param AccountUpdateRequest $request
+     *
      * @return RedirectResponse
      */
     public function update(AccountUpdateRequest $request): RedirectResponse
     {
         $validated = $request->validated();
 
-        // Update user account information
-        $request->user()->fill($validated);
-        $request->user()->save();
+        // Use the AccountService to update the user's account
+        $this->accountService->updateAccount($validated);
 
         // Determine route to redirect to after update
         $route = $request->routeIs('pim.account.*') ? 'pim.account.edit' : 'account.edit';
@@ -63,6 +70,7 @@ class AccountController extends Controller
      * Delete the user's account (shared logic).
      *
      * @param DeleteUpdateRequest $request
+     *
      * @return RedirectResponse
      */
     public function destroy(DeleteUpdateRequest $request): RedirectResponse
@@ -70,15 +78,9 @@ class AccountController extends Controller
         // Validate the password before allowing deletion
         $request->validated();
 
-        $user = $request->user();
+        // Use the AccountService to delete the user's account
+        $this->accountService->deleteAccount();
 
-        // Log out the user, delete account, and clear session
-        Auth::logout();
-        $user->delete();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        // Redirect to login page with a success message
-        return Redirect::to('/login')->with('status', 'Your account has been deleted successfully.');
+        return Redirect::to('/login');
     }
 }

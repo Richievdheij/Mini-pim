@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * Handle an incoming new password request.
+ * Request handles the validation of the new password request.
  */
 class NewPasswordRequest extends FormRequest
 {
