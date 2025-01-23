@@ -12,12 +12,12 @@ const { success, error } = useNotifications(); // Notification plugin
 
 // Props and emits
 const props = defineProps({
+    isOpen: Boolean,
     attributes: Array,
     types: Array,
-    attributeValues: Object,
     product: Object,
+    attributeValues: Object,
     productId: Number,
-    isOpen: Boolean,
 });
 
 const emit = defineEmits(["close", "productUpdated"]); // Emit events

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed } from "vue";
-import { Head } from "@inertiajs/vue3";
-import { useNotifications } from "@/plugins/notificationPlugin";
+import { Head, router } from "@inertiajs/vue3";
+
 import CreateProfileModal from "@/Components/Admin/Profiles/CreateProfileModal.vue";
 import EditProfileModal from "@/Components/Admin/Profiles/EditProfileModal.vue";
 import DeleteProfileModal from "@/Components/Admin/Profiles/DeleteProfileModal.vue";
@@ -11,18 +11,18 @@ import Filter from '@/Components/General/Filter.vue';
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import Searchbar from "@/Components/General/Searchbar.vue";
 
+// Props definition
 const props = defineProps({
     profiles: Array,
+    canCreateProfile: Boolean,
     canEditProfile: Boolean,
     canDeleteProfile: Boolean,
-    canCreateProfile: Boolean,
 });
 
-const { success, error } = useNotifications(); // Use notifications
-
+// Modal visibility state
+const isCreateModalOpen = ref(false);
 const isEditModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
-const isCreateModalOpen = ref(false);
 const selectedProfile = ref(null);
 const searchQuery = ref("");
 
@@ -32,31 +32,45 @@ const sortConfig = ref({
     direction: 'none',  // 'none', 'asc', or 'desc'
 });
 
-// Open modal for create/edit/delete
+// Function to open modals based on type
 function openModal(modalType, profile = null) {
     selectedProfile.value = profile;
 
-    // Open modal based on type
-    if (modalType === "edit") {
-        isEditModalOpen.value = true;
-    } else if (modalType === "delete") {
-        isDeleteModalOpen.value = true;
-    } else if (modalType === "create") {
-        isCreateModalOpen.value = true;
+    switch (modalType) {
+        case 'create':
+            isCreateModalOpen.value = true;
+            break;
+        case 'edit':
+            isEditModalOpen.value = true;
+            break;
+        case 'delete':
+            isDeleteModalOpen.value = true;
+            break;
     }
 }
 
-// Close modal for create/edit/delete
+// Function to close modals based on type
 function closeModal(modalType) {
     selectedProfile.value = null;
 
-    // Close modal based on type
-    if (modalType === "edit") {
-        isEditModalOpen.value = false;
-    } else if (modalType === "delete") {
-        isDeleteModalOpen.value = false;
-    } else if (modalType === "create") {
-        isCreateModalOpen.value = false;
+    switch (modalType) {
+        case 'create':
+            isCreateModalOpen.value = false;
+            break;
+        case 'edit':
+            isEditModalOpen.value = false;
+            break;
+        case 'delete':
+            isDeleteModalOpen.value = false;
+            break;
+    }
+
+    // Reload profiles
+    try {
+        router.reload({only: ['profiles']});
+        console.log("Profiles reloaded", props.profiles);
+    } catch (error) {
+        console.error("Error reloading profiles:", error);
     }
 }
 
@@ -67,9 +81,9 @@ const filteredProfiles = computed(() => {
     );
 });
 
-// Sorting function
+// Function to sort columns
 function sortColumn(column) {
-    const { direction } = sortConfig.value;
+    const {direction} = sortConfig.value;
     let newDirection = 'asc';
 
     if (direction === 'asc') {
@@ -86,10 +100,9 @@ function sortColumn(column) {
 
 // Sorted profiles
 const sortedProfiles = computed(() => {
-    const { column, direction } = sortConfig.value;
+    const {column, direction} = sortConfig.value;
     let profilesToSort = [...filteredProfiles.value];
 
-    // Sort profiles based on column and direction
     if (column && direction !== 'none') {
         profilesToSort.sort((a, b) => {
             const aValue = a[column];
@@ -140,7 +153,7 @@ const sortedProfiles = computed(() => {
                     </div>
 
                     <div class="profiles__filter">
-                        <Filter />
+                        <Filter/>
                     </div>
                 </div>
 
