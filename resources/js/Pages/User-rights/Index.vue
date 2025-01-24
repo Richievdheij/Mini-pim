@@ -5,7 +5,7 @@ import { useNotifications } from "@/plugins/notificationPlugin";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Searchbar from "@/Components/General/Searchbar.vue";
 
-const { success, error } = useNotifications(); // Use notification plugin
+const { success, error } = useNotifications();
 
 const props = defineProps({
     profiles: {
@@ -20,9 +20,9 @@ const props = defineProps({
 
 // Search query to filter permissions
 const searchQuery = ref("");
-const expandedCategories = ref([]); // Track which categories are expanded
+const expandedCategories = ref([]);
 
-// Filter permissions based on search querys
+// Filter permissions based on search query
 const filteredPermissions = computed(() => {
     const result = {};
     Object.keys(props.permissions).forEach((category) => {

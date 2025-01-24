@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { Head, usePage } from '@inertiajs/vue3';
+import { Head, usePage, router } from '@inertiajs/vue3';
 import PIMLayout from "@/Layouts/PIMLayout.vue";
 import AttributeCreateModal from '@/Components/Admin/Data/Attributes/AttributeCreateModal.vue';
 import AttributeEditModal from '@/Components/Admin/Data/Attributes/AttributeEditModal.vue';
@@ -40,12 +40,16 @@ function openModal(modalType, attribute = null) {
     attributeToEdit.value = attribute;
     attributeToDelete.value = attribute;
 
-    if (modalType === "edit") {
-        showEditModal.value = true;
-    } else if (modalType === "delete") {
-        showDeleteModal.value = true;
-    } else if (modalType === "create") {
-        showCreateModal.value = true;
+    switch (modalType) {
+        case "create":
+            showCreateModal.value = true;
+            break;
+        case "edit":
+            showEditModal.value = true;
+            break;
+        case "delete":
+            showDeleteModal.value = true;
+            break;
     }
 }
 
@@ -54,19 +58,30 @@ function closeModal(modalType) {
     attributeToEdit.value = null;
     attributeToDelete.value = null;
 
-    if (modalType === "edit") {
-        showEditModal.value = false;
-    } else if (modalType === "delete") {
-        showDeleteModal.value = false;
-    } else if (modalType === "create") {
-        showCreateModal.value = false;
+    switch (modalType) {
+        case "create":
+            showCreateModal.value = false;
+            break;
+        case "edit":
+            showEditModal.value = false;
+            break;
+        case "delete":
+            showDeleteModal.value = false;
+            break;
+    }
+    // Reload attributes
+    try {
+        router.reload({ only: ["attributes"] });
+        console.log("Attributes reloaded", attributes);
+    } catch (error) {
+        console.error("Error reloading attributes:", error);
     }
 }
 
 // Watch for changes in the search query to filter the attributes
 watch(searchQuery, (newQuery) => {
     if (newQuery) {
-        attributes.value = page?.props?.attributes.filter(attribute => // Filter attributes based on the search query
+        attributes.value = page?.props?.attributes.filter(attribute =>
             attribute.name.toLowerCase().includes(newQuery.toLowerCase())
         ) || [];
     } else {
@@ -103,7 +118,6 @@ const sortedAttributes = computed(() => {
     const { column, direction } = sortConfig.value;
     let attributesToSort = [...filteredAttributes.value];
 
-    // Sort the attributes based on the column and direction
     if (column && direction !== "none") {
         attributesToSort.sort((a, b) => {
             const aValue = column === 'type' ? a[column]?.name : a[column];
@@ -153,7 +167,7 @@ const sortedAttributes = computed(() => {
                     </div>
 
                     <div class="attributes__filter">
-                        <Filter />
+                        <Filter/>
                     </div>
                 </div>
 

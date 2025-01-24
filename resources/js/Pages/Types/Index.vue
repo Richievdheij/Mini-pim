@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
-import { Head, usePage } from "@inertiajs/vue3";
+import { Head, router, usePage } from "@inertiajs/vue3";
 import TypeCreateModal from "@/Components/Admin/Data/Types/TypeCreateModal.vue";
 import TypeEditModal from "@/Components/Admin/Data/Types/TypeEditModal.vue";
 import TypeDeleteModal from "@/Components/Admin/Data/Types/TypeDeleteModal.vue";
@@ -18,11 +18,9 @@ const props = defineProps({
 
 const { types } = usePage().props;
 
-const showCreateModal = ref(false);
-const showEditModal = ref(false);
-const showDeleteModal = ref(false);
-const typeToEdit = ref(null);
-const typeToDelete = ref(null);
+const isCreateModalOpen = ref(false);
+const isEditModalOpen = ref(false);
+const isDeleteModalOpen = ref(false);
 const selectedType = ref(null);
 const searchQuery = ref("");
 
@@ -32,35 +30,49 @@ const sortConfig = ref({
     direction: "none", // 'none', 'asc', or 'desc'
 });
 
-// Open modal for create/edit/delete
+// Open modal function
 function openModal(modalType, type = null) {
     selectedType.value = type;
 
-    if (modalType === "edit") {
-        typeToEdit.value = type;
-        showEditModal.value = true;
-    } else if (modalType === "delete") {
-        typeToDelete.value = type;
-        showDeleteModal.value = true;
-    } else if (modalType === "create") {
-        showCreateModal.value = true;
+    switch (modalType) {
+        case "create":
+            isCreateModalOpen.value = true;
+            break;
+        case "edit":
+            isEditModalOpen.value = true;
+            break;
+        case "delete":
+            isDeleteModalOpen.value = true;
+            break;
     }
 }
 
-// Close modal for create/edit/delete
+// Close modal function
 function closeModal(modalType) {
     selectedType.value = null;
 
-    if (modalType === "edit") {
-        showEditModal.value = false;
-    } else if (modalType === "delete") {
-        showDeleteModal.value = false;
-    } else if (modalType === "create") {
-        showCreateModal.value = false;
+    switch (modalType) {
+        case "create":
+            isCreateModalOpen.value = false;
+            break;
+        case "edit":
+            isEditModalOpen.value = false;
+            break;
+        case "delete":
+            isDeleteModalOpen.value = false;
+            break;
+    }
+
+    // Reload types
+    try {
+        router.reload({ only: ["types"] });
+        console.log("Types reloaded", types);
+    } catch (error) {
+        console.error("Error reloading types:", error);
     }
 }
 
-// Search and Sorting
+// Filter types based on search query
 const filteredTypes = computed(() => {
     return types.filter((type) =>
         type.name.toLowerCase().includes(searchQuery.value.toLowerCase())
@@ -84,7 +96,7 @@ function sortColumn(column) {
     };
 }
 
-// Sorted Types
+// Sorted types
 const sortedTypes = computed(() => {
     const { column, direction } = sortConfig.value;
     let typesToSort = [...filteredTypes.value];
@@ -94,16 +106,6 @@ const sortedTypes = computed(() => {
             const aValue = a[column];
             const bValue = b[column];
 
-            // Handle type name sorting in alphabetical order
-            if (column === "name") {
-                if (direction === "asc") {
-                    return aValue.localeCompare(bValue); // Ascending alphabetical order
-                } else {
-                    return bValue.localeCompare(aValue); // Descending alphabetical order
-                }
-            }
-
-            // Handle numeric sorting for other columns (like 'id')
             if (direction === "asc") {
                 return aValue > bValue ? 1 : -1;
             } else {
@@ -114,32 +116,11 @@ const sortedTypes = computed(() => {
 
     return typesToSort;
 });
-
-// Event Handlers for Type Modals
-function handleTypeCreated(newType) {
-    showCreateModal.value = false;
-    // Optionally, add the new type to the list
-    types.value.push(newType);
-}
-
-function handleTypeUpdated(updatedType) {
-    showEditModal.value = false;
-    // Find and update the type in the array
-    const index = types.value.findIndex(type => type.id === updatedType.id);
-    if (index !== -1) {
-        types.value[index] = updatedType;
-    }
-}
-
-function handleTypeDeleted(typeId) {
-    showDeleteModal.value = false;
-    // Remove the deleted type from the array
-    types.value = types.value.filter(type => type.id !== typeId);
-}
 </script>
 
 <template>
-    <Head title="Mini-Pim | Types"/>
+    <Head title="Mini-Pim | Types" />
+
     <PIMLayout>
         <div class="types">
             <!-- Header -->
@@ -156,22 +137,18 @@ function handleTypeDeleted(typeId) {
                             label="Create New Type"
                             icon="fas fa-plus"
                             type="cancel"
-                            @click="openModal('create', null)"
+                            @click="openModal('create')"
                         />
                     </div>
 
                     <!-- Search Bar -->
                     <div class="types__search-bar">
-                        <Searchbar
-                            id="search"
-                            placeholder="Search..."
-                            v-model="searchQuery"
-                        />
+                        <Searchbar id="search" placeholder="Search..." v-model="searchQuery" />
                     </div>
 
                     <!-- Filter -->
                     <div class="types__filter">
-                        <Filter/>
+                        <Filter />
                     </div>
                 </div>
 
@@ -179,25 +156,23 @@ function handleTypeDeleted(typeId) {
                 <table class="types__table">
                     <thead>
                     <tr class="types__table-header">
-                        <th
-                            class="types__table-header-cell"
-                            @click="sortColumn('id')"
-                        >
+                        <th class="types__table-header-cell" @click="sortColumn('id')">
                             Type ID
-                            <i :class="{
+                            <i
+                                :class="{
                                         'fas fa-sort-up': sortConfig.column === 'id' && sortConfig.direction === 'asc',
-                                        'fas fa-sort-down': sortConfig.column === 'id' && sortConfig.direction === 'desc'}">
-                            </i>
+                                        'fas fa-sort-down': sortConfig.column === 'id' && sortConfig.direction === 'desc',
+                                    }"
+                            ></i>
                         </th>
-                        <th
-                            class="types__table-header-cell"
-                            @click="sortColumn('name')"
-                        >
+                        <th class="types__table-header-cell" @click="sortColumn('name')">
                             Name
-                            <i :class="{
+                            <i
+                                :class="{
                                         'fas fa-sort-up': sortConfig.column === 'name' && sortConfig.direction === 'asc',
-                                        'fas fa-sort-down': sortConfig.column === 'name' && sortConfig.direction === 'desc'}">
-                            </i>
+                                        'fas fa-sort-down': sortConfig.column === 'name' && sortConfig.direction === 'desc',
+                                    }"
+                            ></i>
                         </th>
                         <th v-if="props.canEditType || props.canDeleteType" class="types__table-header-cell"></th>
                     </tr>
@@ -228,7 +203,7 @@ function handleTypeDeleted(typeId) {
                     </tbody>
                 </table>
 
-                <!-- Show message if no Types match the search -->
+                <!-- No results message -->
                 <div v-if="filteredTypes.length === 0" class="types__no-results">
                     <p>No results found</p>
                 </div>
@@ -236,21 +211,18 @@ function handleTypeDeleted(typeId) {
 
             <!-- Modals -->
             <TypeCreateModal
-                :isOpen="showCreateModal"
+                :isOpen="isCreateModalOpen"
                 @close="closeModal('create')"
-                @typeCreated="handleTypeCreated"
             />
             <TypeEditModal
-                :isOpen="showEditModal"
-                :type="typeToEdit"
+                :type="selectedType"
+                :isOpen="isEditModalOpen"
                 @close="closeModal('edit')"
-                @typeUpdated="handleTypeUpdated"
             />
             <TypeDeleteModal
-                :isOpen="showDeleteModal"
-                :type="typeToDelete"
+                :type="selectedType"
+                :isOpen="isDeleteModalOpen"
                 @close="closeModal('delete')"
-                @typeDeleted="handleTypeDeleted"
             />
         </div>
     </PIMLayout>

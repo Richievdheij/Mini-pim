@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
-import { Head } from "@inertiajs/vue3";
+import { Head, router } from "@inertiajs/vue3";
 import CreateUserModal from "@/Components/Admin/Users/CreateUserModal.vue";
 import EditUserModal from "@/Components/Admin/Users/EditUserModal.vue";
 import DeleteUserModal from "@/Components/Admin/Users/DeleteUserModal.vue";
@@ -28,32 +28,48 @@ const searchQuery = ref("");
 // Sort configuration state
 const sortConfig = ref({
     column: null,
-    direction: 'none',  // 'none', 'asc', or 'desc'
+    direction: 'none',
 });
 
 // Open modal for create/edit/delete
 function openModal(modalType, user = null) {
     selectedUser.value = user;
 
-    if (modalType === "edit") {
-        isEditModalOpen.value = true;
-    } else if (modalType === "delete") {
-        isDeleteModalOpen.value = true;
-    } else if (modalType === "create") {
-        isCreateModalOpen.value = true;
+    switch (modalType) {
+        case "edit":
+            isEditModalOpen.value = true;
+            break;
+        case "delete":
+            isDeleteModalOpen.value = true;
+            break;
+        case "create":
+            isCreateModalOpen.value = true;
+            break;
     }
 }
 
-// Close modal for create/edit/delete
+// Close modal for create/edit/delete and reload users
 function closeModal(modalType) {
     selectedUser.value = null;
 
-    if (modalType === "edit") {
-        isEditModalOpen.value = false;
-    } else if (modalType === "delete") {
-        isDeleteModalOpen.value = false;
-    } else if (modalType === "create") {
-        isCreateModalOpen.value = false;
+    switch (modalType) {
+        case "edit":
+            isEditModalOpen.value = false;
+            break;
+        case "delete":
+            isDeleteModalOpen.value = false;
+            break;
+        case "create":
+            isCreateModalOpen.value = false;
+            break;
+    }
+
+    // Reload users
+    try {
+        router.reload({ only: ['users'] });
+        console.log("Users reloaded", props.users);
+    } catch (error) {
+        console.error("Error reloading users:", error);
     }
 }
 
@@ -67,17 +83,15 @@ const filteredUsers = computed(() => {
 
 // Sorting function
 function sortColumn(column) {
-    const {direction} = sortConfig.value;
+    const { direction } = sortConfig.value;
     let newDirection = 'asc';
 
-    // If the column is already sorted, change the direction
     if (direction === 'asc') {
         newDirection = 'desc';
     } else if (direction === 'desc') {
         newDirection = 'none';
     }
 
-    // Update the sort configuration
     sortConfig.value = {
         column,
         direction: newDirection,
@@ -86,22 +100,19 @@ function sortColumn(column) {
 
 // Sorted users
 const sortedUsers = computed(() => {
-    const {column, direction} = sortConfig.value;
+    const { column, direction } = sortConfig.value;
     let usersToSort = [...filteredUsers.value];
 
-    // Sort the users based on the column and direction
     if (column && direction !== 'none') {
         usersToSort.sort((a, b) => {
             let aValue = a[column];
             let bValue = b[column];
 
-            // Special handling for the 'profiles' column
             if (column === "profiles") {
-                aValue = a.profiles && a.profiles.length > 0 ? a.profiles[0].name : ""; // Get the first profile name
+                aValue = a.profiles && a.profiles.length > 0 ? a.profiles[0].name : "";
                 bValue = b.profiles && b.profiles.length > 0 ? b.profiles[0].name : "";
             }
 
-            // Sort the values based on the direction
             if (direction === 'asc') {
                 return aValue > bValue ? 1 : -1;
             } else {
@@ -145,7 +156,7 @@ const sortedUsers = computed(() => {
                     </div>
 
                     <div class="users__filter">
-                        <Filter/>
+                        <Filter />
                     </div>
                 </div>
 
@@ -153,36 +164,26 @@ const sortedUsers = computed(() => {
                 <table class="users__table">
                     <thead>
                     <tr class="users__table-header">
-                        <th
-                            class="users__table-header-cell"
-                            @click="sortColumn('name')"
-                        >
+                        <th class="users__table-header-cell" @click="sortColumn('name')">
                             Name
-                            <i :class="{'fas fa-sort-up'
-                               :sortConfig.column === 'name' && sortConfig.direction === 'asc', 'fas fa-sort-down'
-                               :sortConfig.column === 'name' && sortConfig.direction === 'desc'}">
-                            </i>
+                            <i :class="{
+                                'fas fa-sort-up': sortConfig.column === 'name' && sortConfig.direction === 'asc',
+                                'fas fa-sort-down': sortConfig.column === 'name' && sortConfig.direction === 'desc'
+                            }"></i>
                         </th>
-                        <th
-                            class="users__table-header-cell"
-                            @click="sortColumn('email')"
-                        >
+                        <th class="users__table-header-cell" @click="sortColumn('email')">
                             Email
-                            <i :class="{'fas fa-sort-up'
-                               :sortConfig.column === 'email' && sortConfig.direction === 'asc', 'fas fa-sort-down'
-                               :sortConfig.column === 'email' && sortConfig.direction === 'desc'}">
-                            </i>
+                            <i :class="{
+                                'fas fa-sort-up': sortConfig.column === 'email' && sortConfig.direction === 'asc',
+                                'fas fa-sort-down': sortConfig.column === 'email' && sortConfig.direction === 'desc'
+                            }"></i>
                         </th>
-                        <th
-                            class="users__table-header-cell"
-                            @click="sortColumn('profiles')"
-                        >
+                        <th class="users__table-header-cell" @click="sortColumn('profiles')">
                             Profiles
-                            <i
-                                :class="{'fas fa-sort-up'
-                                :sortConfig.column === 'profiles' && sortConfig.direction === 'asc', 'fas fa-sort-down'
-                                :sortConfig.column === 'profiles' && sortConfig.direction === 'desc'}">
-                            </i>
+                            <i :class="{
+                                'fas fa-sort-up': sortConfig.column === 'profiles' && sortConfig.direction === 'asc',
+                                'fas fa-sort-down': sortConfig.column === 'profiles' && sortConfig.direction === 'desc'
+                            }"></i>
                         </th>
                         <th v-if="props.canEditUser || props.canDeleteUser" class="users__table-header-cell"></th>
                     </tr>
