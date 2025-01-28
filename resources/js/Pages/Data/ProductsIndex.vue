@@ -99,6 +99,7 @@ function sortColumn(column) {
     };
 }
 
+// Sort products based on the sort configuration
 const sortedProducts = computed(() => {
     const {column, direction} = sortConfig.value;
     let productsToSort = [...filteredProducts.value];
@@ -108,9 +109,7 @@ const sortedProducts = computed(() => {
             const aValue = column === "type" ? (a[column] ? a[column].name : '') : a[column];
             const bValue = column === "type" ? (b[column] ? b[column].name : '') : b[column];
 
-            return direction === "asc"
-                ? aValue.localeCompare(bValue)
-                : bValue.localeCompare(aValue);
+            return direction === "asc" ? aValue > bValue ? 1 : -1 : aValue < bValue ? 1 : -1;
         });
     }
 

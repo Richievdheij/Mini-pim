@@ -108,11 +108,7 @@ const sortedProfiles = computed(() => {
             const aValue = a[column];
             const bValue = b[column];
 
-            if (direction === 'asc') {
-                return aValue > bValue ? 1 : -1;
-            } else {
-                return aValue < bValue ? 1 : -1;
-            }
+            return direction === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
         });
     }
 

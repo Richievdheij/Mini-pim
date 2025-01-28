@@ -113,11 +113,7 @@ const sortedUsers = computed(() => {
                 bValue = b.profiles && b.profiles.length > 0 ? b.profiles[0].name : "";
             }
 
-            if (direction === 'asc') {
-                return aValue > bValue ? 1 : -1;
-            } else {
-                return aValue < bValue ? 1 : -1;
-            }
+            return direction === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
         });
     }
 

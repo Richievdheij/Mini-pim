@@ -123,11 +123,7 @@ const sortedAttributes = computed(() => {
             const aValue = column === 'type' ? a[column]?.name : a[column];
             const bValue = column === 'type' ? b[column]?.name : b[column];
 
-            if (direction === "asc") {
-                return aValue > bValue ? 1 : -1;
-            } else {
-                return aValue < bValue ? 1 : -1;
-            }
+            return direction === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
         });
     }
 
