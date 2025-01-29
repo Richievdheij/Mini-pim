@@ -5,10 +5,8 @@ import TypeCreateModal from "@/Components/Admin/Data/Types/TypeCreateModal.vue";
 import TypeEditModal from "@/Components/Admin/Data/Types/TypeEditModal.vue";
 import TypeDeleteModal from "@/Components/Admin/Data/Types/TypeDeleteModal.vue";
 import PIMLayout from "@/Layouts/PIMLayout.vue";
-import PrimaryButton from "@/Components/General/PrimaryButton.vue";
-import SecondaryButton from "@/Components/General/SecondaryButton.vue";
-import Searchbar from "@/Components/General/Searchbar.vue";
-import Filter from "@/Components/General/Filter.vue";
+import TypesSection from '@/Pages/Types/TypesSection.vue';
+import TypesTable from '@/Pages/Types/TypesTable.vue';
 
 const props = defineProps({
     canCreateType: Boolean,
@@ -66,7 +64,6 @@ function closeModal(modalType) {
     // Reload types
     try {
         router.reload({ only: ["types"] });
-        console.log("Types reloaded", types);
     } catch (error) {
         console.error("Error reloading types:", error);
     }
@@ -82,18 +79,9 @@ const filteredTypes = computed(() => {
 // Sorting function
 function sortColumn(column) {
     const { direction } = sortConfig.value;
-    let newDirection = "asc";
+    const newDirection = direction === "asc" ? "desc" : direction === "desc" ? "none" : "asc";
 
-    if (direction === "asc") {
-        newDirection = "desc";
-    } else if (direction === "desc") {
-        newDirection = "none";
-    }
-
-    sortConfig.value = {
-        column,
-        direction: newDirection,
-    };
+    sortConfig.value = { column, direction: newDirection };
 }
 
 // Sorted types
@@ -115,7 +103,7 @@ const sortedTypes = computed(() => {
 </script>
 
 <template>
-    <Head title="Mini-Pim | Types" />
+    <Head title="Mini-Pim | Types"/>
 
     <PIMLayout>
         <div class="types">
@@ -125,85 +113,21 @@ const sortedTypes = computed(() => {
             </div>
 
             <!-- Section -->
-            <div class="types__section">
-                <div class="types__top-bar">
-                    <!-- Create Button -->
-                    <div class="types__create-button" v-if="props.canCreateType">
-                        <PrimaryButton
-                            label="Create New Type"
-                            icon="fas fa-plus"
-                            type="cancel"
-                            @click="openModal('create')"
-                        />
-                    </div>
+            <TypesSection
+                :canCreateType="props.canCreateType"
+                v-model:searchQuery="searchQuery"
+                :openModal="openModal"
+            />
 
-                    <!-- Search Bar -->
-                    <div class="types__search-bar">
-                        <Searchbar id="search" placeholder="Search..." v-model="searchQuery" />
-                    </div>
-
-                    <!-- Filter -->
-                    <div class="types__filter">
-                        <Filter />
-                    </div>
-                </div>
-
-                <!-- Table -->
-                <table class="types__table">
-                    <thead>
-                    <tr class="types__table-header">
-                        <th class="types__table-header-cell" @click="sortColumn('id')">
-                            Type ID
-                            <i
-                                :class="{
-                                        'fas fa-sort-up': sortConfig.column === 'id' && sortConfig.direction === 'asc',
-                                        'fas fa-sort-down': sortConfig.column === 'id' && sortConfig.direction === 'desc',
-                                    }"
-                            ></i>
-                        </th>
-                        <th class="types__table-header-cell" @click="sortColumn('name')">
-                            Name
-                            <i
-                                :class="{
-                                        'fas fa-sort-up': sortConfig.column === 'name' && sortConfig.direction === 'asc',
-                                        'fas fa-sort-down': sortConfig.column === 'name' && sortConfig.direction === 'desc',
-                                    }"
-                            ></i>
-                        </th>
-                        <th v-if="props.canEditType || props.canDeleteType" class="types__table-header-cell"></th>
-                    </tr>
-                    </thead>
-                    <tbody class="types__table-body">
-                    <tr v-for="type in sortedTypes" :key="type.id" class="types__table-row">
-                        <td class="types__table-cell">{{ type.id }}</td>
-                        <td class="types__table-cell">{{ type.name }}</td>
-                        <td v-if="props.canEditType || props.canDeleteType" class="types__table-cell">
-                            <div class="types__actions">
-                                <SecondaryButton
-                                    v-if="props.canEditType"
-                                    label=""
-                                    type="submit"
-                                    icon="fas fa-edit"
-                                    @click="openModal('edit', type)"
-                                />
-                                <SecondaryButton
-                                    v-if="props.canDeleteType"
-                                    label=""
-                                    type="delete"
-                                    icon="fas fa-trash"
-                                    @click="openModal('delete', type)"
-                                />
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <!-- No results message -->
-                <div v-if="filteredTypes.length === 0" class="types__no-results">
-                    <p>No results found</p>
-                </div>
-            </div>
+            <!-- Types Table -->
+            <TypesTable
+                :types="sortedTypes"
+                :sortConfig="sortConfig"
+                :canEditType="props.canEditType"
+                :canDeleteType="props.canDeleteType"
+                :sortColumn="sortColumn"
+                :openModal="openModal"
+            />
 
             <!-- Modals -->
             <TypeCreateModal

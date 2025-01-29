@@ -5,10 +5,8 @@ import PIMLayout from "@/Layouts/PIMLayout.vue";
 import AttributeCreateModal from '@/Components/Admin/Data/Attributes/AttributeCreateModal.vue';
 import AttributeEditModal from '@/Components/Admin/Data/Attributes/AttributeEditModal.vue';
 import AttributeDeleteModal from "@/Components/Admin/Data/Attributes/AttributeDeleteModal.vue";
-import SecondaryButton from "@/Components/General/SecondaryButton.vue";
-import PrimaryButton from "@/Components/General/PrimaryButton.vue";
-import Searchbar from "@/Components/General/Searchbar.vue";
-import Filter from "@/Components/General/Filter.vue";
+import AttributesSection from '@/Pages/Attributes/AttributesSection.vue';
+import AttributesTable from '@/Pages/Attributes/AttributesTable.vue';
 
 const props = defineProps({
     canCreateAttribute: Boolean,
@@ -72,7 +70,6 @@ function closeModal(modalType) {
     // Reload attributes
     try {
         router.reload({ only: ["attributes"] });
-        console.log("Attributes reloaded", attributes);
     } catch (error) {
         console.error("Error reloading attributes:", error);
     }
@@ -89,29 +86,21 @@ watch(searchQuery, (newQuery) => {
     }
 });
 
-// Sorting functionality
-function sortColumn(column) {
-    const { direction } = sortConfig.value;
-    let newDirection = "asc";
-
-    if (direction === "asc") {
-        newDirection = "desc";
-    } else if (direction === "desc") {
-        newDirection = "none";
-    }
-
-    sortConfig.value = {
-        column,
-        direction: newDirection,
-    };
-}
-
 // Filtered attributes based on the search query
 const filteredAttributes = computed(() => {
-    return attributes.value.filter(attribute =>
-        attribute.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
+    return attributes.value
+        .filter(attribute =>
+            attribute.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+        );
 });
+
+// Sorting function
+function sortColumn(column) {
+    const { direction } = sortConfig.value;
+    const newDirection = direction === "asc" ? "desc" : direction === "desc" ? "none" : "asc";
+
+    sortConfig.value = { column, direction: newDirection };
+}
 
 // Sorting logic for both 'name' and 'type'
 const sortedAttributes = computed(() => {
@@ -129,7 +118,6 @@ const sortedAttributes = computed(() => {
 
     return attributesToSort;
 });
-
 </script>
 
 <template>
@@ -143,90 +131,21 @@ const sortedAttributes = computed(() => {
             </div>
 
             <!-- Section -->
-            <div class="attributes__section">
-                <div class="attributes__top-bar">
-                    <div class="attributes__create-button" v-if="props.canCreateAttribute">
-                        <PrimaryButton
-                            label="Create new Attribute"
-                            type="cancel"
-                            icon="fas fa-plus"
-                            @click="openModal('create', null)"
-                        />
-                    </div>
+            <AttributesSection
+                :canCreateAttribute="props.canCreateAttribute"
+                v-model:searchQuery="searchQuery"
+                :openModal="openModal"
+            />
 
-                    <div class="attributes__search-bar">
-                        <Searchbar
-                            id="search"
-                            placeholder="Search..."
-                            v-model="searchQuery"
-                        />
-                    </div>
-
-                    <div class="attributes__filter">
-                        <Filter/>
-                    </div>
-                </div>
-
-                <!-- Attributes Table -->
-                <table class="attributes__table">
-                    <thead>
-                    <tr class="attributes__table-header">
-                        <th
-                            class="attributes__table-header-cell"
-                            @click="sortColumn('name')"
-                        >
-                            Name
-                            <i :class="{
-                                'fas fa-sort-up': sortConfig.column === 'name' && sortConfig.direction === 'asc',
-                                'fas fa-sort-down': sortConfig.column === 'name' && sortConfig.direction === 'desc'}">
-                            </i>
-                        </th>
-                        <th
-                            class="attributes__table-header-cell"
-                            @click="sortColumn('type')"
-                        >
-                            Type
-                            <i :class="{
-                                'fas fa-sort-up': sortConfig.column === 'type' && sortConfig.direction === 'asc',
-                                'fas fa-sort-down': sortConfig.column === 'type' && sortConfig.direction === 'desc'}">
-                            </i>
-                        </th>
-                        <th v-if="props.canEditAttribute || props.canDeleteAttribute"
-                            class="attributes__table-header-cell"></th>
-                    </tr>
-                    </thead>
-                    <tbody class="attributes__table-body">
-                    <tr v-for="attribute in sortedAttributes" :key="attribute.id" class="attributes__table-row">
-                        <td class="attributes__table-cell">{{ attribute.name }}</td>
-                        <td class="attributes__table-cell">{{ attribute.type.name }}</td>
-                        <td v-if="props.canEditAttribute || props.canDeleteAttribute" class="attributes__table-cell">
-                            <!-- Actions -->
-                            <div class="attributes__actions">
-                                <SecondaryButton
-                                    v-if="props.canEditAttribute"
-                                    label=""
-                                    type="submit"
-                                    icon="fas fa-edit"
-                                    @click="openModal('edit', attribute)"
-                                />
-                                <SecondaryButton
-                                    v-if="props.canDeleteAttribute"
-                                    label=""
-                                    type="delete"
-                                    icon="fas fa-trash"
-                                    @click="openModal('delete', attribute)"
-                                />
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <!-- Show message if no Attributes match the search -->
-                <div v-if="filteredAttributes.length === 0" class="attributes__no-results">
-                    <p>No results found</p>
-                </div>
-            </div>
+            <!-- Attributes Table -->
+            <AttributesTable
+                :attributes="sortedAttributes"
+                :sortConfig="sortConfig"
+                :canEditAttribute="props.canEditAttribute"
+                :canDeleteAttribute="props.canDeleteAttribute"
+                :sortColumn="sortColumn"
+                :openModal="openModal"
+            />
 
             <!-- Modals -->
             <AttributeCreateModal

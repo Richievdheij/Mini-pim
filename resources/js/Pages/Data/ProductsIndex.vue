@@ -1,21 +1,19 @@
 <script setup>
 import { ref, computed } from "vue";
-import {Head, router, usePage } from "@inertiajs/vue3";
+import { Head, router, usePage } from "@inertiajs/vue3";
 import ProductCreateModal from "@/Components/Admin/Data/Products/ProductCreateModal.vue";
 import ProductEditModal from "@/Components/Admin/Data/Products/ProductEditModal.vue";
 import ProductDeleteModal from "@/Components/Admin/Data/Products/ProductDeleteModal.vue";
 import PIMLayout from "@/Layouts/PIMLayout.vue";
-import PrimaryButton from "@/Components/General/PrimaryButton.vue";
-import SecondaryButton from "@/Components/General/SecondaryButton.vue";
-import Searchbar from "@/Components/General/Searchbar.vue";
-import Filter from "@/Components/General/Filter.vue";
+import ProductsSection from '@/Pages/Data/ProductsSection.vue';
+import ProductsTable from '@/Pages/Data/ProductsTable.vue';
 
-// Props and context
 const props = defineProps({
     canCreateProduct: Boolean,
     canEditProduct: Boolean,
     canDeleteProduct: Boolean,
 });
+
 const { products, types } = usePage().props;
 const attributes = ref([]);
 
@@ -88,15 +86,12 @@ const filteredProducts = computed(() => {
         );
 });
 
-// Sort function
+// Sorting function
 function sortColumn(column) {
-    const {direction} = sortConfig.value;
-    let newDirection = direction === "asc" ? "desc" : direction === "desc" ? "none" : "asc";
+    const { direction } = sortConfig.value;
+    const newDirection = direction === "asc" ? "desc" : direction === "desc" ? "none" : "asc";
 
-    sortConfig.value = {
-        column,
-        direction: newDirection,
-    };
+    sortConfig.value = { column, direction: newDirection };
 }
 
 // Sort products based on the sort configuration
@@ -115,11 +110,11 @@ const sortedProducts = computed(() => {
 
     return productsToSort;
 });
-
 </script>
 
 <template>
     <Head title="Mini-Pim | Products"/>
+
     <PIMLayout>
         <div class="products">
             <!-- Header -->
@@ -128,94 +123,21 @@ const sortedProducts = computed(() => {
             </div>
 
             <!-- Section -->
-            <div class="products__section">
-                <div class="products__top-bar">
-                    <!-- Create Button -->
-                    <div v-if="props.canCreateProduct" class="products__create-button">
-                        <PrimaryButton
-                            label="Create New Product"
-                            icon="fas fa-plus"
-                            type="cancel"
-                            @click="openModal('create')"
-                        />
-                    </div>
+            <ProductsSection
+                :canCreateProduct="props.canCreateProduct"
+                v-model:searchQuery="searchQuery"
+                :openModal="openModal"
+            />
 
-                    <!-- Search Bar -->
-                    <div class="products__search-bar">
-                        <Searchbar
-                            id="search"
-                            placeholder="Search..."
-                            v-model="searchQuery"
-                        />
-                    </div>
-
-                    <!-- Filter -->
-                    <div class="products__filter">
-                        <Filter/>
-                    </div>
-                </div>
-
-                <!-- Table -->
-                <table class="products__table">
-                    <thead>
-                    <tr class="products__table-header">
-                        <th class="products__table-header-cell" @click="sortColumn('product_id')">
-                            Product ID
-                            <i :class="{
-                                    'fas fa-sort-up': sortConfig.column === 'product_id' && sortConfig.direction === 'asc',
-                                    'fas fa-sort-down': sortConfig.column === 'product_id' && sortConfig.direction === 'desc'}">
-                            </i>
-                        </th>
-                        <th class="products__table-header-cell" @click="sortColumn('name')">
-                            Name
-                            <i :class="{
-                                    'fas fa-sort-up': sortConfig.column === 'name' && sortConfig.direction === 'asc',
-                                    'fas fa-sort-down': sortConfig.column === 'name' && sortConfig.direction === 'desc'}">
-                            </i>
-                        </th>
-                        <th class="products__table-header-cell" @click="sortColumn('type')">
-                            Type
-                            <i :class="{
-                                    'fas fa-sort-up': sortConfig.column === 'type' && sortConfig.direction === 'asc',
-                                    'fas fa-sort-down': sortConfig.column === 'type' && sortConfig.direction === 'desc'}">
-                            </i>
-                        </th>
-                        <th v-if="props.canEditProduct || props.canDeleteProduct"
-                            class="products__table-header-cell"></th>
-                    </tr>
-                    </thead>
-                    <tbody class="products__table-body">
-                    <tr v-for="product in sortedProducts" :key="product.id" class="products__table-row">
-                        <td class="products__table-cell">{{ product.product_id }}</td>
-                        <td class="products__table-cell">{{ product.name }}</td>
-                        <td class="products__table-cell">{{ product.type ? product.type.name : 'No Type' }}</td>
-                        <td v-if="props.canEditProduct || props.canDeleteProduct" class="products__table-cell">
-                            <div class="products__actions">
-                                <SecondaryButton
-                                    v-if="props.canEditProduct"
-                                    label=""
-                                    type="submit"
-                                    icon="fas fa-edit"
-                                    @click="openModal('edit', product)"
-                                />
-                                <SecondaryButton
-                                    v-if="props.canDeleteProduct"
-                                    label=""
-                                    type="delete"
-                                    icon="fas fa-trash"
-                                    @click="openModal('delete', product)"
-                                />
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <!-- Show message if no Products match the search -->
-                <div v-if="filteredProducts.length === 0" class="products__no-results">
-                    <p>No results found</p>
-                </div>
-            </div>
+            <!-- Products Table -->
+            <ProductsTable
+                :products="sortedProducts"
+                :sortConfig="sortConfig"
+                :canEditProduct="props.canEditProduct"
+                :canDeleteProduct="props.canDeleteProduct"
+                :sortColumn="sortColumn"
+                :openModal="openModal"
+            />
 
             <!-- Modals -->
             <ProductCreateModal
