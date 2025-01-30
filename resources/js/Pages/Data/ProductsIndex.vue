@@ -1,135 +1,75 @@
 <script setup>
-import { ref, computed } from "vue";
-import { Head, router, usePage } from "@inertiajs/vue3";
-import ProductCreateModal from "@/Components/Admin/Data/Products/ProductCreateModal.vue";
-import ProductEditModal from "@/Components/Admin/Data/Products/ProductEditModal.vue";
-import ProductDeleteModal from "@/Components/Admin/Data/Products/ProductDeleteModal.vue";
+import { Head } from '@inertiajs/vue3';
 import PIMLayout from "@/Layouts/PIMLayout.vue";
+import ProductCreateModal from '@/Components/Admin/Data/Products/ProductCreateModal.vue';
+import ProductEditModal from '@/Components/Admin/Data/Products/ProductEditModal.vue';
+import ProductDeleteModal from '@/Components/Admin/Data/Products/ProductDeleteModal.vue';
 import ProductsSection from '@/Pages/Data/ProductsSection.vue';
 import ProductsTable from '@/Pages/Data/ProductsTable.vue';
+import useEntityTable from '@/composables/useEntityTable';
 
+/**
+ * Props passed to the component.
+ * @property {Boolean} canCreateProduct - Indicates if the user can create a new product.
+ * @property {Boolean} canEditProduct - Indicates if the user can edit a product.
+ * @property {Boolean} canDeleteProduct - Indicates if the user can delete a product.
+ */
 const props = defineProps({
     canCreateProduct: Boolean,
     canEditProduct: Boolean,
     canDeleteProduct: Boolean,
 });
 
-const { products, types } = usePage().props;
-const attributes = ref([]);
-
-// Modal visibility states
-const modalState = ref({
-    create: false,
-    edit: false,
-    delete: false,
-});
-
-// Target product for actions
-const selectedProduct = ref(null);
-const productToDelete = ref(null);
-
-// Search and sorting configuration
-const searchQuery = ref("");
-const sortConfig = ref({
-    column: null,
-    direction: "none", // 'none', 'asc', or 'desc'
-});
-
-// Open and close modals using a switch-case
-function openModal(modalType, product = null) {
-    switch (modalType) {
-        case 'create':
-            modalState.value.create = true;
-            break;
-        case 'edit':
-            selectedProduct.value = product;
-            modalState.value.edit = true;
-            break;
-        case 'delete':
-            productToDelete.value = product;
-            modalState.value.delete = true;
-            break;
-    }
-}
-
-function closeModal(modalType) {
-    // Reset values before closing the modal
-    selectedProduct.value = null;
-    productToDelete.value = null;
-
-    switch (modalType) {
-        case 'create':
-            modalState.value.create = false;
-            break;
-        case 'edit':
-            modalState.value.edit = false;
-            break;
-        case 'delete':
-            modalState.value.delete = false;
-            break;
-    }
-
-    // Reload the products data after closing the modal
-    try {
-        router.reload({ only: ["products"] });
-    } catch (error) {
-        console.error("Error reloading products:", error);
-    }
-}
-
-// Search filtering
-const filteredProducts = computed(() => {
-    return products
-        .filter((product) => product && product.name) // Ensure product and product.name exist
-        .filter((product) =>
-            product.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-        );
-});
-
-// Sorting function
-function sortColumn(column) {
-    const { direction } = sortConfig.value;
-    const newDirection = direction === "asc" ? "desc" : direction === "desc" ? "none" : "asc";
-
-    sortConfig.value = { column, direction: newDirection };
-}
-
-// Sort products based on the sort configuration
-const sortedProducts = computed(() => {
-    const {column, direction} = sortConfig.value;
-    let productsToSort = [...filteredProducts.value];
-
-    if (column && direction !== "none") {
-        productsToSort.sort((a, b) => {
-            const aValue = column === "type" ? (a[column] ? a[column].name : '') : a[column];
-            const bValue = column === "type" ? (b[column] ? b[column].name : '') : b[column];
-
-            return direction === "asc" ? aValue > bValue ? 1 : -1 : aValue < bValue ? 1 : -1;
-        });
-    }
-
-    return productsToSort;
-});
+/**
+ * Destructure properties and methods from the useEntityTable composable.
+ * @property {Ref<Boolean>} showCreateModal - Reactive reference for the visibility of the create modal.
+ * @property {Ref<Boolean>} showEditModal - Reactive reference for the visibility of the edit modal.
+ * @property {Ref<Boolean>} showDeleteModal - Reactive reference for the visibility of the delete modal.
+ * @property {Ref<Object|null>} itemToEdit - Reactive reference for the item to edit.
+ * @property {Ref<Object|null>} itemToDelete - Reactive reference for the item to delete.
+ * @property {Ref<String>} searchQuery - Reactive reference for the search query.
+ * @property {Ref<Array>} types - Reactive reference for the types of products.
+ * @property {Ref<Object>} sortConfig - Reactive reference for the sorting configuration.
+ * @property {Function} openModal - Function to open a modal.
+ * @property {Function} closeModal - Function to close a modal.
+ * @property {ComputedRef<Array>} sortedItems - Computed reference for the sorted products.
+ * @property {Function} sortColumn - Function to sort the table by a specified column.
+ */
+const {
+    showCreateModal,
+    showEditModal,
+    showDeleteModal,
+    itemToEdit,
+    itemToDelete,
+    searchQuery,
+    types,
+    sortConfig,
+    openModal,
+    closeModal,
+    sortedItems: sortedProducts,
+    sortColumn,
+} = useEntityTable('products');
 </script>
 
 <template>
+    <!-- Set the page title -->
     <Head title="Mini-Pim | Products"/>
 
+    <!-- Main layout component -->
     <PIMLayout>
         <div class="products">
-            <!-- Header -->
             <div class="products__header">
                 <h1 class="products__title">Products</h1>
             </div>
 
-            <!-- Section -->
+            <!-- Section for product creation and search -->
             <ProductsSection
                 :canCreateProduct="props.canCreateProduct"
                 v-model:searchQuery="searchQuery"
                 :openModal="openModal"
             />
 
-            <!-- Products Table -->
+            <!-- Table displaying the products -->
             <ProductsTable
                 :products="sortedProducts"
                 :sortConfig="sortConfig"
@@ -139,22 +79,23 @@ const sortedProducts = computed(() => {
                 :openModal="openModal"
             />
 
-            <!-- Modals -->
+            <!-- Modal for creating a new product -->
             <ProductCreateModal
-                :isOpen="modalState.create"
+                :isOpen="showCreateModal"
                 :types="types"
                 @close="closeModal('create')"
             />
+            <!-- Modal for editing an existing product -->
             <ProductEditModal
-                :isOpen="modalState.edit"
-                :product="selectedProduct"
+                :isOpen="showEditModal"
+                :product="itemToEdit"
                 :types="types"
-                :attributes="attributes"
                 @close="closeModal('edit')"
             />
+            <!-- Modal for deleting a product -->
             <ProductDeleteModal
-                :isOpen="modalState.delete"
-                :product="productToDelete"
+                :isOpen="showDeleteModal"
+                :product="itemToDelete"
                 @close="closeModal('delete')"
             />
         </div>

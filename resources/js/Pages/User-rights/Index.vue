@@ -7,6 +7,7 @@ import Searchbar from "@/Components/General/Searchbar.vue";
 
 const { success, error } = useNotifications();
 
+// Props passed to the component.
 const props = defineProps({
     profiles: {
         type: Array,
@@ -22,7 +23,10 @@ const props = defineProps({
 const searchQuery = ref("");
 const expandedCategories = ref([]);
 
-// Filter permissions based on search query
+/**
+ * Computed property to filter permissions based on the search query.
+ * @returns {Object} Filtered permissions grouped by categories.
+ */
 const filteredPermissions = computed(() => {
     const result = {};
     Object.keys(props.permissions).forEach((category) => {
@@ -36,7 +40,12 @@ const filteredPermissions = computed(() => {
     return result;
 });
 
-// Check if a profile has a permission
+/**
+ * Check if a profile has a specific permission.
+ * @param {Object} profile - User profile.
+ * @param {Object} permission - Permission to check.
+ * @returns {Boolean} True if the profile has the permission, false otherwise.
+ */
 function hasPermission(profile, permission) {
     return profile.permissions.some((p) => p.id === permission.id);
 }
@@ -47,7 +56,11 @@ const form = useForm({
     permission_id: null,
 });
 
-// Toggle permission for a profile
+/**
+ * Toggle permission for a profile.
+ * @param {Number} profileId - ID of the profile.
+ * @param {Number} permissionId - ID of the permission.
+ */
 function togglePermission(profileId, permissionId) {
     form.profile_id = profileId;
     form.permission_id = permissionId;
@@ -94,6 +107,7 @@ function toggleCategory(category) {
             <div class="user-rights__section">
                 <div class="user-rights__top-bar">
                     <div class="user-rights__search-bar">
+                        <!-- Search bar component for filtering user rights -->
                         <Searchbar
                             id="search"
                             placeholder="Search..."
