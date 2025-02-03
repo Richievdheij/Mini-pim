@@ -2,266 +2,120 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Models\ProductType;
-use App\Models\Attribute;
-use Illuminate\Http\Request;
+use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
+use App\Http\Services\ProductService;
+use App\Http\Services\ProductTypeService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Inertia\Response;
 
+/**
+ * Controller that handles all logic related to the products in the Mini-PIM
+ */
 class ProductController extends Controller
 {
+    protected ProductService $productService;
+    protected ProductTypeService $productTypeService;
+
+    public function __construct(ProductService $productService, ProductTypeService $productTypeService)
+    {
+        $this->productService = $productService;
+        $this->productTypeService = $productTypeService;
+    }
+
     /**
      * Display the PIM dashboard.
      *
+     * @return Response
      */
-    public function dashboard()
+    public function dashboard(): Response
     {
-        // Check if the user has permission to view the dashboard
-        return inertia('PIM/PIMDashboard');
+        return Inertia::render('PIM/PIMDashboard');
     }
 
     /**
      * Display the products index page.
      *
+     * @return Response
      */
-    public function index()
+    public function index(): Response
     {
-        $user = auth()->user();
         $this->authorizeAction('view_products');
 
-        // Get the user's profile ID
-        $profileId = $user->profiles->first()->id;
-
-        // Admin profile_id = 1 can see all products
-        if ($profileId === 1) {
-            $products = Product::with('type')->get(); // Admin sees all products
-        } else {
-            // Non-admin users only see products assigned to their profile
-            $products = Product::whereHas('profiles', function ($query) use ($profileId) {
-                $query->where('profile_id', $profileId);
-            })->with('type')->get();
-        }
-
-        // Fetch product types
-        $types = ProductType::where('profile_id', $profileId)->get();
-
-        return inertia('Data/ProductsIndex', [
-            'products' => $products,
-            'types' => $types,
-            'canCreateProduct' => $user->hasPermission('create_products'),
-            'canEditProduct' => $user->hasPermission('edit_products'),
-            'canDeleteProduct' => $user->hasPermission('delete_products'),
+        return Inertia::render('Data/ProductsIndex', [
+            'products' => $this->productService->retrieveProducts(),
+            'types' => $this->productTypeService->retrieveProductTypes(),
+            'canCreateProduct' => Auth::user()->hasPermission('create_products'),
+            'canEditProduct' => Auth::user()->hasPermission('edit_products'),
+            'canDeleteProduct' => Auth::user()->hasPermission('delete_products'),
         ]);
-    }
-
-    /**
-     * Display the product creation page.
-     *
-     */
-    public function create()
-    {
-        $user = auth()->user();
-        $this->authorizeAction('create_products');
-
-        $types = ProductType::where('profile_id', $user->profiles->first()->id)->get();
-        $attributes = Attribute::where('profile_id', $user->profiles->first()->id)->get();
-
-        return inertia('Data/ProductCreate', compact('types', 'attributes'));
     }
 
     /**
      * Store a newly created product in storage.
      *
+     * @param ProductStoreRequest $request
+     *
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request): RedirectResponse
     {
-        $user = auth()->user();
         $this->authorizeAction('create_products');
 
-        // Validate incoming data
-        $validated = $request->validate([
-            'product_id' => 'required|unique:products,product_id',
-            'name' => 'required|string',
-            'type_id' => 'required|exists:product_types,id',
-            'description' => 'nullable|string',
-        ]);
-
         // Create the product
-        $product = Product::create(array_merge($validated, [
-            'weight' => 0,
-            'stock_quantity' => 0,
-            'price' => 0,
-            'profile_id' => $user->profiles->first()->id,
-        ]));
-
-        // Attach profiles: the user's current profile and the admin profile (id=1)
-        $profileIds = [$user->profiles->first()->id, 1]; // User's profile + admin profile
-        $product->profiles()->sync($profileIds);
-
-        // Get the user's profile ID and product types
-        $profileId = $user->profiles->first()->id;
-        $products = Product::with('type')->get();
-        $types = ProductType::where('profile_id', $profileId)->get();
-
-        // Return an Inertia response with updated data
-        return Inertia::render('Data/ProductsIndex', [
-            'products' => $products,
-            'types' => $types,
-            'canCreateProduct' => $user->hasPermission('create_products'),
-            'canEditProduct' => $user->hasPermission('edit_products'),
-            'canDeleteProduct' => $user->hasPermission('delete_products'),
-        ]);
-    }
-
-    /**
-     * Display the specified product.
-     *
-     */
-    public function edit($id)
-    {
-        $this->authorizeAction('edit_products');
-
-        // Retrieve the product with the associated type and attributes
-        $product = Product::with(['type', 'attributes'])->findOrFail($id);
-
-        // Ensure ownership or admin access
-        $this->authorizeOwnership($product);
-
-        // Fetch the product's existing attribute values
-        $attributeValues = $product->attributes->mapWithKeys(function ($attribute) {
-            return [$attribute->id => $attribute->pivot->value];
-        });
-
-        // Fetch attributes based on the product's type
-        $attributes = Attribute::where('type_id', $product->type_id)->get();
-
-        return inertia('Data/ProductEdit', [
-            'product' => $product,
-            'attributes' => $attributes,
-            'attributeValues' => $attributeValues, // Pass existing values
-        ]);
-    }
-
-    /**
-     * Update the specified product in storage.
-     *
-     */
-    public function update(Request $request, Product $product)
-    {
-        $this->authorizeAction('edit_products');
-        // Ensure ownership or admin access
-        $this->authorizeOwnership($product);
-
-        // Validate incoming data
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'type_id' => 'required|exists:product_types,id',
-            'weight' => 'nullable|numeric',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'stock_quantity' => 'required|integer|min:0',
-            'attributes' => 'array',
-            'attributes.*.id' => 'exists:attributes,id',
-            'attributes.*.value' => 'string|nullable',
-            // Add validation for dimensions
-            'height' => 'nullable|numeric',
-            'width' => 'nullable|numeric',
-            'depth' => 'nullable|numeric',
-            'dimensions' => function ($attribute, $value, $fail) use ($request) {
-                if (
-                    // Check if one dimension is provided without the others
-                    ($request->has('height') && !$request->has('width')) ||
-                    ($request->has('height') && !$request->has('depth')) ||
-                    ($request->has('width') && !$request->has('height')) ||
-                    ($request->has('width') && !$request->has('depth')) ||
-                    ($request->has('depth') && !$request->has('height')) ||
-                    ($request->has('depth') && !$request->has('width'))
-                ) {
-                    $fail('All dimensions (height, width, depth) must be filled when one dimension is provided.');
-                }
-            },
-        ]);
-
-        // Update the product with validated data
-        $product->update($validated);
-
-        // Update attributes if they are provided
-        if (!empty($validated['attributes'])) {
-            foreach ($validated['attributes'] as $attribute) {
-                \DB::table('product_attribute_values')->updateOrInsert(
-                    [
-                        'product_id' => $product->id,
-                        'attribute_id' => $attribute['id'],
-                    ],
-                    [
-                        'value' => $attribute['value'],
-                    ]
-                );
-            }
-        }
-
-        return redirect()->route('pim.products.index')->with('success', 'Product updated successfully!');
-    }
-
-    /**
-     * Delete the specified product
-     *
-     */
-    public function destroy(Product $product)
-    {
-        $this->authorizeAction('delete_products');
-        // Ensure ownership or admin access
-        $this->authorizeOwnership($product);
-
-        // Dissociate the product from its type
-        $product->type_id = null;
-        $product->save();
-
-        // Dissociate the product from its attributes
-        $product->attributes()->detach();
-
-        // Now delete the product
-        $product->delete();
+        $this->productService->createProduct($request->validated());
 
         return redirect()->route('pim.products.index');
     }
 
     /**
-     * Check if the current user owns the product or is an admin within profile
+     * Display the specified product for editing.
      *
+     * @param int $id
+     *
+     * @return Response
      */
-    private function authorizeOwnership(Product $product)
+    public function edit(int $id): Response
     {
-        $user = auth()->user();
+        $this->authorizeAction('edit_products');
 
-        // Check if the user is an admin (profile_id = 1)
-        if ($user->profiles->first()->id === 1) {
-            return;  // Admin has access to everything
-        }
-
-        // Get all profile_ids of the user
-        $userProfileIds = $user->profiles->pluck('id')->toArray();
-
-        // Check if the product's profile_id exists in the list of user's profiles
-        if (!in_array($product->profile_id, $userProfileIds)) {
-            abort(403, 'Unauthorized action.');
-        }
+        return Inertia::render('Data/ProductEdit', $this->productService->getProductEditData($id));
     }
 
     /**
-     * Check if the current user has permission to perform an action.
+     * Update the specified product in storage.
      *
-     * @param string $permission
-     * @return void
+     * @param ProductUpdateRequest $request
+     * @param int $id
+     *
+     * @return RedirectResponse
      */
-    private function authorizeAction(string $permission): void
+    public function update(ProductUpdateRequest $request, int $id): RedirectResponse
     {
-        // Get the authenticated user
-        $user = auth()->user();
+        $this->authorizeAction('edit_products');
 
-        // Check if the user has the required permission
-        if (!$user || !$user->hasPermission($permission)) {
-            abort(403, 'Unauthorized action.');
-        }
+        // Update the product
+        $this->productService->updateProduct($id, $request->validated());
+
+        return redirect()->route('pim.products.index');
+    }
+
+    /**
+     * Delete the specified product.
+     *
+     * @param int $id
+     *
+     * @return RedirectResponse
+     */
+    public function destroy(int $id): RedirectResponse
+    {
+        $this->authorizeAction('delete_products');
+
+        // Delete the product
+        $this->productService->deleteProduct($id);
+
+        return redirect()->route('pim.products.index');
     }
 }

@@ -21,9 +21,15 @@ class ProductTypeSeeder extends Seeder
             ['name' => 'Toys'],
         ];
 
-        // Insert product types
+        // Default profile ID (ensure this ID exists in the profiles table)
+        $defaultProfileId = 1;
+
+        // Insert product types with default profile ID
         foreach ($productTypes as $type) {
-            ProductType::firstOrCreate(['name' => $type['name']]);
+            ProductType::firstOrCreate(
+                ['name' => $type['name']],
+                ['profile_id' => $defaultProfileId]
+            );
         }
     }
 }

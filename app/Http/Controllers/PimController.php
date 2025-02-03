@@ -2,239 +2,145 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Hash;
-
+use App\Http\Requests\UserRequest;
+use App\Http\Services\UserService;
+use App\Models\Profile;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use App\Models\Profile;
-use Illuminate\Validation\Rules\Password as PasswordRules;
 
+/**
+ * Controller responsible for handling user-related actions, such as viewing, creating, updating, and deleting users.
+ * It ensures the correct permissions are in place for each action and delegates business logic to the UserService.
+ */
 class PimController extends Controller
 {
+    private UserService $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
-     * Display the dashboard for authenticated users with the appropriate permission.
+     * Display the PIM dashboard.
+     *
+     * @return Response
      */
     public function index(): Response
     {
-        // Ensure the user has permission to view the dashboard
         $this->authorizeAction('view_dashboard');
 
-        $user = auth()->user();
-
-        // Render the dashboard view and pass the authenticated user data
-        return Inertia::render('Dashboard', ['user' => $user]);
-    }
-
-    /**
-     * Handle user login.
-     */
-    public function login(Request $request)
-    {
-        // Validate login request data
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        // Attempt to log in the user
-        $credentials = $request->only('email', 'password');
-
-        // Redirect to the dashboard if the login is successful
-        if (Auth::attempt($credentials)) {
-            return redirect()->intended('dashboard');
-        }
-
-        // Redirect back with an error message if the login fails
-        return back()->withErrors([
-            'email' => 'The provided credentials are incorrect.',
+        return Inertia::render('Dashboard', [
+            'user' => Auth::user()
         ]);
     }
 
     /**
-     * Display a listing of users (for users with manage_users permission only).
+     * Display the users index page.
+     *
+     * @return Response
      */
     public function showUsers(): Response
     {
-        // Ensure the user has permission to view users
         $this->authorizeAction('view_users');
 
-        $user = auth()->user();
+        // Get users based on the user's profile with the function in the UserService
+        $users = $this->userService->getUsersForAuthUser(Auth::user());
 
-        // Admin users (profile_id === 1) can view all users
-        if ($user->profiles->first()->id === 1) {
-            // Admin can see all users
-            $users = User::with('profiles')->get();
-        } else {
-            // Non-admin users can only see users with the same profile_id
-            $users = User::with('profiles')
-                ->whereHas('profiles', function ($query) use ($user) {
-                    $query->where('id', $user->profiles->first()->id);
-                })
-                ->get();
-        }
-
-        // Render the users view and pass the users data
         return Inertia::render('Users/Index', [
             'users' => $users,
-            'profiles' => Profile::all(), // Add this to pass all profiles
-            'canEditUser' => $user->hasPermission('edit_users'),
-            'canDeleteUser' => $user->hasPermission('delete_users'),
-            'canCreateUser' => $user->hasPermission('create_users'),
+            'profiles' => Profile::all(),
+            'canEditUser' => Auth::user()->hasPermission('edit_users'),
+            'canDeleteUser' => Auth::user()->hasPermission('delete_users'),
+            'canCreateUser' => Auth::user()->hasPermission('create_users'),
         ]);
     }
 
     /**
-     * Show the form for creating a new user.
+     * Display the create user page.
+     *
+     * @return Response
      */
     public function createUser(): Response
     {
-        // Ensure the user has permission to create users
         $this->authorizeAction('create_users');
 
-        $user = auth()->user();
+        // Get profiles based on the user's profile with the function in the UserService
+        $profiles = $this->userService->getProfilesForAuthUser(Auth::user());
 
-        // Admin users can see all profiles, others can only see their own profile
-        if ($user->profiles->first()->id === 1) {
-            // Admin can see all profiles
-            $profiles = Profile::all();
-        } else {
-            // Non-admin users can only see their own profile
-            $profiles = $user->profiles;
-        }
-
-        // Render the create user view and pass the profiles data
         return Inertia::render('Users/Create', ['profiles' => $profiles]);
     }
 
     /**
      * Store a newly created user in storage.
+     *
+     * @param UserRequest $request
+     *
+     * @return RedirectResponse
      */
-    public function storeUser(Request $request)
+    public function storeUser(UserRequest $request): RedirectResponse
     {
         $this->authorizeAction('create_users');
 
-        // Validate request
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => [
-                'required',
-                PasswordRules::min(8)
-                    ->mixedCase() // At least one uppercase and one lowercase character
-                    ->letters() // At least one letter
-                    ->numbers() // At least one number
-                    ->symbols(), // At least one special character
-                function ($attribute, $value, $fail) use ($request) {
-                    // Custom validation to ensure the password is not the same as an existing user's password
-                    $user = User::where('email', $request->email)->first();
-                    if ($user && Hash::check($value, $user->password)) {
-                        $fail(__('The new password cannot be the same as your current password.'));
-                    }
-                },
-            ],
-            'profiles' => 'required|array|min:1', // Ensure at least one profile is selected
-            'profiles.*' => 'exists:profiles,id', // Validate profile IDs
-        ]);
+        // Store the user with the function in the UserService
+        $this->userService->storeUser($request);
 
-        $user = auth()->user();
-
-        // Create the user
-        $newUser = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'profile_id' => $user->profile_id, // Set the profile_id of the logged-in user
-        ]);
-
-        // Assign profiles
-        $newUser->profiles()->sync($request->profiles);
-
-        // Redirect to the users index page with a success message
-        return redirect()->route('users.index')->with('success', 'User created successfully.');
+        return redirect()->route('users.index');
     }
 
     /**
-     * Show the form for editing an existing user.
+     * Display the edit user page.
+     *
+     * @param User $user
+     *
+     * @return Response
      */
     public function editUser(User $user): Response
     {
         $this->authorizeAction('edit_users');
 
-        // Get all profiles and the profiles of the user
-        $profiles = Profile::all();
-        $userProfiles = $user->profiles->pluck('id')->toArray();
-
-        // Render the edit user view and pass the user and profiles data
         return Inertia::render('Users/Edit', [
             'user' => $user,
-            'profiles' => $profiles,
-            'userProfiles' => $userProfiles,
+            'profiles' => Profile::all(),
+            'userProfiles' => $user->profiles->pluck('id')->toArray(),
         ]);
     }
 
     /**
      * Update the specified user in storage.
+     *
+     * @param UserRequest $request
+     * @param User $user
+     *
+     * @return RedirectResponse
      */
-    public function updateUser(Request $request, User $user)
+    public function updateUser(UserRequest $request, User $user): RedirectResponse
     {
         $this->authorizeAction('edit_users');
 
-        // Validate request
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|min:8',
-            'profiles' => 'array',
-        ]);
+        // Update the user with the function in the UserService
+        $this->userService->updateUser($request, $user);
 
-        // Update the user data
-        $user->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password ? bcrypt($request->password) : $user->password,
-        ]);
-
-        // Update the user's profiles if provided
-        if ($request->has('profiles')) {
-            $user->profiles()->sync($request->profiles);
-        }
-
-        // Redirect to the users index page with a success message
         return redirect()->route('users.index');
     }
 
     /**
      * Remove the specified user from storage.
+     *
+     * @param User $user
+     *
+     * @return RedirectResponse
      */
-    public function destroyUser(User $user)
+    public function destroyUser(User $user): RedirectResponse
     {
-        // Ensure the user has permission to delete users
         $this->authorizeAction('delete_users');
 
-        // Delete the user
-        $user->delete();
+        // Delete the user with the function in the UserService
+        $this->userService->deleteUser($user);
 
-        // Redirect to the users index page with a success message
         return redirect()->route('users.index');
-    }
-
-    /**
-     * Check if the current user has permission to perform an action.
-     *
-     * @param string $permission
-     * @return void
-     */
-    private function authorizeAction(string $permission): void
-    {
-        // Get the authenticated user
-        $user = auth()->user();
-
-        // Check if the user has the required permission
-        if (!$user || !$user->hasPermission($permission)) {
-            abort(403, 'Unauthorized action.');
-        }
     }
 }

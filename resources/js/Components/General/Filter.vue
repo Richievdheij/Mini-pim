@@ -14,12 +14,13 @@ const selectOption = (option) => {
     selectedOption.value = option;
     dropdownVisible.value = false;
 };
+
 </script>
 
 <template>
     <div class="filter">
         <!-- Filter Button -->
-        <button @click="toggleDropdown" class="filter__button">
+        <button class="filter__button">
             <i
                 class="fas fa-sliders filter__icon">
             </i>

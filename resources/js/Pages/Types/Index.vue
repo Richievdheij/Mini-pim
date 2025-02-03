@@ -1,256 +1,98 @@
 <script setup>
-import { ref, computed } from "vue";
-import { Head, usePage } from "@inertiajs/vue3";
-import TypeCreateModal from "@/Components/Admin/Data/Types/TypeCreateModal.vue";
-import TypeEditModal from "@/Components/Admin/Data/Types/TypeEditModal.vue";
-import TypeDeleteModal from "@/Components/Admin/Data/Types/TypeDeleteModal.vue";
+import { Head } from '@inertiajs/vue3';
 import PIMLayout from "@/Layouts/PIMLayout.vue";
-import PrimaryButton from "@/Components/General/PrimaryButton.vue";
-import SecondaryButton from "@/Components/General/SecondaryButton.vue";
-import Searchbar from "@/Components/General/Searchbar.vue";
-import Filter from "@/Components/General/Filter.vue";
+import TypeCreateModal from '@/Components/Admin/Data/Types/TypeCreateModal.vue';
+import TypeEditModal from '@/Components/Admin/Data/Types/TypeEditModal.vue';
+import TypeDeleteModal from '@/Components/Admin/Data/Types/TypeDeleteModal.vue';
+import TypesSection from '@/Pages/Types/TypesSection.vue';
+import TypesTable from '@/Pages/Types/TypesTable.vue';
+import useEntityTable from '@/composables/useEntityTable';
 
+/**
+ * Props passed to the component.
+ * @property {Boolean} canCreateType - Indicates if the user can create a new type.
+ * @property {Boolean} canEditType - Indicates if the user can edit a type.
+ * @property {Boolean} canDeleteType - Indicates if the user can delete a type.
+ */
 const props = defineProps({
     canCreateType: Boolean,
     canEditType: Boolean,
     canDeleteType: Boolean,
 });
 
-const { types } = usePage().props;
-
-const showCreateModal = ref(false);
-const showEditModal = ref(false);
-const showDeleteModal = ref(false);
-const typeToEdit = ref(null);
-const typeToDelete = ref(null);
-const selectedType = ref(null);
-const searchQuery = ref("");
-
-// Sort configuration state
-const sortConfig = ref({
-    column: null,
-    direction: "none", // 'none', 'asc', or 'desc'
-});
-
-// Open modal for create/edit/delete
-function openModal(modalType, type = null) {
-    selectedType.value = type;
-
-    if (modalType === "edit") {
-        typeToEdit.value = type;
-        showEditModal.value = true;
-    } else if (modalType === "delete") {
-        typeToDelete.value = type;
-        showDeleteModal.value = true;
-    } else if (modalType === "create") {
-        showCreateModal.value = true;
-    }
-}
-
-// Close modal for create/edit/delete
-function closeModal(modalType) {
-    selectedType.value = null;
-
-    if (modalType === "edit") {
-        showEditModal.value = false;
-    } else if (modalType === "delete") {
-        showDeleteModal.value = false;
-    } else if (modalType === "create") {
-        showCreateModal.value = false;
-    }
-}
-
-// Search and Sorting
-const filteredTypes = computed(() => {
-    return types.filter((type) =>
-        type.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
-});
-
-// Sorting function
-function sortColumn(column) {
-    const { direction } = sortConfig.value;
-    let newDirection = "asc";
-
-    if (direction === "asc") {
-        newDirection = "desc";
-    } else if (direction === "desc") {
-        newDirection = "none";
-    }
-
-    sortConfig.value = {
-        column,
-        direction: newDirection,
-    };
-}
-
-// Sorted Types
-const sortedTypes = computed(() => {
-    const { column, direction } = sortConfig.value;
-    let typesToSort = [...filteredTypes.value];
-
-    if (column && direction !== "none") {
-        typesToSort.sort((a, b) => {
-            const aValue = a[column];
-            const bValue = b[column];
-
-            // Handle type name sorting in alphabetical order
-            if (column === "name") {
-                if (direction === "asc") {
-                    return aValue.localeCompare(bValue); // Ascending alphabetical order
-                } else {
-                    return bValue.localeCompare(aValue); // Descending alphabetical order
-                }
-            }
-
-            // Handle numeric sorting for other columns (like 'id')
-            if (direction === "asc") {
-                return aValue > bValue ? 1 : -1;
-            } else {
-                return aValue < bValue ? 1 : -1;
-            }
-        });
-    }
-
-    return typesToSort;
-});
-
-// Event Handlers for Type Modals
-function handleTypeCreated(newType) {
-    showCreateModal.value = false;
-    // Optionally, add the new type to the list
-    types.value.push(newType);
-}
-
-function handleTypeUpdated(updatedType) {
-    showEditModal.value = false;
-    // Find and update the type in the array
-    const index = types.value.findIndex(type => type.id === updatedType.id);
-    if (index !== -1) {
-        types.value[index] = updatedType;
-    }
-}
-
-function handleTypeDeleted(typeId) {
-    showDeleteModal.value = false;
-    // Remove the deleted type from the array
-    types.value = types.value.filter(type => type.id !== typeId);
-}
+/**
+ * Destructure properties and methods from the useEntityTable composable.
+ * @property {Ref<Boolean>} showCreateModal - Reactive reference for the visibility of the create modal.
+ * @property {Ref<Boolean>} showEditModal - Reactive reference for the visibility of the edit modal.
+ * @property {Ref<Boolean>} showDeleteModal - Reactive reference for the visibility of the delete modal.
+ * @property {Ref<Object|null>} itemToEdit - Reactive reference for the item to edit.
+ * @property {Ref<Object|null>} itemToDelete - Reactive reference for the item to delete.
+ * @property {Ref<String>} searchQuery - Reactive reference for the search query.
+ * @property {Ref<Object>} sortConfig - Reactive reference for the sorting configuration.
+ * @property {Function} openModal - Function to open a modal.
+ * @property {Function} closeModal - Function to close a modal.
+ * @property {ComputedRef<Array>} sortedItems - Computed reference for the sorted types.
+ * @property {Function} sortColumn - Function to sort the table by a specified column.
+ */
+const {
+    showCreateModal,
+    showEditModal,
+    showDeleteModal,
+    itemToEdit,
+    itemToDelete,
+    searchQuery,
+    sortConfig,
+    openModal,
+    closeModal,
+    sortedItems: sortedTypes,
+    sortColumn,
+} = useEntityTable('types');
 </script>
 
 <template>
+    <!-- Set the page title -->
     <Head title="Mini-Pim | Types"/>
+
+    <!-- Main layout component -->
     <PIMLayout>
         <div class="types">
-            <!-- Header -->
             <div class="types__header">
                 <h1 class="types__title">Types</h1>
             </div>
 
-            <!-- Section -->
-            <div class="types__section">
-                <div class="types__top-bar">
-                    <!-- Create Button -->
-                    <div class="types__create-button" v-if="props.canCreateType">
-                        <PrimaryButton
-                            label="Create New Type"
-                            icon="fas fa-plus"
-                            type="cancel"
-                            @click="openModal('create', null)"
-                        />
-                    </div>
+            <!-- Section for type creation and search -->
+            <TypesSection
+                :canCreateType="props.canCreateType"
+                v-model:searchQuery="searchQuery"
+                :openModal="openModal"
+            />
 
-                    <!-- Search Bar -->
-                    <div class="types__search-bar">
-                        <Searchbar
-                            id="search"
-                            placeholder="Search..."
-                            v-model="searchQuery"
-                        />
-                    </div>
+            <!-- Table displaying the types -->
+            <TypesTable
+                :types="sortedTypes"
+                :sortConfig="sortConfig"
+                :canEditType="props.canEditType"
+                :canDeleteType="props.canDeleteType"
+                :sortColumn="sortColumn"
+                :openModal="openModal"
+            />
 
-                    <!-- Filter -->
-                    <div class="types__filter">
-                        <Filter/>
-                    </div>
-                </div>
-
-                <!-- Table -->
-                <table class="types__table">
-                    <thead>
-                    <tr class="types__table-header">
-                        <th
-                            class="types__table-header-cell"
-                            @click="sortColumn('id')"
-                        >
-                            Type ID
-                            <i :class="{
-                                        'fas fa-sort-up': sortConfig.column === 'id' && sortConfig.direction === 'asc',
-                                        'fas fa-sort-down': sortConfig.column === 'id' && sortConfig.direction === 'desc'}">
-                            </i>
-                        </th>
-                        <th
-                            class="types__table-header-cell"
-                            @click="sortColumn('name')"
-                        >
-                            Name
-                            <i :class="{
-                                        'fas fa-sort-up': sortConfig.column === 'name' && sortConfig.direction === 'asc',
-                                        'fas fa-sort-down': sortConfig.column === 'name' && sortConfig.direction === 'desc'}">
-                            </i>
-                        </th>
-                        <th v-if="props.canEditType || props.canDeleteType" class="types__table-header-cell"></th>
-                    </tr>
-                    </thead>
-                    <tbody class="types__table-body">
-                    <tr v-for="type in sortedTypes" :key="type.id" class="types__table-row">
-                        <td class="types__table-cell">{{ type.id }}</td>
-                        <td class="types__table-cell">{{ type.name }}</td>
-                        <td v-if="props.canEditType || props.canDeleteType" class="types__table-cell">
-                            <div class="types__actions">
-                                <SecondaryButton
-                                    v-if="props.canEditType"
-                                    label=""
-                                    type="submit"
-                                    icon="fas fa-edit"
-                                    @click="openModal('edit', type)"
-                                />
-                                <SecondaryButton
-                                    v-if="props.canDeleteType"
-                                    label=""
-                                    type="delete"
-                                    icon="fas fa-trash"
-                                    @click="openModal('delete', type)"
-                                />
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <!-- Show message if no Types match the search -->
-                <div v-if="filteredTypes.length === 0" class="types__no-results">
-                    <p>No results found</p>
-                </div>
-            </div>
-
-            <!-- Modals -->
+            <!-- Modal for creating a new type -->
             <TypeCreateModal
                 :isOpen="showCreateModal"
                 @close="closeModal('create')"
-                @typeCreated="handleTypeCreated"
             />
+            <!-- Modal for editing an existing type -->
             <TypeEditModal
                 :isOpen="showEditModal"
-                :type="typeToEdit"
+                :type="itemToEdit"
                 @close="closeModal('edit')"
-                @typeUpdated="handleTypeUpdated"
             />
+            <!-- Modal for deleting a type -->
             <TypeDeleteModal
                 :isOpen="showDeleteModal"
-                :type="typeToDelete"
+                :type="itemToDelete"
                 @close="closeModal('delete')"
-                @typeDeleted="handleTypeDeleted"
             />
         </div>
     </PIMLayout>

@@ -1,240 +1,96 @@
 <script setup>
-import { ref, computed } from "vue";
-import { Head } from "@inertiajs/vue3";
-import CreateUserModal from "@/Components/Admin/Users/CreateUserModal.vue";
-import EditUserModal from "@/Components/Admin/Users/EditUserModal.vue";
-import DeleteUserModal from "@/Components/Admin/Users/DeleteUserModal.vue";
+import { Head } from '@inertiajs/vue3';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import PrimaryButton from "@/Components/General/PrimaryButton.vue";
-import Filter from '@/Components/General/Filter.vue';
-import SecondaryButton from "@/Components/General/SecondaryButton.vue";
-import Searchbar from "@/Components/General/Searchbar.vue";
+import CreateUserModal from '@/Components/Admin/Users/CreateUserModal.vue';
+import EditUserModal from '@/Components/Admin/Users/EditUserModal.vue';
+import DeleteUserModal from '@/Components/Admin/Users/DeleteUserModal.vue';
+import UsersSection from '@/Pages/Users/UsersSection.vue';
+import UsersTable from '@/Pages/Users/UsersTable.vue';
+import useEntityTable from '@/composables/useEntityTable';
 
+/**
+ * Props passed to the component.
+ * @property {Boolean} canCreateUser - Indicates if the user can create a new user.
+ * @property {Boolean} canEditUser - Indicates if the user can edit a user.
+ * @property {Boolean} canDeleteUser - Indicates if the user can delete a user.
+ */
 const props = defineProps({
-    users: Array,
-    profiles: Array,
+    canCreateUser: Boolean,
     canEditUser: Boolean,
     canDeleteUser: Boolean,
-    canCreateUser: Boolean,
 });
 
-// Modals state
-const isEditModalOpen = ref(false);
-const isDeleteModalOpen = ref(false);
-const isCreateModalOpen = ref(false);
-const selectedUser = ref(null);
-const searchQuery = ref("");
-
-// Sort configuration state
-const sortConfig = ref({
-    column: null,
-    direction: 'none',  // 'none', 'asc', or 'desc'
-});
-
-// Open modal for create/edit/delete
-function openModal(modalType, user = null) {
-    selectedUser.value = user;
-
-    if (modalType === "edit") {
-        isEditModalOpen.value = true;
-    } else if (modalType === "delete") {
-        isDeleteModalOpen.value = true;
-    } else if (modalType === "create") {
-        isCreateModalOpen.value = true;
-    }
-}
-
-// Close modal for create/edit/delete
-function closeModal(modalType) {
-    selectedUser.value = null;
-
-    if (modalType === "edit") {
-        isEditModalOpen.value = false;
-    } else if (modalType === "delete") {
-        isDeleteModalOpen.value = false;
-    } else if (modalType === "create") {
-        isCreateModalOpen.value = false;
-    }
-}
-
-// Filter users based on search query
-const filteredUsers = computed(() => {
-    return (props.users || []).filter((user) =>
-        user.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
-});
-
-// Sorting function
-function sortColumn(column) {
-    const {direction} = sortConfig.value;
-    let newDirection = 'asc';
-
-    // If the column is already sorted, change the direction
-    if (direction === 'asc') {
-        newDirection = 'desc';
-    } else if (direction === 'desc') {
-        newDirection = 'none';
-    }
-
-    // Update the sort configuration
-    sortConfig.value = {
-        column,
-        direction: newDirection,
-    };
-}
-
-// Sorted users
-const sortedUsers = computed(() => {
-    const {column, direction} = sortConfig.value;
-    let usersToSort = [...filteredUsers.value];
-
-    // Sort the users based on the column and direction
-    if (column && direction !== 'none') {
-        usersToSort.sort((a, b) => {
-            let aValue = a[column];
-            let bValue = b[column];
-
-            // Special handling for the 'profiles' column
-            if (column === "profiles") {
-                aValue = a.profiles && a.profiles.length > 0 ? a.profiles[0].name : ""; // Get the first profile name
-                bValue = b.profiles && b.profiles.length > 0 ? b.profiles[0].name : "";
-            }
-
-            // Sort the values based on the direction
-            if (direction === 'asc') {
-                return aValue > bValue ? 1 : -1;
-            } else {
-                return aValue < bValue ? 1 : -1;
-            }
-        });
-    }
-
-    return usersToSort;
-});
+/**
+ * Destructure properties and methods from useEntityTable composable.
+ * @property {Boolean} showCreateModal - Indicates if the create user modal is visible.
+ * @property {Boolean} showEditModal - Indicates if the edit user modal is visible.
+ * @property {Boolean} showDeleteModal - Indicates if the delete user modal is visible.
+ * @property {Object} itemToEdit - The user item to be edited.
+ * @property {Object} itemToDelete - The user item to be deleted.
+ * @property {String} searchQuery - The current search query.
+ * @property {Object} sortConfig - Configuration object for sorting the table columns.
+ * @property {Function} openModal - Function to open a modal.
+ * @property {Function} closeModal - Function to close a modal.
+ * @property {Array} sortedUsers - List of sorted users.
+ * @property {Function} sortColumn - Function to sort the table by a specified column.
+ */
+const {
+    showCreateModal,
+    showEditModal,
+    showDeleteModal,
+    itemToEdit,
+    itemToDelete,
+    searchQuery,
+    sortConfig,
+    openModal,
+    closeModal,
+    sortedItems: sortedUsers,
+    sortColumn,
+} = useEntityTable('users');
 </script>
 
 <template>
+    <!-- Set the page title -->
     <Head title="Mini-Pim | Users"/>
 
     <AuthenticatedLayout>
         <div class="users">
-            <!-- Header -->
             <div class="users__header">
                 <h1 class="users__title">Users</h1>
             </div>
 
-            <!-- Section -->
-            <div class="users__section">
-                <div class="users__top-bar">
-                    <div class="users__create-button" v-if="props.canCreateUser">
-                        <PrimaryButton
-                            label="Create New User"
-                            type="cancel"
-                            icon="fas fa-plus"
-                            @click="openModal('create')"
-                        />
-                    </div>
+            <!-- Users section with search and create functionality -->
+            <UsersSection
+                :canCreateUser="props.canCreateUser"
+                v-model:searchQuery="searchQuery"
+                :openModal="openModal"
+            />
 
-                    <div class="users__search-bar">
-                        <Searchbar
-                            id="search"
-                            placeholder="Search..."
-                            v-model="searchQuery"
-                        />
-                    </div>
+            <!-- Users table displaying the list of users -->
+            <UsersTable
+                :users="sortedUsers"
+                :sortConfig="sortConfig"
+                :canEditUser="props.canEditUser"
+                :canDeleteUser="props.canDeleteUser"
+                :sortColumn="sortColumn"
+                :openModal="openModal"
+            />
 
-                    <div class="users__filter">
-                        <Filter/>
-                    </div>
-                </div>
-
-                <!-- Table -->
-                <table class="users__table">
-                    <thead>
-                    <tr class="users__table-header">
-                        <th
-                            class="users__table-header-cell"
-                            @click="sortColumn('name')"
-                        >
-                            Name
-                            <i :class="{'fas fa-sort-up'
-                               :sortConfig.column === 'name' && sortConfig.direction === 'asc', 'fas fa-sort-down'
-                               :sortConfig.column === 'name' && sortConfig.direction === 'desc'}">
-                            </i>
-                        </th>
-                        <th
-                            class="users__table-header-cell"
-                            @click="sortColumn('email')"
-                        >
-                            Email
-                            <i :class="{'fas fa-sort-up'
-                               :sortConfig.column === 'email' && sortConfig.direction === 'asc', 'fas fa-sort-down'
-                               :sortConfig.column === 'email' && sortConfig.direction === 'desc'}">
-                            </i>
-                        </th>
-                        <th
-                            class="users__table-header-cell"
-                            @click="sortColumn('profiles')"
-                        >
-                            Profiles
-                            <i
-                                :class="{'fas fa-sort-up'
-                                :sortConfig.column === 'profiles' && sortConfig.direction === 'asc', 'fas fa-sort-down'
-                                :sortConfig.column === 'profiles' && sortConfig.direction === 'desc'}">
-                            </i>
-                        </th>
-                        <th v-if="props.canEditUser || props.canDeleteUser" class="users__table-header-cell"></th>
-                    </tr>
-                    </thead>
-                    <tbody class="users__table-body">
-                    <tr v-for="user in sortedUsers" :key="user.id" class="users__table-row">
-                        <td class="users__table-cell">{{ user.name }}</td>
-                        <td class="users__table-cell">{{ user.email }}</td>
-                        <td class="users__table-cell">{{ user.profiles.map(p => p.name).join(", ") }}</td>
-                        <td v-if="props.canEditUser || props.canDeleteUser" class="users__table-cell">
-                            <div class="users__actions">
-                                <SecondaryButton
-                                    v-if="props.canEditUser"
-                                    type="submit"
-                                    label=""
-                                    icon="fas fa-edit"
-                                    @click="openModal('edit', user)"
-                                />
-                                <SecondaryButton
-                                    v-if="props.canDeleteUser"
-                                    type="delete"
-                                    label=""
-                                    icon="fas fa-trash"
-                                    @click="openModal('delete', user)"
-                                />
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <!-- Show message if no users match the search -->
-                <div v-if="filteredUsers.length === 0" class="users__no-results">
-                    <p>No results found</p>
-                </div>
-            </div>
-
-            <!-- Modals -->
+            <!-- Modal for creating a new user -->
             <CreateUserModal
-                :profiles="props.profiles"
-                :isOpen="isCreateModalOpen"
+                :isOpen="showCreateModal"
                 @close="closeModal('create')"
             />
+            <!-- Modal for editing an existing user -->
             <EditUserModal
-                :user="selectedUser"
-                :profiles="props.profiles"
-                :isOpen="isEditModalOpen"
+                :isOpen="showEditModal"
+                :user="itemToEdit"
                 @close="closeModal('edit')"
             />
+            <!-- Modal for deleting an existing user -->
             <DeleteUserModal
-                :user="selectedUser"
-                :isOpen="isDeleteModalOpen"
+                :isOpen="showDeleteModal"
+                :user="itemToDelete"
                 @close="closeModal('delete')"
             />
         </div>

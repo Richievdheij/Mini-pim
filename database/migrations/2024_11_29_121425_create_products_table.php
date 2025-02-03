@@ -12,7 +12,7 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('product_id')->unique();
             $table->string('name');
-            $table->foreignId('type_id')->constrained('product_types'); // Tied to product type
+            $table->foreignId('type_id')->nullable()->constrained('product_types'); // Tied to product type, allows NULL
             $table->foreignId('profile_id')->constrained('profiles'); // Scoped to a profile
             $table->decimal('weight', 8, 2)->nullable();
             $table->text('description')->nullable();

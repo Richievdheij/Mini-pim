@@ -22,15 +22,23 @@ class AttributeSeeder extends Seeder
             ['name' => 'Brand', 'type' => 'Sports'],
         ];
 
+        // Default profile ID (ensure this ID exists in the profiles table)
+        $defaultProfileId = 1;
+
         // Add attributes
         foreach ($attributes as $attribute) {
             $type = ProductType::where('name', $attribute['type'])->first();
             if ($type) {
-                // Create attribute
-                Attribute::firstOrCreate([
-                    'name' => $attribute['name'],
-                    'type_id' => $type->id,
-                ]);
+                // Create attribute with default profile_id
+                Attribute::firstOrCreate(
+                    [
+                        'name' => $attribute['name'],
+                        'type_id' => $type->id,
+                    ],
+                    [
+                        'profile_id' => $defaultProfileId,
+                    ]
+                );
             }
         }
     }

@@ -1,210 +1,97 @@
 <script setup>
-import { ref, computed } from "vue";
-import { Head } from "@inertiajs/vue3";
-import { useNotifications } from "@/plugins/notificationPlugin";
-import CreateProfileModal from "@/Components/Admin/Profiles/CreateProfileModal.vue";
-import EditProfileModal from "@/Components/Admin/Profiles/EditProfileModal.vue";
-import DeleteProfileModal from "@/Components/Admin/Profiles/DeleteProfileModal.vue";
+import { Head } from '@inertiajs/vue3';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import PrimaryButton from "@/Components/General/PrimaryButton.vue";
-import Filter from '@/Components/General/Filter.vue';
-import SecondaryButton from "@/Components/General/SecondaryButton.vue";
-import Searchbar from "@/Components/General/Searchbar.vue";
+import CreateProfileModal from '@/Components/Admin/Profiles/CreateProfileModal.vue';
+import EditProfileModal from '@/Components/Admin/Profiles/EditProfileModal.vue';
+import DeleteProfileModal from '@/Components/Admin/Profiles/DeleteProfileModal.vue';
+import ProfilesSection from '@/Pages/Profiles/ProfilesSection.vue';
+import ProfilesTable from '@/Pages/Profiles/ProfilesTable.vue';
+import useEntityTable from '@/composables/useEntityTable';
 
+/**
+ * Props passed to the component.
+ * @property {Boolean} canCreateProfile - Indicates if the user can create a new profile.
+ * @property {Boolean} canEditProfile - Indicates if the user can edit a profile.
+ * @property {Boolean} canDeleteProfile - Indicates if the user can delete a profile.
+ */
 const props = defineProps({
-    profiles: Array,
+    canCreateProfile: Boolean,
     canEditProfile: Boolean,
     canDeleteProfile: Boolean,
-    canCreateProfile: Boolean,
 });
 
-const { success, error } = useNotifications(); // Use notifications
-
-const isEditModalOpen = ref(false);
-const isDeleteModalOpen = ref(false);
-const isCreateModalOpen = ref(false);
-const selectedProfile = ref(null);
-const searchQuery = ref("");
-
-// Sort configuration state
-const sortConfig = ref({
-    column: null,
-    direction: 'none',  // 'none', 'asc', or 'desc'
-});
-
-// Open modal for create/edit/delete
-function openModal(modalType, profile = null) {
-    selectedProfile.value = profile;
-
-    // Open modal based on type
-    if (modalType === "edit") {
-        isEditModalOpen.value = true;
-    } else if (modalType === "delete") {
-        isDeleteModalOpen.value = true;
-    } else if (modalType === "create") {
-        isCreateModalOpen.value = true;
-    }
-}
-
-// Close modal for create/edit/delete
-function closeModal(modalType) {
-    selectedProfile.value = null;
-
-    // Close modal based on type
-    if (modalType === "edit") {
-        isEditModalOpen.value = false;
-    } else if (modalType === "delete") {
-        isDeleteModalOpen.value = false;
-    } else if (modalType === "create") {
-        isCreateModalOpen.value = false;
-    }
-}
-
-// Filter profiles based on search query
-const filteredProfiles = computed(() => {
-    return (props.profiles || []).filter((profile) =>
-        profile.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
-});
-
-// Sorting function
-function sortColumn(column) {
-    const { direction } = sortConfig.value;
-    let newDirection = 'asc';
-
-    if (direction === 'asc') {
-        newDirection = 'desc';
-    } else if (direction === 'desc') {
-        newDirection = 'none';
-    }
-
-    sortConfig.value = {
-        column,
-        direction: newDirection, // 'none', 'asc', or 'desc'
-    };
-}
-
-// Sorted profiles
-const sortedProfiles = computed(() => {
-    const { column, direction } = sortConfig.value;
-    let profilesToSort = [...filteredProfiles.value];
-
-    // Sort profiles based on column and direction
-    if (column && direction !== 'none') {
-        profilesToSort.sort((a, b) => {
-            const aValue = a[column];
-            const bValue = b[column];
-
-            if (direction === 'asc') {
-                return aValue > bValue ? 1 : -1;
-            } else {
-                return aValue < bValue ? 1 : -1;
-            }
-        });
-    }
-
-    return profilesToSort;
-});
+/**
+ * Destructure properties and methods from the useEntityTable composable.
+ * @property {Ref<Boolean>} showCreateModal - Reactive reference for the visibility of the create modal.
+ * @property {Ref<Boolean>} showEditModal - Reactive reference for the visibility of the edit modal.
+ * @property {Ref<Boolean>} showDeleteModal - Reactive reference for the visibility of the delete modal.
+ * @property {Ref<Object|null>} itemToEdit - Reactive reference for the item to edit.
+ * @property {Ref<Object|null>} itemToDelete - Reactive reference for the item to delete.
+ * @property {Ref<String>} searchQuery - Reactive reference for the search query.
+ * @property {Ref<Object>} sortConfig - Reactive reference for the sorting configuration.
+ * @property {Function} openModal - Function to open a modal.
+ * @property {Function} closeModal - Function to close a modal.
+ * @property {ComputedRef<Array>} sortedItems - Computed reference for the sorted profiles.
+ * @property {Function} sortColumn - Function to sort the table by a specified column.
+ */
+const {
+    showCreateModal,
+    showEditModal,
+    showDeleteModal,
+    itemToEdit,
+    itemToDelete,
+    searchQuery,
+    sortConfig,
+    openModal,
+    closeModal,
+    sortedItems: sortedProfiles,
+    sortColumn,
+} = useEntityTable('profiles');
 </script>
 
 <template>
+    <!-- Set the page title -->
     <Head title="Mini-Pim | Profiles"/>
 
+    <!-- Main layout component -->
     <AuthenticatedLayout>
         <div class="profiles">
-            <!-- Header -->
             <div class="profiles__header">
                 <h1 class="profiles__title">Profiles</h1>
             </div>
 
-            <!-- Section -->
-            <div class="profiles__section">
-                <div class="profiles__top-bar">
-                    <!-- Create Profiles Button -->
-                    <div class="profiles__create-button" v-if="props.canCreateProfile">
-                        <PrimaryButton
-                            label="Create New Profile"
-                            type="cancel"
-                            icon="fas fa-plus"
-                            @click="openModal('create')"
-                        />
-                    </div>
+            <!-- Section for profile creation and search -->
+            <ProfilesSection
+                :canCreateProfile="props.canCreateProfile"
+                v-model:searchQuery="searchQuery"
+                :openModal="openModal"
+            />
 
-                    <!-- Search Bar -->
-                    <div class="profiles__search-bar">
-                        <Searchbar
-                            id="search"
-                            placeholder="Search..."
-                            v-model="searchQuery"
-                        />
-                    </div>
+            <!-- Table displaying the profiles -->
+            <ProfilesTable
+                :profiles="sortedProfiles"
+                :sortConfig="sortConfig"
+                :canEditProfile="props.canEditProfile"
+                :canDeleteProfile="props.canDeleteProfile"
+                :sortColumn="sortColumn"
+                :openModal="openModal"
+            />
 
-                    <div class="profiles__filter">
-                        <Filter />
-                    </div>
-                </div>
-
-                <!-- Table -->
-                <table class="profiles__table">
-                    <thead>
-                    <tr class="profiles__table-header">
-                        <th
-                            class="profiles__table-header-cell"
-                            @click="sortColumn('name')"
-                        >
-                            Name
-                            <i :class="{'fas fa-sort-up': sortConfig.column === 'name' && sortConfig.direction === 'asc', 'fas fa-sort-down': sortConfig.column === 'name' && sortConfig.direction === 'desc'}"></i>
-                        </th>
-                        <th
-                            v-if="props.canEditProfile || props.canDeleteProfile"
-                            class="profiles__table-header-cell">
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody class="profiles__table-body">
-                    <tr v-for="profile in sortedProfiles" :key="profile.id" class="profiles__table-row">
-                        <td class="profiles__table-cell">{{ profile.name }}</td>
-                        <td v-if="props.canEditProfile || props.canDeleteProfile" class="profiles__table-cell">
-                            <div class="profiles__actions">
-                                <SecondaryButton
-                                    v-if="props.canEditProfile"
-                                    type="submit"
-                                    label=""
-                                    icon="fas fa-edit"
-                                    @click="openModal('edit', profile)"
-                                />
-                                <SecondaryButton
-                                    v-if="props.canDeleteProfile"
-                                    type="delete"
-                                    label=""
-                                    icon="fas fa-trash"
-                                    @click="openModal('delete', profile)"
-                                />
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <!-- Show message if no profiles match the search -->
-                <div v-if="filteredProfiles.length === 0" class="profiles__no-results">
-                    <p>No results found</p>
-                </div>
-            </div>
-
-            <!-- Modals -->
+            <!-- Modal for creating a new profile -->
             <CreateProfileModal
-                :isOpen="isCreateModalOpen"
+                :isOpen="showCreateModal"
                 @close="closeModal('create')"
             />
+            <!-- Modal for editing an existing profile -->
             <EditProfileModal
-                :profile="selectedProfile"
-                :isOpen="isEditModalOpen"
+                :isOpen="showEditModal"
+                :profile="itemToEdit"
                 @close="closeModal('edit')"
             />
+            <!-- Modal for deleting a profile -->
             <DeleteProfileModal
-                :profile="selectedProfile"
-                :isOpen="isDeleteModalOpen"
+                :isOpen="showDeleteModal"
+                :profile="itemToDelete"
                 @close="closeModal('delete')"
             />
         </div>

@@ -10,15 +10,17 @@ class LoadUserProfiles
 {
     /**
      * Handle an incoming request.
+     *
+     * @param Request $request
+     * @param Closure $next
+     * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
-        // Load the user's profiles if authenticated
+        // Load the user's profiles if they are authenticated
         if ($user = Auth::user()) {
             $user->load('profiles');
         }
-
-        // Continue to the next request
         return $next($request);
     }
 }

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\LoadUserProfiles;
 
 // Root Route
-Route::get('/', function () {
+Route::get('/', static function () {
     return redirect()->route('login');  // Redirects '/' to the login page
 });
 

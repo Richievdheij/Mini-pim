@@ -26,14 +26,22 @@ class AttributeValueSeeder extends Seeder
             ['attribute' => 'Brand', 'value' => 'Adidas'],
         ];
 
+        // Default profile ID (ensure this ID exists in the profiles table)
+        $defaultProfileId = 1;
+
         // Insert attribute values
         foreach ($values as $value) {
             $attribute = Attribute::where('name', $value['attribute'])->first();
             if ($attribute) {
-                AttributeValue::firstOrCreate([
-                    'attribute_id' => $attribute->id,
-                    'value' => $value['value'],
-                ]);
+                AttributeValue::firstOrCreate(
+                    [
+                        'attribute_id' => $attribute->id,
+                        'value' => $value['value'],
+                    ],
+                    [
+                        'profile_id' => $defaultProfileId,
+                    ]
+                );
             }
         }
     }

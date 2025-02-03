@@ -12,12 +12,12 @@ const { success, error } = useNotifications(); // Notification plugin
 
 // Props and emits
 const props = defineProps({
+    isOpen: Boolean,
     attributes: Array,
     types: Array,
-    attributeValues: Object,
     product: Object,
+    attributeValues: Object,
     productId: Number,
-    isOpen: Boolean,
 });
 
 const emit = defineEmits(["close", "productUpdated"]); // Emit events
@@ -134,8 +134,6 @@ function submit() {
                             type="field"
                             v-model="form.product_id"
                             :error="form.errors.product_id"
-                            class="product-id-input input"
-                            :disabled="true"
                             required
                         />
 

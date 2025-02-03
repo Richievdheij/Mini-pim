@@ -4,11 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\belongsTo;
+use Illuminate\Database\Eloquent\Relations\belongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Handles product-related logic.
+ */
 class Product extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     * @var string[]
+     */
     protected $fillable = [
         'product_id', // SKU
         'name',
@@ -18,25 +28,34 @@ class Product extends Model
         'description',
         'price',
         'stock_quantity',
+        'height',
+        'width',
+        'depth',
     ];
 
     /**
      * Relationship to ProductType
+     * @return belongsToMany
      */
-    public function profiles()
+    public function profiles(): belongsToMany
     {
         return $this->belongsToMany(Profile::class, 'product_profile');
     }
 
-    public function type()
+    /**
+     * Relationship to ProductType
+     * @return belongsTo
+     */
+    public function type(): belongsTo
     {
         return $this->belongsTo(ProductType::class);
     }
 
     /**
      * Relationship to Attributes
+     * @return belongsToMany
      */
-    public function attributes()
+    public function attributes(): belongsToMany
     {
         return $this->belongsToMany(Attribute::class, 'product_attribute_values')
             ->withPivot('value_id')
@@ -45,8 +64,9 @@ class Product extends Model
 
     /**
      * Relationship to Images
+     * @return hasMany
      */
-    public function images()
+    public function images(): HasMany
     {
         return $this->hasMany(ProductImage::class);
     }
