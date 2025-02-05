@@ -25,41 +25,49 @@ const props = defineProps({
         <thead>
         <tr class="products__table-header">
             <!-- Column header for Product ID with sorting functionality -->
-            <th
-                class="products__table-header-cell"
-                @click="props.sortColumn('product_id')"
-            >
-                Product ID
-                <i :class="{
-                    'fas fa-sort-up': props.sortConfig.column === 'product_id' && props.sortConfig.direction === 'asc',
-                    'fas fa-sort-down': props.sortConfig.column === 'product_id' && props.sortConfig.direction === 'desc'}">
-                </i>
+            <th class="products__table-header-cell" @click="props.sortColumn('product_id')">
+                <div class="products__table-header-sort">
+                    <span>Product ID</span>
+                    <button class="products__sort-button" @click.stop="props.sortColumn('product_id')">
+                        <i :class="{
+                            'fas fa-sort': props.sortConfig.column !== 'product_id' || props.sortConfig.direction === 'none',
+                            'fas fa-sort-up': props.sortConfig.column === 'product_id' && props.sortConfig.direction === 'asc',
+                            'fas fa-sort-down': props.sortConfig.column === 'product_id' && props.sortConfig.direction === 'desc'
+                        }"></i>
+                    </button>
+                </div>
             </th>
-            <!-- Column header for Name with sorting functionality -->
-            <th
-                class="products__table-header-cell"
-                @click="props.sortColumn('name')"
-            >
-                Name
-                <i :class="{
-                    'fas fa-sort-up': props.sortConfig.column === 'name' && props.sortConfig.direction === 'asc',
-                    'fas fa-sort-down': props.sortConfig.column === 'name' && props.sortConfig.direction === 'desc'}">
-                </i>
+            <th class="products__table-header-cell" @click="props.sortColumn('name')">
+                <!-- Column header for Name with sorting functionality -->
+                <div class="products__table-header-sort">
+                    <span>Name</span>
+                    <button class="products__sort-button" @click.stop="props.sortColumn('name')">
+                        <i :class="{
+                            'fas fa-sort': props.sortConfig.column !== 'name' || props.sortConfig.direction === 'none',
+                            'fas fa-sort-up': props.sortConfig.column === 'name' && props.sortConfig.direction === 'asc',
+                            'fas fa-sort-down': props.sortConfig.column === 'name' && props.sortConfig.direction === 'desc'
+                        }"></i>
+                    </button>
+                </div>
             </th>
-            <!-- Column header for Type with sorting functionality -->
-            <th
-                class="products__table-header-cell"
-                @click="props.sortColumn('type')"
-            >
-                Type
-                <i :class="{
-                    'fas fa-sort-up': props.sortConfig.column === 'type' && props.sortConfig.direction === 'asc',
-                    'fas fa-sort-down': props.sortConfig.column === 'type' && props.sortConfig.direction === 'desc'}">
-                </i>
+            <th class="products__table-header-cell" @click="props.sortColumn('type')">
+                <!-- Column header for Type with sorting functionality -->
+                <div class="products__table-header-sort">
+                    <span>Type</span>
+                    <button class="products__sort-button" @click.stop="props.sortColumn('type')">
+                        <i :class="{
+                            'fas fa-sort': props.sortConfig.column !== 'type' || props.sortConfig.direction === 'none',
+                            'fas fa-sort-up': props.sortConfig.column === 'type' && props.sortConfig.direction === 'asc',
+                            'fas fa-sort-down': props.sortConfig.column === 'type' && props.sortConfig.direction === 'desc'
+                        }"></i>
+                    </button>
+                </div>
             </th>
+
             <!-- Empty column header for action buttons, visible if editing or deleting is allowed -->
             <th v-if="props.canEditProduct || props.canDeleteProduct"
-                class="products__table-header-cell"></th>
+                class="products__table-header-cell--actions">
+            </th>
         </tr>
         </thead>
         <tbody class="products__table-body">

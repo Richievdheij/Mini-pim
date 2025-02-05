@@ -24,31 +24,36 @@ const props = defineProps({
     <table class="attributes__table">
         <thead>
         <tr class="attributes__table-header">
-            <!-- Column header for attribute name with sorting functionality -->
-            <th
-                class="attributes__table-header-cell"
-                @click="props.sortColumn('name')"
-            >
-                Name
-                <i :class="{
-                    'fas fa-sort-up': props.sortConfig.column === 'name' && props.sortConfig.direction === 'asc',
-                    'fas fa-sort-down': props.sortConfig.column === 'name' && props.sortConfig.direction === 'desc'}">
-                </i>
+            <!-- Column header for Name with sorting functionality -->
+            <th class="attributes__table-header-cell" @click="props.sortColumn('name')">
+                <div class="attributes__table-header-sort">
+                    <span>Name</span>
+                    <button class="attributes__sort-button" @click.stop="props.sortColumn('name')">
+                        <i :class="{
+                            'fas fa-sort': props.sortConfig.column !== 'name' || props.sortConfig.direction === 'none',
+                            'fas fa-sort-up': props.sortConfig.column === 'name' && props.sortConfig.direction === 'asc',
+                            'fas fa-sort-down': props.sortConfig.column === 'name' && props.sortConfig.direction === 'desc'
+                        }"></i>
+                    </button>
+                </div>
             </th>
-            <!-- Column header for attribute type with sorting functionality -->
-            <th
-                class="attributes__table-header-cell"
-                @click="props.sortColumn('type')"
-            >
-                Type
-                <i :class="{
-                    'fas fa-sort-up': props.sortConfig.column === 'type' && props.sortConfig.direction === 'asc',
-                    'fas fa-sort-down': props.sortConfig.column === 'type' && props.sortConfig.direction === 'desc'}">
-                </i>
+            <!-- Column header for Type with sorting functionality -->
+            <th class="attributes__table-header-cell" @click="props.sortColumn('type')">
+                <div class="attributes__table-header-sort">
+                    <span>Type</span>
+                    <button class="attributes__sort-button" @click.stop="props.sortColumn('type')">
+                        <i :class="{
+                            'fas fa-sort': props.sortConfig.column !== 'type' || props.sortConfig.direction === 'none',
+                            'fas fa-sort-up': props.sortConfig.column === 'type' && props.sortConfig.direction === 'asc',
+                            'fas fa-sort-down': props.sortConfig.column === 'type' && props.sortConfig.direction === 'desc'
+                        }"></i>
+                    </button>
+                </div>
             </th>
-            <!-- Empty column header for action buttons if editing or deleting is allowed -->
+            <!-- Empty column header for action buttons, visible if editing or deleting is allowed -->
             <th v-if="props.canEditAttribute || props.canDeleteAttribute"
-                class="attributes__table-header-cell"></th>
+                class="attributes__table-header-cell--actions">
+            </th>
         </tr>
         </thead>
         <tbody class="attributes__table-body">
@@ -56,7 +61,7 @@ const props = defineProps({
         <tr v-for="attribute in props.attributes" :key="attribute.id" class="attributes__table-row">
             <td class="attributes__table-cell">{{ attribute.name }}</td>
             <td class="attributes__table-cell">{{ attribute.type.name }}</td>
-            <!-- Action buttons for editing or deleting an attribute -->
+            <!-- Action buttons for editing and deleting an attribute, visible if allowed -->
             <td v-if="props.canEditAttribute || props.canDeleteAttribute" class="attributes__table-cell">
                 <div class="attributes__actions">
                     <SecondaryButton

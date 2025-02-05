@@ -25,19 +25,22 @@ const props = defineProps({
         <thead>
         <tr class="profiles__table-header">
             <!-- Column header for Name with sorting functionality -->
-            <th
-                class="profiles__table-header-cell"
-                @click="props.sortColumn('name')"
-            >
-                Name
-                <i :class="{
-                    'fas fa-sort-up': props.sortConfig.column === 'name' && props.sortConfig.direction === 'asc',
-                    'fas fa-sort-down': props.sortConfig.column === 'name' && props.sortConfig.direction === 'desc'}">
-                </i>
+            <th class="profiles__table-header-cell" @click="props.sortColumn('name')">
+                <div class="profiles__table-header-sort">
+                    <span>Name</span>
+                    <button class="profiles__sort-button" @click.stop="props.sortColumn('name')">
+                        <i :class="{
+                            'fas fa-sort': props.sortConfig.column !== 'name' || props.sortConfig.direction === 'none',
+                            'fas fa-sort-up': props.sortConfig.column === 'name' && props.sortConfig.direction === 'asc',
+                            'fas fa-sort-down': props.sortConfig.column === 'name' && props.sortConfig.direction === 'desc'
+                        }"></i>
+                    </button>
+                </div>
             </th>
             <!-- Empty column header for action buttons, visible if editing or deleting is allowed -->
             <th v-if="props.canEditProfile || props.canDeleteProfile"
-                class="profiles__table-header-cell"></th>
+                class="profiles__table-header-cell--actions">
+            </th>
         </tr>
         </thead>
         <tbody class="profiles__table-body">

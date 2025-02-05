@@ -13,11 +13,13 @@ import useEntityTable from '@/composables/useEntityTable';
  * @property {Boolean} canCreateUser - Indicates if the user can create a new user.
  * @property {Boolean} canEditUser - Indicates if the user can edit a user.
  * @property {Boolean} canDeleteUser - Indicates if the user can delete a user.
+ * @property {Array} profiles - List of profiles to be used in the modals.
  */
 const props = defineProps({
     canCreateUser: Boolean,
     canEditUser: Boolean,
     canDeleteUser: Boolean,
+    profiles: Array,
 });
 
 /**
@@ -79,12 +81,14 @@ const {
             <!-- Modal for creating a new user -->
             <CreateUserModal
                 :isOpen="showCreateModal"
+                :profiles="props.profiles"
                 @close="closeModal('create')"
             />
             <!-- Modal for editing an existing user -->
             <EditUserModal
                 :isOpen="showEditModal"
                 :user="itemToEdit"
+                :profiles="props.profiles"
                 @close="closeModal('edit')"
             />
             <!-- Modal for deleting an existing user -->

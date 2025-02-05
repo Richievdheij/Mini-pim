@@ -29,13 +29,30 @@
         padding: 0.5rem;
         text-overflow: ellipsis;
         white-space: nowrap;
+        user-select: none;
+
+        &--actions {
+            overflow: hidden;
+        }
+    }
+
+    &__table-header-cell--actions,
+    &__table-cell--actions {
+        border-bottom: 0.06rem solid rgba(0, 0, 0, 0.1);
+        border-right: 0.06rem solid rgba(0, 0, 0, 0.1);
+        width: 7.5%;
     }
 
     &__table-header-cell i {
+        width: 100%;
         margin-left: 0.5rem;
         cursor: pointer;
+        transition: transform 0.3s ease, color 0.3s ease;
     }
 
+    &__table-header-cell i:hover {
+        color: #d5def0;
+    }
 
     &__table-header {
         background-color: rgb(86, 122, 197);
@@ -43,36 +60,6 @@
         color: rgba(255, 255, 255, 1);
         font-weight: bold;
         text-align: left;
-    }
-
-    // Remove border-right for Users and keep it for others
-    .users__table-header-cell:nth-child(3),
-    .users__table-cell:nth-child(3) {
-        border-right: none;
-    }
-
-    // Remove border-right for actions column in profiles
-    .profiles__table-header-cell:nth-child(1),
-    .profiles__table-cell:nth-child(1) {
-        border-right: none;
-    }
-
-    // Remove border-right for actions column in Products
-    .products__table-header-cell:nth-child(3),
-    .products__table-cell:nth-child(3) {
-        border-right: none;
-    }
-
-    // Remove border-right for actions column in Products
-    .types__table-header-cell:nth-child(2),
-    .types__table-cell:nth-child(2) {
-        border-right: none;
-    }
-
-    // Remove border-right for actions column in Products
-    .attributes__table-header-cell:nth-child(2),
-    .attributes__table-cell:nth-child(2) {
-        border-right: none;
     }
 
     &__table-row {

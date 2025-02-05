@@ -1,11 +1,11 @@
 import { ref, computed, watch } from 'vue';
-import { usePage, router } from '@inertiajs/vue3';
+import { usePage } from '@inertiajs/vue3';
+import { Inertia } from '@inertiajs/inertia';
 
 /**
- * A composable function to manage entity tables with modals for creating, editing, and deleting items.
- *
- * @param {string} entityName - The name of the entity to manage.
- * @returns {Object} - The reactive properties and methods for managing the entity table.
+ * Composable function to manage entity tables.
+ * @param {String} entityName - The name of the entity to manage.
+ * @returns {Object} - Reactive references and functions to manage the entity table.
  */
 export default function useEntityTable(entityName) {
     // Reactive references for modal visibility
@@ -28,9 +28,8 @@ export default function useEntityTable(entityName) {
     });
 
     /**
-     * Open a modal of the specified type.
-     *
-     * @param {string} modalType - The type of modal to open ('create', 'edit', 'delete').
+     * Opens a modal of the specified type.
+     * @param {String} modalType - The type of modal to open ('create', 'edit', 'delete').
      * @param {Object|null} item - The item to edit or delete (optional).
      */
     function openModal(modalType, item = null) {
@@ -51,9 +50,8 @@ export default function useEntityTable(entityName) {
     }
 
     /**
-     * Close a modal of the specified type and reload the entity data.
-     *
-     * @param {string} modalType - The type of modal to close ('create', 'edit', 'delete').
+     * Closes a modal of the specified type.
+     * @param {String} modalType - The type of modal to close ('create', 'edit', 'delete').
      */
     function closeModal(modalType) {
         itemToEdit.value = null;
@@ -70,14 +68,13 @@ export default function useEntityTable(entityName) {
                 showDeleteModal.value = false;
                 break;
         }
-        try {
-            router.reload({ only: [entityName] });
-        } catch (error) {
-            console.error(`Error reloading ${entityName}:`, error);
-        }
+        Inertia.reload({ only: [entityName] });
     }
 
-    // Watch for changes in the search query and filter items accordingly
+    /**
+     * Watches the search query and filters items based on the query.
+     * Filters items by name or type name.
+     */
     watch(searchQuery, (newQuery) => {
         if (newQuery) {
             items.value = page?.props?.[entityName].filter(item =>
@@ -89,43 +86,68 @@ export default function useEntityTable(entityName) {
         }
     });
 
-    // Computed property for filtered items based on the search query
+    /**
+     * Computed property to get filtered items based on the search query.
+     * @returns {Array} - The filtered items.
+     */
     const filteredItems = computed(() => {
         return items.value.filter(item =>
+            // Filter items by name or type name
             item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
             item.type?.name.toLowerCase().includes(searchQuery.value.toLowerCase())
         );
     });
 
     /**
-     * Sort the items by the specified column.
-     *
-     * @param {string} column - The column to sort by.
+     * Sorts the table by the specified column.
+     * Toggles the sort direction between 'asc', 'desc', and 'none'.
+     * @param {String} column - The column to sort by.
      */
     function sortColumn(column) {
         const { direction } = sortConfig.value;
         const newDirection = direction === "asc" ? "desc" : direction === "desc" ? "none" : "asc";
 
+        // Update the sort configuration
         sortConfig.value = { column, direction: newDirection };
     }
 
-    // Computed property for sorted items based on the sort configuration
+    /**
+     * Computed property to get sorted items based on the sort configuration.
+     * Sorts items by the specified column and direction.
+     * @returns {Array} - The sorted items.
+     */
     const sortedItems = computed(() => {
         const { column, direction } = sortConfig.value;
         let itemsToSort = [...filteredItems.value];
 
+        // Sort items by the specified column and direction
         if (column && direction !== "none") {
             itemsToSort.sort((a, b) => {
-                const aValue = column === 'type' ? a[column]?.name : a[column];
-                const bValue = column === 'type' ? b[column]?.name : b[column];
+                let aValue = a[column];
+                let bValue = b[column];
 
-                return direction === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+                // Handle sorting for nested properties
+                if (column === 'profiles') {
+                    aValue = a.profiles.map(p => p.name).join(", ");
+                    bValue = b.profiles.map(p => p.name).join(", ");
+                } else if (column === 'type') {
+                    aValue = a.type?.name;
+                    bValue = b.type?.name;
+                }
+
+                // Compare values based on type
+                if (typeof aValue === 'number' && typeof bValue === 'number') {
+                    return direction === "asc" ? aValue - bValue : bValue - aValue;
+                } else {
+                    return direction === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+                }
             });
         }
 
         return itemsToSort;
     });
 
+    // Return reactive references and functions
     return {
         showCreateModal,
         showEditModal,

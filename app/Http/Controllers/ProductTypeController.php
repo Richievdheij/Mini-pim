@@ -107,3 +107,4 @@ class ProductTypeController extends Controller
         return back();
     }
 }
+
