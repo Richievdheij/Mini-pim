@@ -14,12 +14,14 @@ class Role extends Model
     use HasFactory;
 
     /**
+     * The table associated with the model.
      * @var string[]
      */
     protected $fillable = ['name'];
 
 
     /**
+     * The users that belong to the role.
      * @return BelongsToMany
      */
     public function users(): BelongsToMany
