@@ -1,0 +1,27 @@
+/* Verberg alle ongewilde tekst op de Cookie Declaration */
+.CookieDeclaration {
+    display: none !important; /* Zorg ervoor dat de verklaring niet zichtbaar is */
+}
+
+.CookieDeclaration p,
+.CookieDeclaration span,
+.CookieDeclaration div {
+    display: none !important; /* Verberg alle sub-elementen die tekst bevatten */
+}
+
+
+/* Verberg alle interne elementen in de cookieverklaring */
+    .CookieDeclarationDialogText,
+    .CookieDeclarationIntro,
+    .CookieDeclarationType,
+    .CookieDeclarationLastUpdated,
+    .CookieDeclarationTable,
+    .CookieDeclarationTableCell,
+    .CookieDeclarationTableHeader,
+    #CookieDeclarationUserStatusPanel,
+    #CookieDeclarationConsentIdAndDate,
+    #CookieDeclarationChangeConsent,
+    #CookieDeclarationDoNotSell {
+        display: none !important; /* Verberg alle sub-elementen van de cookieverklaring */
+}
+
