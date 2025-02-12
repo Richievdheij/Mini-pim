@@ -39,6 +39,14 @@
         type="text/javascript">
     </script>
 
+    <!-- Cookie Declaration -->
+    <script
+        id="CookieDeclaration"
+        src="https://consent.cookiebot.com/eb5a8a84-458d-49ac-ba40-eee70b46fe14/cd.js"
+        type="text/javascript"
+        async>
+    </script>
+
     <!-- Scripts -->
     @routes
     @vite(['resources/js/app.js', 'resources/sass/app.scss', "resources/js/Pages/{$page['component']}.vue"])
