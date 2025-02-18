@@ -8,9 +8,10 @@ import ProductEditModalTypes from "@/Components/Admin/Data/Products/Edit/Product
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
-const { success, error } = useNotifications(); // Notification plugin
+// Import the useNotifications function
+const { success, error } = useNotifications();
 
-// Props and emits
+// Define the props and emits
 const props = defineProps({
     isOpen: Boolean,
     attributes: Array,
@@ -20,9 +21,10 @@ const props = defineProps({
     productId: Number,
 });
 
-const emit = defineEmits(["close", "productUpdated"]); // Emit events
+// Define the emits
+const emit = defineEmits(["close", "productUpdated"]);
 
-// Reactive form state
+// Define the form and attributes
 const form = useForm({
     product_id: "",
     name: "",
@@ -34,15 +36,14 @@ const form = useForm({
     depth: "",
     price: "",
     stock_quantity: "",
-    attributes: {},
+    attribute_values: {},
 });
 
-// Attributes and validation
+// Define the attributes and errors
 const attributes = ref([]);
-const attributeValues = ref({});
 const errors = ref({});
 
-// Watch for modal open state
+// Watch the isOpen prop and set the form values
 watch(
     () => props.isOpen,
     (isOpen) => {
@@ -58,74 +59,65 @@ watch(
             form.price = props.product.price;
             form.stock_quantity = props.product.stock_quantity;
 
-            // Set attributes and attribute values
-            attributes.value = props.attributes || []; // Set attributes
-            attributeValues.value = attributes.value.reduce((acc, attr) => { // Set attribute values
-                acc[attr.id] = props.product?.attributes?.find((a) => a.id === attr.id)?.value || ""; // Set attribute value if exists
-                return acc; // Starts with empty object, if attribute value exists, add it to the object
-            }, {});
+            attributes.value = props.attributes || [];
+            form.attribute_values = props.product.attribute_values || {};
         }
     }
 );
 
-// Close modal handler
+// Close the modal
 function closeModal() {
     emit("close");
     form.reset();
     form.clearErrors();
-    attributeValues.value = {};
     errors.value = {};
 }
 
-// Submit form data
-function submit() {
-    // Validate attributes
-    errors.value = {}; // Clear previous errors
+// Validate the form
+function validateForm() {
+    errors.value = {};
     attributes.value.forEach((attribute) => {
-        if (!attributeValues.value[attribute.id]) {
-            errors.value[attribute.id] = `${attribute.name} is required.`;
+        if (!form.attribute_values[attribute.id]) {
+            errors.value[`attributes.${attribute.id}`] = `${attribute.name} is required.`;
         }
     });
 
     // Check if there are any errors
-    if (Object.keys(errors.value).length > 0) {
+    return Object.keys(errors.value).length === 0;
+}
+
+// Submit the form
+function submit() {
+    if (!validateForm()) {
         error("Please fill in all required fields.");
         return;
     }
 
-    // Submit the form data to the correct table, ensuring attributes are linked with product_id
+    // Submit the form
     form.put(route("pim.products.update", props.product.id), {
         onSuccess: () => {
             closeModal();
+            emit("productUpdated");
             success("Product updated successfully.");
         },
         onError: () => {
             error("Failed to update product. Please try again.");
         },
-        data: {
-            ...form, // Include all form data
-            attributes: Object.entries(attributeValues.value).map(([attribute_id, value]) => ({
-                attribute_id,
-                value,
-                product_id: props.product.id,  // Include the product_id to correctly associate the attributes
-            })),
-        },
     });
 }
-
 </script>
 
 <template>
     <div v-if="isOpen" class="edit-product-modal">
         <div class="edit-product-modal__overlay"></div>
         <div class="edit-product-modal__content">
-            <h2 class="edit-product-modal__title">Edit Product "{{ props.product.name }}" </h2>
+            <h2 class="edit-product-modal__title">Edit Product "{{ props.product.name }}"</h2>
 
             <form @submit.prevent="submit" class="edit-product-modal__form">
                 <div class="edit-product-modal__container">
                     <div class="edit-product-modal__general">
                         <h3 class="edit-product-modal__subtitle">General Information</h3>
-                        <!-- Product ID -->
+                        <!-- Product ID, Name, and Description Inputs -->
                         <Input
                             label="Product ID"
                             id="product_id"
@@ -136,8 +128,7 @@ function submit() {
                             :error="form.errors.product_id"
                             required
                         />
-
-                        <!-- Name -->
+                        <!-- Product Name and Description Inputs -->
                         <Input
                             label="Name"
                             id="name"
@@ -148,8 +139,6 @@ function submit() {
                             :error="form.errors.name"
                             required
                         />
-
-                        <!-- Description input field -->
                         <Input
                             label="Description"
                             id="description"
@@ -163,26 +152,25 @@ function submit() {
 
                     <div class="edit-product-modal__additional">
                         <h3 class="edit-product-modal__subtitle">Types</h3>
-                        <!-- Component for product types -->
+                        <!-- Product Type and Attributes Inputs -->
                         <ProductEditModalTypes
                             :types="types"
-                            v-model="form.type_id"
+                            v-model:type-id="form.type_id"
+                            v-model:attribute-values="form.attribute_values"
                             :attributes="attributes"
-                            :attributeValues="attributeValues"
-                            :errors="form.errors"
+                            :errors="errors"
                         />
                     </div>
 
                     <div class="edit-product-modal__info">
                         <h3 class="edit-product-modal__subtitle">Additional Information</h3>
-                        <!-- Component for product info -->
+                        <!-- Product Weight, Height, Width, Depth, Price, and Stock Quantity Inputs -->
                         <ProductEditModalInfo
-                            v-model="form"
+                            v-model:form="form"
                         />
                     </div>
                 </div>
 
-                <!-- Actions -->
                 <div class="edit-product-modal__actions">
                     <TertiaryButton
                         label="Cancel"

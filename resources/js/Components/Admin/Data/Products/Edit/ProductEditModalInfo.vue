@@ -1,94 +1,95 @@
 <script setup>
-import { useForm } from "@inertiajs/vue3";
 import Input from "@/Components/General/Input.vue";
 
-// Define props and emit
+/**
+ * Component properties
+ * @typedef {Object} Props
+ * @property {Object} form - Object containing the form data.
+ */
 const props = defineProps({
-    product: Object,
+    form: Object
 });
 
-const emit = defineEmits(["productUpdated"]);
+/**
+ * Emits events to update the form data.
+ * @typedef {Object} Emits
+ * @property {Function} update:form - Emits the updated form object.
+ */
+const emit = defineEmits(['update:form']);
 
-// Form
-const form = useForm({
-    weight: props.product?.weight || "",
-    height: props.product?.height || "",
-    width: props.product?.width || "",
-    depth: props.product?.depth || "",
-    price: props.product?.price || "",
-    stock_quantity: props.product?.stock_quantity || "",
-    // Add Active/Inactive
-});
+/**
+ * Updates the form data by modifying a specific key.
+ * @param {string} key - The form field key to update.
+ * @param {string|number} value - The new value for the field.
+ */
+function updateForm(key, value) {
+    const newForm = { ...props.form, [key]: value };
+    emit('update:form', newForm);
+}
 </script>
 
 <template>
     <div class="edit-product-modal-info">
-            <form class="edit-product-modal-info__form">
-                <!-- Add dimensions & weight popup button -->
-                <!-- Weight input field -->
-                <Input
-                    label="Weight"
-                    id="weight"
-                    inputType="number"
-                    placeholder="Enter product weight"
-                    type="field"
-                    v-model="form.weight"
-                    :error="form.errors.weight"
-                />
-
-                <!-- Size: Height input field -->
-                <Input
-                    label="Height"
-                    id="height"
-                    inputType="number"
-                    placeholder="Enter product height"
-                    type="field"
-                    v-model="form.height"
-                    :error="form.errors.height"
-                />
-                <!-- Size: Width input field -->
-                <Input
-                    label="Width"
-                    id="width"
-                    inputType="number"
-                    placeholder="Enter product width"
-                    type="field"
-                    v-model="form.width"
-                    :error="form.errors.width"
-                />
-                <!-- Size: Depth input field -->
-                <Input
-                    label="Depth"
-                    id="depth"
-                    inputType="number"
-                    placeholder="Enter product depth"
-                    type="field"
-                    v-model="form.depth"
-                    :error="form.errors.depth"
-                />
-
-                <!-- Add Pricing & stock popup button -->
-                <!-- Price input field -->
-                <Input
-                    label="Price"
-                    id="price"
-                    inputType="number"
-                    placeholder="Enter product price"
-                    type="field"
-                    v-model="form.price"
-                    :error="form.errors.price"
-                />
-
-                <!-- Stock Quantity input field -->
-                <Input
-                    label="Stock Quantity"
-                    id="stock_quantity"
-                    inputType="number"
-                    placeholder="Enter stock quantity"
-                    type="field"
-                    v-model="form.stock_quantity"
-                    :error="form.errors.stock_quantity"
-                />
-            </form>
-        </div>
+        <!-- Input fields for product details -->
+        <Input
+            label="Weight (kg)"
+            id="weight"
+            type="field"
+            inputType="number"
+            v-model="form.weight"
+            @input="(value) => updateForm('weight', value)"
+            :error="form.errors?.weight"
+            required
+        />
+        <Input
+            label="Height (cm)"
+            id="height"
+            type="field"
+            inputType="number"
+            v-model="form.height"
+            @input="(value) => updateForm('height', value)"
+            :error="form.errors?.height"
+            required
+        />
+        <Input
+            label="Width (cm)"
+            id="width"
+            type="field"
+            inputType="number"
+            v-model="form.width"
+            @input="(value) => updateForm('width', value)"
+            :error="form.errors?.width"
+            required
+        />
+        <Input
+            label="Depth (cm)"
+            id="depth"
+            type="field"
+            inputType="number"
+            v-model="form.depth"
+            @input="(value) => updateForm('depth', value)"
+            :error="form.errors?.depth"
+            required
+        />
+        <Input
+            label="Price"
+            id="price"
+            type="field"
+            inputType="number"
+            v-model="form.price"
+            @input="(value) => updateForm('price', value)"
+            :error="form.errors?.price"
+            required
+        />
+        <Input
+            label="Stock Quantity"
+            id="stock_quantity"
+            type="field"
+            inputType="number"
+            v-model="form.stock_quantity"
+            @input="(value) => updateForm('stock_quantity', value)"
+            :error="form.errors?.stock_quantity"
+            required
+        />
+    </div>
 </template>

@@ -30,7 +30,7 @@ const props = defineProps({
                     : 'No Profile Assigned' }}
                 </span>
                 <!-- Display version release -->
-                <span class="sidebar-profile-section__version">v2.0.0</span>
+                <span class="sidebar-profile-section__version">v2.1.0</span>
             </div>
         </div>
     </div>

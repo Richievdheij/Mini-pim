@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAttributeValueRequest;
-use App\Http\Services\AttributeValueService;
+use App\Http\Services\ProductAttributeValueService;
 use App\Models\ProductAttributeValue;
 use Exception;
 use Inertia\Inertia;
@@ -13,13 +13,13 @@ use Illuminate\Http\JsonResponse;
 /**
  * Handles requests related to product attribute values.
  */
-class AttributeValueController extends Controller
+class ProductAttributeValueController extends Controller
 {
-    protected AttributeValueService $attributeValueService;
+    protected ProductAttributeValueService $productAttributeValueService;
 
-    public function __construct(AttributeValueService $attributeValueService)
+    public function __construct(ProductAttributeValueService $productAttributeValueService)
     {
-        $this->attributeValueService = $attributeValueService;
+        $this->productAttributeValueService = $productAttributeValueService;
     }
 
     /**
@@ -30,7 +30,7 @@ class AttributeValueController extends Controller
     public function index(): Response
     {
         // Retrieve product attribute values for the authenticated user's profile
-        $values = $this->attributeValueService->getProductAttributeValuesForUser();
+        $values = $this->productAttributeValueService->getProductAttributeValuesForUser();
 
         // Render the Inertia page with the product attribute values
         return Inertia::render('Attributes/Index', compact('values'));
@@ -49,7 +49,7 @@ class AttributeValueController extends Controller
         $validated = $request->validated();
 
         // Store or update the product attribute values
-        $this->attributeValueService->storeOrUpdateProductAttributeValues($validated['values'], $validated['product_id']);
+        $this->productAttributeValueService->storeOrUpdateProductAttributeValues($validated['values'], $validated['product_id']);
 
         // Return a success response
         return response()->json([
@@ -71,16 +71,16 @@ class AttributeValueController extends Controller
         if (!$this->authorizeOwnership($productAttributeValue)) {
             // If the user is not authorized, return Inertia with an error message
             return Inertia::render('Attributes/Index', [
-                'values' => $this->attributeValueService->getProductAttributeValuesForUser()
+                'values' => $this->productAttributeValueService->getProductAttributeValuesForUser()
             ]);
         }
 
         // Delete the product attribute value
-        $this->attributeValueService->deleteProductAttributeValue($productAttributeValue);
+        $this->productAttributeValueService->deleteProductAttributeValue($productAttributeValue);
 
         // Return Inertia with a success message
         return Inertia::render('Attributes/Index', [
-            'values' => $this->attributeValueService->getProductAttributeValuesForUser()
+            'values' => $this->productAttributeValueService->getProductAttributeValuesForUser()
         ]);
     }
 
@@ -96,7 +96,7 @@ class AttributeValueController extends Controller
     public function getAttributesWithValues(int $typeId): JsonResponse
     {
         // Retrieve attributes with their values for the specified product type
-        $attributes = $this->attributeValueService->getAttributesWithValues($typeId);
+        $attributes = $this->productAttributeValueService->getAttributesWithValues($typeId);
 
         // Return the attributes with their values
         return response()->json([

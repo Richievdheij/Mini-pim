@@ -7,7 +7,7 @@ use App\Http\Controllers\PimController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\AttributeController;
-use App\Http\Controllers\AttributeValueController;
+use App\Http\Controllers\ProductAttributeValueController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\LoadUserProfiles;
 
@@ -102,19 +102,19 @@ Route::middleware(['auth', LoadUserProfiles::class])->group(function () {
             ]);
 
         // Attribute Values Management
-        Route::resource('attribute-values', AttributeValueController::class)
+        Route::resource('product-attribute-values', ProductAttributeValueController::class)
             ->except(['show']) // No show page for attribute values
             ->names([
-                'index' => 'attribute-values.index',
-                'create' => 'attribute-values.create',
-                'store' => 'attribute-values.store',
-                'edit' => 'attribute-values.edit',
-                'update' => 'attribute-values.update',
-                'destroy' => 'attribute-values.destroy',
+                'index' => 'product-attribute-values.index',
+                'create' => 'product-attribute-values.create',
+                'store' => 'product-attribute-values.store',
+                'edit' => 'product-attribute-values.edit',
+                'update' => 'product-attribute-values.update',
+                'destroy' => 'product-attribute-values.destroy',
             ]);
 
         // Product Type-specific Attributes
-        Route::get('/types/{typeId}/attributes', [AttributeValueController::class, 'getAttributesWithValues'])->name('types.attributes');
+        Route::get('/types/{typeId}/attributes', [ProductAttributeValueController::class, 'getAttributesWithValues'])->name('types.attributes');
 
     });
 });
