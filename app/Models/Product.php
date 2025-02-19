@@ -34,6 +34,20 @@ class Product extends Model
     ];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'weight' => 'decimal:2',
+        'height' => 'decimal:2',
+        'width' => 'decimal:2',
+        'depth' => 'decimal:2',
+        'price' => 'decimal:2',
+        'stock_quantity' => 'integer',
+    ];
+
+    /**
      * Relationship to ProductType
      * @return belongsToMany
      */

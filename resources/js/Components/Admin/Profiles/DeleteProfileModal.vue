@@ -52,11 +52,13 @@ function submit() {
                     label="Cancel"
                     type="cancel"
                     @click="closeModal"
+                    :disabled="form.processing"
                 />
                 <!-- Delete button to confirm the deletion -->
                 <SecondaryButton
                     label="Delete"
                     type="delete"
+                    :disabled="form.processing"
                 />
             </form>
         </div>

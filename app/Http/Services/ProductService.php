@@ -38,8 +38,11 @@ class ProductService
 
         $data = array_merge([
             'weight' => 0,
-            'stock_quantity' => 0,
+            'height' => 0,
+            'width' => 0,
+            'depth' => 0,
             'price' => 0,
+            'stock_quantity' => 0,
             'profile_id' => $profileId,
         ], $data);
 

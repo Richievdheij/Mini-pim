@@ -45,7 +45,7 @@ function submit() {
         <div class="delete-attribute-modal__overlay"></div>
         <div class="delete-attribute-modal__content">
             <h2 class="delete-attribute-modal__title">Delete Attribute</h2>
-            <p class="delete-attribute-modal__message">
+            <p class="delete-attribute-modal__description">
                 Are you sure you want to delete the attribute <strong>"{{ props.attribute.name }}"?</strong>
             </p>
             <form @submit.prevent="submit" class="delete-attribute-modal__form">
@@ -55,6 +55,7 @@ function submit() {
                         label="Cancel"
                         type="cancel"
                         @click="closeModal"
+                        :disabled="form.processing"
                     />
                     <!-- Delete button -->
                     <SecondaryButton

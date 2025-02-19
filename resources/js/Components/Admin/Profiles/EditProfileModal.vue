@@ -81,6 +81,7 @@ function submit() {
                         label="Cancel"
                         type="cancel"
                         @click="closeModal"
+                        :disabled="form.processing"
                     />
                     <!-- Update Button -->
                     <SecondaryButton

@@ -1,44 +1,34 @@
 <script setup>
 import Input from "@/Components/General/Input.vue";
 
-/**
- * Component properties
- * @typedef {Object} Props
- * @property {Object} form - Object containing the form data.
- */
+// Define component properties
 const props = defineProps({
-    form: Object
+    form: Object,
+    errors: Object
 });
 
-/**
- * Emits events to update the form data.
- * @typedef {Object} Emits
- * @property {Function} update:form - Emits the updated form object.
- */
-const emit = defineEmits(['update:form']);
+// Define emits to update the form
+const emit = defineEmits(["update:form"]);
 
-/**
- * Updates the form data by modifying a specific key.
- * @param {string} key - The form field key to update.
- * @param {string|number} value - The new value for the field.
- */
+// Function to update the form fields and emit the changes
 function updateForm(key, value) {
     const newForm = { ...props.form, [key]: value };
-    emit('update:form', newForm);
+    emit("update:form", newForm);
 }
 </script>
 
 <template>
     <div class="edit-product-modal-info">
-        <!-- Input fields for product details -->
         <Input
             label="Weight (kg)"
             id="weight"
             type="field"
             inputType="number"
+            step="0.01"
+            min="0"
             v-model="form.weight"
-            @input="(value) => updateForm('weight', value)"
-            :error="form.errors?.weight"
+            @update:modelValue="(value) => updateForm('weight', value)"
+            :error="errors.weight"
             required
         />
         <Input
@@ -46,9 +36,11 @@ function updateForm(key, value) {
             id="height"
             type="field"
             inputType="number"
+            step="0.1"
+            min="0"
             v-model="form.height"
-            @input="(value) => updateForm('height', value)"
-            :error="form.errors?.height"
+            @update:modelValue="(value) => updateForm('height', value)"
+            :error="errors.height"
             required
         />
         <Input
@@ -56,9 +48,11 @@ function updateForm(key, value) {
             id="width"
             type="field"
             inputType="number"
+            step="0.1"
+            min="0"
             v-model="form.width"
-            @input="(value) => updateForm('width', value)"
-            :error="form.errors?.width"
+            @update:modelValue="(value) => updateForm('width', value)"
+            :error="errors.width"
             required
         />
         <Input
@@ -66,19 +60,23 @@ function updateForm(key, value) {
             id="depth"
             type="field"
             inputType="number"
+            step="0.1"
+            min="0"
             v-model="form.depth"
-            @input="(value) => updateForm('depth', value)"
-            :error="form.errors?.depth"
+            @update:modelValue="(value) => updateForm('depth', value)"
+            :error="errors.depth"
             required
         />
         <Input
-            label="Price"
+            label="Price (€)"
             id="price"
             type="field"
             inputType="number"
+            step="0.01"
+            min="0"
             v-model="form.price"
-            @input="(value) => updateForm('price', value)"
-            :error="form.errors?.price"
+            @update:modelValue="(value) => updateForm('price', value)"
+            :error="errors.price"
             required
         />
         <Input
@@ -86,9 +84,11 @@ function updateForm(key, value) {
             id="stock_quantity"
             type="field"
             inputType="number"
+            step="1"
+            min="0"
             v-model="form.stock_quantity"
-            @input="(value) => updateForm('stock_quantity', value)"
-            :error="form.errors?.stock_quantity"
+            @update:modelValue="(value) => updateForm('stock_quantity', value)"
+            :error="errors.stock_quantity"
             required
         />
     </div>
