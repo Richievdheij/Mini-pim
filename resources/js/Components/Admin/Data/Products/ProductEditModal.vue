@@ -1,5 +1,5 @@
 <script setup>
-import { watch, ref } from "vue";
+import { watch } from "vue";
 import { useNotifications } from "@/plugins/notificationPlugin";
 import { useForm } from "@inertiajs/vue3";
 import Input from "@/Components/General/Input.vue";
@@ -8,23 +8,27 @@ import ProductEditModalTypes from "@/Components/Admin/Data/Products/Edit/Product
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
-// Import the useNotifications function
+// Notification functions for success and error messages
 const { success, error } = useNotifications();
 
-// Define the props and emits
+/**
+ * Define component props
+ * @property {Boolean} isOpen - Determines if the modal is open
+ * @property {Array} attributes - List of product attributes
+ * @property {Array} types - List of product types
+ * @property {Object} product - Product data
+ */
 const props = defineProps({
     isOpen: Boolean,
     attributes: Array,
     types: Array,
     product: Object,
-    attributeValues: Object,
-    productId: Number,
 });
 
-// Define the emits
+// Emit events for closing the modal and updating the product
 const emit = defineEmits(["close", "productUpdated"]);
 
-// Define the form and attributes
+// Initialize form with default values
 const form = useForm({
     product_id: "",
     name: "",
@@ -35,15 +39,11 @@ const form = useForm({
     width: "",
     depth: "",
     price: "",
-    stock_quantity: "",
+    stock_quantity: "0",
     attribute_values: {},
 });
 
-// Define the attributes and errors
-const attributes = ref([]);
-const errors = ref({});
-
-// Watch the isOpen prop and set the form values
+// Watch for modal open state and set form values
 watch(
     () => props.isOpen,
     (isOpen) => {
@@ -52,56 +52,34 @@ watch(
             form.name = props.product.name;
             form.description = props.product.description;
             form.type_id = props.product.type_id;
-            form.weight = props.product.weight;
-            form.height = props.product.height;
-            form.width = props.product.width;
-            form.depth = props.product.depth;
-            form.price = props.product.price;
-            form.stock_quantity = props.product.stock_quantity;
-
-            attributes.value = props.attributes || [];
+            form.weight = props.product.weight || "";
+            form.height = props.product.height || "";
+            form.width = props.product.width || "";
+            form.depth = props.product.depth || "";
+            form.price = props.product.price || "";
+            form.stock_quantity = props.product.stock_quantity || "0";
             form.attribute_values = props.product.attribute_values || {};
         }
     }
 );
 
-// Close the modal
+// Close the modal and reset the form
 function closeModal() {
     emit("close");
     form.reset();
     form.clearErrors();
-    errors.value = {};
 }
 
-// Validate the form
-function validateForm() {
-    errors.value = {};
-    attributes.value.forEach((attribute) => {
-        if (!form.attribute_values[attribute.id]) {
-            errors.value[`attributes.${attribute.id}`] = `${attribute.name} is required.`;
-        }
-    });
-
-    // Check if there are any errors
-    return Object.keys(errors.value).length === 0;
-}
-
-// Submit the form
+// Submit the form data to update the product
 function submit() {
-    if (!validateForm()) {
-        error("Please fill in all required fields.");
-        return;
-    }
-
-    // Submit the form
     form.put(route("pim.products.update", props.product.id), {
         onSuccess: () => {
             closeModal();
             emit("productUpdated");
-            success("Product updated successfully.");
+            success(`Product "${props.product.name}" updated successfully.`);
         },
         onError: () => {
-            error("Failed to update product. Please try again.");
+            error(`Failed to update product "${props.product.name}". Please check the fields.`);
         },
     });
 }
@@ -113,65 +91,70 @@ function submit() {
         <div class="edit-product-modal__content">
             <h2 class="edit-product-modal__title">Edit Product "{{ props.product.name }}"</h2>
 
+            <!-- Product edit form -->
             <form @submit.prevent="submit" class="edit-product-modal__form">
                 <div class="edit-product-modal__container">
                     <div class="edit-product-modal__general">
                         <h3 class="edit-product-modal__subtitle">General Information</h3>
-                        <!-- Product ID, Name, and Description Inputs -->
+                        <!-- Product ID input field -->
                         <Input
                             label="Product ID"
                             id="product_id"
                             inputType="text"
-                            placeholder="Enter product ID"
+                            :placeholder="props.product.product_id"
                             type="field"
                             v-model="form.product_id"
                             :error="form.errors.product_id"
                             required
                         />
-                        <!-- Product Name and Description Inputs -->
+                        <!-- Name input field -->
                         <Input
                             label="Name"
                             id="name"
                             inputType="text"
-                            placeholder="Enter product name"
+                            :placeholder="props.product.name"
                             type="field"
                             v-model="form.name"
                             :error="form.errors.name"
                             required
                         />
+                        <!-- Description input field -->
                         <Input
                             label="Description"
                             id="description"
                             inputType="textarea"
-                            placeholder="Enter product description"
+                            :placeholder="props.product.description"
                             type="description"
                             v-model="form.description"
                             :error="form.errors.description"
                         />
                     </div>
 
+                    <!-- Additional product information -->
                     <div class="edit-product-modal__additional">
                         <h3 class="edit-product-modal__subtitle">Types</h3>
-                        <!-- Product Type and Attributes Inputs -->
                         <ProductEditModalTypes
                             :types="types"
                             v-model:type-id="form.type_id"
                             v-model:attribute-values="form.attribute_values"
                             :attributes="attributes"
-                            :errors="errors"
+                            :errors="form.errors"
                         />
                     </div>
 
+                    <!-- Additional product information -->
                     <div class="edit-product-modal__info">
                         <h3 class="edit-product-modal__subtitle">Additional Information</h3>
-                        <!-- Product Weight, Height, Width, Depth, Price, and Stock Quantity Inputs -->
                         <ProductEditModalInfo
                             v-model:form="form"
-                            :errors="errors"
+                            :errors="form.errors"
+                            :isOpen="isOpen"
+                            :product="props.product"
                         />
                     </div>
                 </div>
 
+                <!-- Submit and Cancel Buttons -->
                 <div class="edit-product-modal__actions">
                     <TertiaryButton
                         label="Cancel"

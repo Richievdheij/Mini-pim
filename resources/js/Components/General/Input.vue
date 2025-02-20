@@ -30,6 +30,14 @@ const props = defineProps({
         required: true,
     },
     icon: String,
+    step: {
+        type: [String, Number],
+        default: null,
+    },
+    min: {
+        type: [String, Number],
+        default: null,
+    },
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -132,6 +140,8 @@ const computedPlaceholder = computed(() => {
             :class="{ 'has-value': modelValue }"
             :value="modelValue"
             :disabled="props.disabled"
+            :step="step"
+            :min="min"
             @input="$emit('update:modelValue', $event.target.value)"
         />
 

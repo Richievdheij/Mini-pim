@@ -7,12 +7,17 @@ import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
 const { success, error } = useNotifications(); // Notification plugin
 
-// Define props and emit
+/**
+* Define component props
+* @property {Boolean} isOpen - Determines if the modal is open
+* @property {Object} product - Product data
+*/
 const props = defineProps({
     isOpen: Boolean,
     product: Object,
 });
 
+// Emit event for closing the modal
 const emit = defineEmits(["close"]);
 
 // Reactive form state
@@ -20,7 +25,9 @@ const form = useForm({
     name: "",
 });
 
-// Close modal function
+/**
+ * Close the modal
+ */
 function closeModal() {
     emit("close");
     form.reset();

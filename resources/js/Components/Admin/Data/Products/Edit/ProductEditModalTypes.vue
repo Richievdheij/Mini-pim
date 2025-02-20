@@ -27,21 +27,14 @@ const props = defineProps({
  */
 const emit = defineEmits(['update:typeId', 'update:attributeValues']);
 
-/**
- * Reactive state for the selected type ID.
- * @type {import("vue").Ref<string|number>}
- */
+// Reactive state for the selected type ID.
 const selectedTypeId = ref(props.typeId);
 
-/**
- * Reactive list of attributes for the selected type.
- * @type {import("vue").Ref<Array>}
- */
+// Reactive list of attributes for the selected type.
 const localAttributes = ref([]);
 
-/**
- * Watches for changes in the selected type ID and fetches related attributes.
- */
+
+// Watches for changes in the selected type ID and fetches related attributes.
 watch(
     () => selectedTypeId.value,
     async (newTypeId) => {

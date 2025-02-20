@@ -6,15 +6,21 @@ import Input from "@/Components/General/Input.vue";
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
-// Define props and events for the modal
+// Initialize notifications system
+const { success, error } = useNotifications();
+
+/**
+ * Define component props
+ * @property {Boolean} isOpen - Determines if the modal is open
+ * @property {Array} types - List of product types
+ */
 const props = defineProps({
     isOpen: Boolean, // Determines if the modal is open
     types: Array, // List of product types
 });
-const emit = defineEmits(["close", "productCreated"]); // Emit events for closing and product creation
 
-// Initialize notifications system
-const { success, error } = useNotifications();
+// Emit events for closing the modal and product creation
+const emit = defineEmits(["close", "productCreated"]); // Emit events for closing and product creation
 
 // Initialize form with default values
 const form = useForm({
