@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 /**
  * Handle product attribute value-related logic.
  */
-class AttributeValueService
+class ProductAttributeValueService
 {
     /**
      * Get all product attribute values for the authenticated user.

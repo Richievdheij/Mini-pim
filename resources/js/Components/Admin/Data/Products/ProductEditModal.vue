@@ -1,5 +1,5 @@
 <script setup>
-import { watch, ref } from "vue";
+import { watch } from "vue";
 import { useNotifications } from "@/plugins/notificationPlugin";
 import { useForm } from "@inertiajs/vue3";
 import Input from "@/Components/General/Input.vue";
@@ -8,21 +8,27 @@ import ProductEditModalTypes from "@/Components/Admin/Data/Products/Edit/Product
 import SecondaryButton from "@/Components/General/SecondaryButton.vue";
 import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
-const { success, error } = useNotifications(); // Notification plugin
+// Notification functions for success and error messages
+const { success, error } = useNotifications();
 
-// Props and emits
+/**
+ * Define component props
+ * @property {Boolean} isOpen - Determines if the modal is open
+ * @property {Array} attributes - List of product attributes
+ * @property {Array} types - List of product types
+ * @property {Object} product - Product data
+ */
 const props = defineProps({
     isOpen: Boolean,
     attributes: Array,
     types: Array,
     product: Object,
-    attributeValues: Object,
-    productId: Number,
 });
 
-const emit = defineEmits(["close", "productUpdated"]); // Emit events
+// Emit events for closing the modal and updating the product
+const emit = defineEmits(["close", "productUpdated"]);
 
-// Reactive form state
+// Initialize form with default values
 const form = useForm({
     product_id: "",
     name: "",
@@ -33,16 +39,11 @@ const form = useForm({
     width: "",
     depth: "",
     price: "",
-    stock_quantity: "",
-    attributes: {},
+    stock_quantity: "0",
+    attribute_values: {},
 });
 
-// Attributes and validation
-const attributes = ref([]);
-const attributeValues = ref({});
-const errors = ref({});
-
-// Watch for modal open state
+// Watch for modal open state and set form values
 watch(
     () => props.isOpen,
     (isOpen) => {
@@ -51,143 +52,115 @@ watch(
             form.name = props.product.name;
             form.description = props.product.description;
             form.type_id = props.product.type_id;
-            form.weight = props.product.weight;
-            form.height = props.product.height;
-            form.width = props.product.width;
-            form.depth = props.product.depth;
-            form.price = props.product.price;
-            form.stock_quantity = props.product.stock_quantity;
-
-            // Set attributes and attribute values
-            attributes.value = props.attributes || []; // Set attributes
-            attributeValues.value = attributes.value.reduce((acc, attr) => { // Set attribute values
-                acc[attr.id] = props.product?.attributes?.find((a) => a.id === attr.id)?.value || ""; // Set attribute value if exists
-                return acc; // Starts with empty object, if attribute value exists, add it to the object
-            }, {});
+            form.weight = props.product.weight || "";
+            form.height = props.product.height || "";
+            form.width = props.product.width || "";
+            form.depth = props.product.depth || "";
+            form.price = props.product.price || "";
+            form.stock_quantity = props.product.stock_quantity || "0";
+            form.attribute_values = props.product.attribute_values || {};
         }
     }
 );
 
-// Close modal handler
+// Close the modal and reset the form
 function closeModal() {
     emit("close");
     form.reset();
     form.clearErrors();
-    attributeValues.value = {};
-    errors.value = {};
 }
 
-// Submit form data
+// Submit the form data to update the product
 function submit() {
-    // Validate attributes
-    errors.value = {}; // Clear previous errors
-    attributes.value.forEach((attribute) => {
-        if (!attributeValues.value[attribute.id]) {
-            errors.value[attribute.id] = `${attribute.name} is required.`;
-        }
-    });
-
-    // Check if there are any errors
-    if (Object.keys(errors.value).length > 0) {
-        error("Please fill in all required fields.");
-        return;
-    }
-
-    // Submit the form data to the correct table, ensuring attributes are linked with product_id
     form.put(route("pim.products.update", props.product.id), {
         onSuccess: () => {
             closeModal();
-            success("Product updated successfully.");
+            emit("productUpdated");
+            success(`Product "${props.product.name}" updated successfully.`);
         },
         onError: () => {
-            error("Failed to update product. Please try again.");
-        },
-        data: {
-            ...form, // Include all form data
-            attributes: Object.entries(attributeValues.value).map(([attribute_id, value]) => ({
-                attribute_id,
-                value,
-                product_id: props.product.id,  // Include the product_id to correctly associate the attributes
-            })),
+            error(`Failed to update product "${props.product.name}". Please check the fields.`);
         },
     });
 }
-
 </script>
 
 <template>
     <div v-if="isOpen" class="edit-product-modal">
         <div class="edit-product-modal__overlay"></div>
         <div class="edit-product-modal__content">
-            <h2 class="edit-product-modal__title">Edit Product "{{ props.product.name }}" </h2>
+            <h2 class="edit-product-modal__title">Edit Product "{{ props.product.name }}"</h2>
 
+            <!-- Product edit form -->
             <form @submit.prevent="submit" class="edit-product-modal__form">
                 <div class="edit-product-modal__container">
                     <div class="edit-product-modal__general">
                         <h3 class="edit-product-modal__subtitle">General Information</h3>
-                        <!-- Product ID -->
+                        <!-- Product ID input field -->
                         <Input
                             label="Product ID"
                             id="product_id"
                             inputType="text"
-                            placeholder="Enter product ID"
+                            :placeholder="props.product.product_id"
                             type="field"
                             v-model="form.product_id"
                             :error="form.errors.product_id"
                             required
                         />
-
-                        <!-- Name -->
+                        <!-- Name input field -->
                         <Input
                             label="Name"
                             id="name"
                             inputType="text"
-                            placeholder="Enter product name"
+                            :placeholder="props.product.name"
                             type="field"
                             v-model="form.name"
                             :error="form.errors.name"
                             required
                         />
-
                         <!-- Description input field -->
                         <Input
                             label="Description"
                             id="description"
                             inputType="textarea"
-                            placeholder="Enter product description"
+                            :placeholder="props.product.description"
                             type="description"
                             v-model="form.description"
                             :error="form.errors.description"
                         />
                     </div>
 
+                    <!-- Additional product information -->
                     <div class="edit-product-modal__additional">
                         <h3 class="edit-product-modal__subtitle">Types</h3>
-                        <!-- Component for product types -->
                         <ProductEditModalTypes
                             :types="types"
-                            v-model="form.type_id"
+                            v-model:type-id="form.type_id"
+                            v-model:attribute-values="form.attribute_values"
                             :attributes="attributes"
-                            :attributeValues="attributeValues"
                             :errors="form.errors"
                         />
                     </div>
 
+                    <!-- Additional product information -->
                     <div class="edit-product-modal__info">
                         <h3 class="edit-product-modal__subtitle">Additional Information</h3>
-                        <!-- Component for product info -->
                         <ProductEditModalInfo
-                            v-model="form"
+                            v-model:form="form"
+                            :errors="form.errors"
+                            :isOpen="isOpen"
+                            :product="props.product"
                         />
                     </div>
                 </div>
 
-                <!-- Actions -->
+                <!-- Submit and Cancel Buttons -->
                 <div class="edit-product-modal__actions">
                     <TertiaryButton
                         label="Cancel"
                         type="cancel"
                         @click="closeModal"
+                        :disabled="form.processing"
                     />
                     <SecondaryButton
                         label="Save"

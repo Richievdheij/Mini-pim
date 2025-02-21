@@ -1,94 +1,130 @@
 <script setup>
-import { useForm } from "@inertiajs/vue3";
+import { watch, reactive, toRefs } from "vue";
 import Input from "@/Components/General/Input.vue";
 
-// Define props and emit
+/**
+ * Define component props
+ * @property {Object} form - Form data object
+ * @property {Object} errors - Validation errors object
+ * @property {Boolean} isOpen - Determines if the modal is open
+ * @property {Object} product - Product data
+ */
 const props = defineProps({
+    form: Object,
+    errors: Object,
+    isOpen: Boolean,
     product: Object,
 });
 
-const emit = defineEmits(["productUpdated"]);
-
-// Form
-const form = useForm({
-    weight: props.product?.weight || "",
-    height: props.product?.height || "",
-    width: props.product?.width || "",
-    depth: props.product?.depth || "",
-    price: props.product?.price || "",
-    stock_quantity: props.product?.stock_quantity || "",
-    // Add Active/Inactive
+// Reactive placeholders for input fields
+const placeholders = reactive({
+    weight: "",
+    height: "",
+    width: "",
+    depth: "",
+    price: "",
+    stock_quantity: "",
 });
+
+// Watch for modal open state and set placeholders
+watch(
+    () => props.isOpen,
+    (isOpen) => {
+        if (isOpen && props.product) {
+            placeholders.weight = props.product.weight || "";
+            placeholders.height = props.product.height || "";
+            placeholders.width = props.product.width || "";
+            placeholders.depth = props.product.depth || "";
+            placeholders.price = props.product.price || "";
+            placeholders.stock_quantity = props.product.stock_quantity || "0";
+        }
+    },
+    { immediate: true }
+);
+
+// Destructure form and errors from props
+const { form, errors } = toRefs(props);
 </script>
 
 <template>
     <div class="edit-product-modal-info">
-            <form class="edit-product-modal-info__form">
-                <!-- Add dimensions & weight popup button -->
-                <!-- Weight input field -->
-                <Input
-                    label="Weight"
-                    id="weight"
-                    inputType="number"
-                    placeholder="Enter product weight"
-                    type="field"
-                    v-model="form.weight"
-                    :error="form.errors.weight"
-                />
-
-                <!-- Size: Height input field -->
-                <Input
-                    label="Height"
-                    id="height"
-                    inputType="number"
-                    placeholder="Enter product height"
-                    type="field"
-                    v-model="form.height"
-                    :error="form.errors.height"
-                />
-                <!-- Size: Width input field -->
-                <Input
-                    label="Width"
-                    id="width"
-                    inputType="number"
-                    placeholder="Enter product width"
-                    type="field"
-                    v-model="form.width"
-                    :error="form.errors.width"
-                />
-                <!-- Size: Depth input field -->
-                <Input
-                    label="Depth"
-                    id="depth"
-                    inputType="number"
-                    placeholder="Enter product depth"
-                    type="field"
-                    v-model="form.depth"
-                    :error="form.errors.depth"
-                />
-
-                <!-- Add Pricing & stock popup button -->
-                <!-- Price input field -->
-                <Input
-                    label="Price"
-                    id="price"
-                    inputType="number"
-                    placeholder="Enter product price"
-                    type="field"
-                    v-model="form.price"
-                    :error="form.errors.price"
-                />
-
-                <!-- Stock Quantity input field -->
-                <Input
-                    label="Stock Quantity"
-                    id="stock_quantity"
-                    inputType="number"
-                    placeholder="Enter stock quantity"
-                    type="field"
-                    v-model="form.stock_quantity"
-                    :error="form.errors.stock_quantity"
-                />
-            </form>
-        </div>
+        <!-- Weight field for product information -->
+        <Input
+            label="Weight (kg)"
+            id="weight"
+            type="field"
+            inputType="number"
+            step="0.01"
+            min="0"
+            v-model="form.weight"
+            :error="errors.weight"
+            :placeholder="placeholders.weight"
+            required
+        />
+        <!-- Height field for product information -->
+        <Input
+            label="Height (cm)"
+            id="height"
+            type="field"
+            inputType="number"
+            step="0.01"
+            min="0"
+            v-model="form.height"
+            :error="errors.height"
+            :placeholder="placeholders.height"
+            required
+        />
+        <!-- Width field for product information -->
+        <Input
+            label="Width (cm)"
+            id="width"
+            type="field"
+            inputType="number"
+            step="0.01"
+            min="0"
+            v-model="form.width"
+            :error="errors.width"
+            :placeholder="placeholders.width"
+            required
+        />
+        <!-- Depth field for product information -->
+        <Input
+            label="Depth (cm)"
+            id="depth"
+            type="field"
+            inputType="number"
+            step="0.01"
+            min="0"
+            v-model="form.depth"
+            :error="errors.depth"
+            :placeholder="placeholders.depth"
+            required
+        />
+        <!-- Price field for product information -->
+        <Input
+            label="Price (€)"
+            id="price"
+            type="field"
+            inputType="number"
+            step="0.01"
+            min="0"
+            v-model="form.price"
+            :error="errors.price"
+            :placeholder="placeholders.price"
+            required
+        />
+        <!-- Stock quantity field for product information -->
+        <Input
+            label="Stock Quantity"
+            id="stock_quantity"
+            type="field"
+            inputType="number"
+            step="1"
+            min="0"
+            v-model="form.stock_quantity"
+            :error="errors.stock_quantity"
+            :placeholder="placeholders.stock_quantity"
+            required
+        />
+    </div>
 </template>

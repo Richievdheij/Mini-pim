@@ -68,7 +68,12 @@ export default function useEntityTable(entityName) {
                 showDeleteModal.value = false;
                 break;
         }
-        Inertia.reload({ only: [entityName] });
+        // Reload entity
+        try {
+            Inertia.reload({ only: [entityName] });
+        } catch (error) {
+            console.error(`Error reloading ${entityName}:`, error);
+        }
     }
 
     /**

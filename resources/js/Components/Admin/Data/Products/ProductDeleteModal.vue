@@ -7,12 +7,17 @@ import TertiaryButton from "@/Components/General/TertiaryButton.vue";
 
 const { success, error } = useNotifications(); // Notification plugin
 
-// Define props and emit
+/**
+* Define component props
+* @property {Boolean} isOpen - Determines if the modal is open
+* @property {Object} product - Product data
+*/
 const props = defineProps({
     isOpen: Boolean,
     product: Object,
 });
 
+// Emit event for closing the modal
 const emit = defineEmits(["close"]);
 
 // Reactive form state
@@ -20,7 +25,9 @@ const form = useForm({
     name: "",
 });
 
-// Close modal function
+/**
+ * Close the modal
+ */
 function closeModal() {
     emit("close");
     form.reset();
@@ -46,7 +53,7 @@ function submit() {
         <div class="delete-product-modal__overlay"></div>
         <div class="delete-product-modal__content">
             <h2 class="delete-product-modal__title">Delete Product</h2>
-            <p class="delete-product-modal__message">
+            <p class="delete-product-modal__description">
                 Are you sure you want to delete the product <strong>"{{ props.product.name }}"?</strong>
             </p>
             <form @submit.prevent="submit" class="delete-product-modal__form">
@@ -56,6 +63,7 @@ function submit() {
                         label="Cancel"
                         type="cancel"
                         @click="closeModal"
+                        :disabled="form.processing"
                     />
                     <!-- Delete button -->
                     <SecondaryButton

@@ -87,13 +87,13 @@ class UserService
     /**
      * Retrieve all profiles based on the authenticated user's profile.
      * @param $authUser
-     * 
+     *
      * @return mixed
      */
     public function getProfilesForAuthUser($authUser): mixed
     {
-        return $authUser->profiles->first()->id === 1
-            ? Profile::all()
-            : $authUser->profiles;
+        return $authUser->profiles->contains('id', 1)
+            ? Profile::all() // Admin profile: return all profiles
+            : Profile::where('id', $authUser->profiles->first()->id)->get(); // Other profiles: return only the user's profile
     }
 }

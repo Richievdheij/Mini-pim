@@ -73,7 +73,7 @@ const toggleSection = (section) => {
         <!-- Profile Section -->
         <ProfileSection
             :isSidebarExpanded="isSidebarExpanded"
-            :user="user" s
+            :user="user"
         />
     </aside>
 </template>

@@ -81,6 +81,7 @@ class ProductController extends Controller
     {
         $this->authorizeAction('edit_products');
 
+        // Get the product edit data
         return Inertia::render('Data/ProductEdit', $this->productService->getProductEditData($id));
     }
 
@@ -88,11 +89,11 @@ class ProductController extends Controller
      * Update the specified product in storage.
      *
      * @param ProductUpdateRequest $request
-     * @param int $id
+     * @param string $id
      *
      * @return RedirectResponse
      */
-    public function update(ProductUpdateRequest $request, int $id): RedirectResponse
+    public function update(ProductUpdateRequest $request, string $id): RedirectResponse
     {
         $this->authorizeAction('edit_products');
 

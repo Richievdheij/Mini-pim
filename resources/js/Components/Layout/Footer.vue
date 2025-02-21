@@ -19,6 +19,7 @@ import { Link } from '@inertiajs/vue3';
                 <Link href="#" class="guest-layout__footer-link">Terms and conditions</Link>
                 <span class="guest-layout__footer-separator">|</span>
                 <Link href="#" class="guest-layout__footer-link">Contact</Link>
+                <span class="guest-layout__footer-separator">|</span>
             </footer>
         </div>
     </footer>

@@ -49,10 +49,11 @@ class PimController extends Controller
 
         // Get users based on the user's profile with the function in the UserService
         $users = $this->userService->getUsersForAuthUser(Auth::user());
+        $profiles = $this->userService->getProfilesForAuthUser(Auth::user());
 
         return Inertia::render('Users/Index', [
             'users' => $users,
-            'profiles' => Profile::all(),
+            'profiles' => $profiles,
             'canEditUser' => Auth::user()->hasPermission('edit_users'),
             'canDeleteUser' => Auth::user()->hasPermission('delete_users'),
             'canCreateUser' => Auth::user()->hasPermission('create_users'),
