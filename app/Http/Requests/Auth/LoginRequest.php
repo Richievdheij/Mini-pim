@@ -11,6 +11,7 @@ use Illuminate\Validation\ValidationException;
 
 /**
  * Handle an incoming authentication request.
+ *
  */
 class LoginRequest extends FormRequest
 {

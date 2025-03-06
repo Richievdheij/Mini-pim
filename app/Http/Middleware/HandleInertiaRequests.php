@@ -5,6 +5,10 @@ namespace App\Http\Middleware;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
+/**
+ * Middleware for handling Inertia requests.
+ *
+ */
 class HandleInertiaRequests extends Middleware
 {
     /**

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Handle account-related logic.
+ *
  */
 class Account extends Model
 {

@@ -12,9 +12,11 @@ use App\Notifications\CustomResetPassword;
 
 /**
  * Represents a user of the application.
+ *
  */
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable
 {
+    //
     use HasFactory, Notifiable, AuthorizesActions;
 
     /**
@@ -73,6 +75,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasPermission(string $permissionName): bool
     {
+        // Check if the user has the permission in any of their profiles
         foreach ($this->profiles as $profile) {
             if ($profile->permissions->contains('name', $permissionName)) {
                 return true;
@@ -89,6 +92,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function sendPasswordResetNotification($token): void
     {
+        // Send the custom password reset notification
         $this->notify(new CustomResetPassword($token));
     }
 }

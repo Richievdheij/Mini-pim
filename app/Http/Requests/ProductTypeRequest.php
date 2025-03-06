@@ -5,6 +5,10 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/**
+ * Handle the incoming request for product types.
+ *
+ */
 class ProductTypeRequest extends FormRequest
 {
     /**

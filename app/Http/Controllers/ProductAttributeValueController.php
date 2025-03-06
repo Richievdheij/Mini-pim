@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 
 /**
  * Handles requests related to product attribute values.
+ *
  */
 class ProductAttributeValueController extends Controller
 {

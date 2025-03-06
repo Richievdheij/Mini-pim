@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Handle permissions.
+ *
  */
 class Permission extends Model
 {

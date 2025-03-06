@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Represents a role in the application.
+ *
  */
 class Role extends Model
 {

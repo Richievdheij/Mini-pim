@@ -6,6 +6,10 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Middleware for loading the user's profiles if they are authenticated.
+ *
+ */
 class LoadUserProfiles
 {
     /**

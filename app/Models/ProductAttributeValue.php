@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Handle product attribute values.
+ *
  * @method static upsert(mixed[] $toArray, string[] $array, string[] $array1)
  */
 class ProductAttributeValue extends Model

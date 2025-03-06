@@ -13,6 +13,8 @@ use Inertia\Response;
 
 /**
  * Controller that handles all logic related to the products in the Mini-PIM
+ * Such as creating, updating, deleting, and displaying products.
+ *
  */
 class ProductController extends Controller
 {

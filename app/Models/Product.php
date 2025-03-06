@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Handles product-related logic.
+ *
  */
 class Product extends Model
 {

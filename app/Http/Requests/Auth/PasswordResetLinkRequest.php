@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Handle an incoming password reset link request.
+ *
  */
 class PasswordResetLinkRequest extends FormRequest
 {

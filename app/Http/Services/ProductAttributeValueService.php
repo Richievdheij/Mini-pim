@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Handle product attribute value-related logic.
+ *
  */
 class ProductAttributeValueService
 {

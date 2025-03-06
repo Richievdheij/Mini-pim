@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Validate incoming request to store a new product attribute value.
+ *
  */
 class StoreAttributeValueRequest extends FormRequest
 {

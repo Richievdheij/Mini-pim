@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Service for handling product-related actions, such as retrieving, creating, updating, and deleting products.
+ *
  */
 class ProductService
 {

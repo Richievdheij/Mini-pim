@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class ConfirmPasswordRequest handles the validation of the password confirmation request.
+ *
  */
 class ConfirmPasswordRequest extends FormRequest
 {

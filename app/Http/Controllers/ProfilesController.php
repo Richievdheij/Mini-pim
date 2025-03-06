@@ -13,6 +13,7 @@ use Inertia\Response;
 
 /**
  * Controller handles all profile related actions, such as displaying, creating, editing, and deleting profiles.
+ *
  */
 class ProfilesController extends Controller
 {

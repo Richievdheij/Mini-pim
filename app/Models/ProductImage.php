@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Model for product images.
+ *
  */
 class ProductImage extends Model
 {

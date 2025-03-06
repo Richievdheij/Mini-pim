@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Handles the incoming request for updating a product.
+ *
  */
 class ProductUpdateRequest extends FormRequest
 {

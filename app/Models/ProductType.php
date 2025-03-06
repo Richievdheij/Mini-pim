@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Handles product types (e.g., Electronics, Clothing).
+ *
  */
 class ProductType extends Model
 {

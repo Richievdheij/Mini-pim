@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
  * Service class for handling profile related operations,
  * such as creating, updating, and deleting profiles.
  * This class is responsible for interacting with the Profile model.
+ *
  */
 class ProfileService
 {

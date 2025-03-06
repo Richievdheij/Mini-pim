@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 /**
  * Request handles the validation of the new password request.
+ *
  */
 class NewPasswordRequest extends FormRequest
 {

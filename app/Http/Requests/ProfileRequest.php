@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Request class for validating profile data.
+ *
  */
 class ProfileRequest extends FormRequest
 {

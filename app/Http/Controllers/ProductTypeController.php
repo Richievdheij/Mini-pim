@@ -13,6 +13,7 @@ use Inertia\Response;
 /**
  * Controller handles all logic related to the product types,
  * such as creating, updating, and deleting them
+ *
  */
 class ProductTypeController extends Controller
 {

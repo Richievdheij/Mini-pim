@@ -14,6 +14,7 @@ use Inertia\Response;
  * Handle attribute-related actions, such as viewing, creating, updating, and deleting attributes.
  * It ensures the correct permissions are in place for each action and delegates business logic to the AttributeService.
  * The controller is responsible for rendering the views and passing the necessary data to the front-end.
+ *
  */
 class AttributeController extends Controller
 {

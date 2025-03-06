@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Handle an incoming registration request.
+ *
  */
 class RegisterUserRequest extends FormRequest
 {

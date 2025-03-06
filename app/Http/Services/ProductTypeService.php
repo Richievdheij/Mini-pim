@@ -6,6 +6,10 @@ use App\Models\ProductType;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Service for handling product type-related actions.
+ *
+ */
 class ProductTypeService
 {
     /**

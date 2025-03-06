@@ -4,6 +4,10 @@ namespace App\Http\Services;
 
 use App\Models\Profile;
 
+/**
+ * Service for handling permission-related actions.
+ *
+ */
 class PermissionService
 {
     /**

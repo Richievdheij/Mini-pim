@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Handles attribute values.
+ *
  */
 class AttributeValue extends Model
 {

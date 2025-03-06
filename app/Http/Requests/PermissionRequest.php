@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Handles the incoming request for permissions.
+ *
  */
 class PermissionRequest extends FormRequest
 {

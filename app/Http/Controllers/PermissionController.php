@@ -10,6 +10,10 @@ use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
+/**
+ * Controller that handles all logic related to permissions/user rights in the application
+ *
+ */
 class PermissionController extends Controller
 {
     protected PermissionService $permissionService;

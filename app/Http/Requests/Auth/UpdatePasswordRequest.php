@@ -7,6 +7,7 @@ use Illuminate\Validation\Rules\Password;
 
 /**
  * UpdatePasswordRequest to handle password update validation.
+ *
  */
 class UpdatePasswordRequest extends FormRequest
 {

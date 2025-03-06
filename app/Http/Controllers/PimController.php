@@ -14,6 +14,7 @@ use Inertia\Response;
 /**
  * Controller responsible for handling user-related actions, such as viewing, creating, updating, and deleting users.
  * It ensures the correct permissions are in place for each action and delegates business logic to the UserService.
+ *
  */
 class PimController extends Controller
 {

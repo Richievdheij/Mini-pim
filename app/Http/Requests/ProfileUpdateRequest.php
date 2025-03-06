@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 
 /**
  * Handle the incoming request for updating a user's profile.
+ *
  */
 class  ProfileUpdateRequest extends FormRequest
 {

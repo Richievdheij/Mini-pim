@@ -5,6 +5,10 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Middleware for checking if the user has a specific permission.
+ * 
+ */
 class CheckPermission
 {
     /**

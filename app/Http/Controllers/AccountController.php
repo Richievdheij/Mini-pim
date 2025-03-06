@@ -12,6 +12,7 @@ use Inertia\Response;
 
 /**
  * Handles account settings actions (edit, update, delete).
+ *
  */
 class AccountController extends Controller
 {

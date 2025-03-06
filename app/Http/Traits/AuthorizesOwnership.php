@@ -6,6 +6,7 @@ use App\Models\ProductAttributeValue;
 
 /**
  * Trait for authorizing ownership, such as checking if the authenticated user owns a product attribute value.
+ *
  */
 trait AuthorizesOwnership
 {

@@ -7,6 +7,7 @@ use Illuminate\Validation\Rules\Password as PasswordRules;
 
 /**
  * Handles the incoming request for users.
+ *
  */
 class UserRequest extends FormRequest
 {

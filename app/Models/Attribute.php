@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Handles attributes for products.
+ *
  */
 class Attribute extends Model
 {

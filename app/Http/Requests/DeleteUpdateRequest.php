@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Handle the incoming request for deleting an update.
+ *
  */
 class DeleteUpdateRequest extends FormRequest
 {

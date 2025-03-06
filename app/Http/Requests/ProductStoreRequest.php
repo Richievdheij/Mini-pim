@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Handle the incoming request for storing a product.
+ *
  */
 class ProductStoreRequest extends FormRequest
 {

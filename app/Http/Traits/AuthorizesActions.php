@@ -4,6 +4,7 @@ namespace App\Http\Traits;
 
 /**
  * Trait for authorizing actions, such as checking if the user has permission to perform an action.
+ *
  */
 trait AuthorizesActions
 {

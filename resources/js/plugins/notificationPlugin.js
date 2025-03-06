@@ -1,5 +1,6 @@
 import { useToast } from "vue-toastification";
 
+// Create a custom hook to use the toast functions
 export function useNotifications() {
     const toast = useToast();
 

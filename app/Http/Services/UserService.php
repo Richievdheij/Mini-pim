@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
  * Service class to handle user-related business logic, including creation,
  * updating, deletion, and retrieving users and profiles based on the
  * authenticated user's permissions.
+ *
  */
 class UserService
 {

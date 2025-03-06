@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Handle the incoming request for updating an account.
+ *
  */
 class AccountUpdateRequest extends FormRequest
 {

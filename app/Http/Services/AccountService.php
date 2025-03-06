@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Service for handling account-related actions.
+ *
  */
 class AccountService
 {

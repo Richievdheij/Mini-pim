@@ -63,6 +63,19 @@ const props = defineProps({
                     </button>
                 </div>
             </th>
+            <th class="products__table-header-cell" @click="props.sortColumn('telefoon')">
+                <!-- Column header for Type with sorting functionality -->
+                <div class="products__table-header-sort">
+                    <span>Type</span>
+                    <button class="products__sort-button" @click.stop="props.sortColumn('telefoon')">
+                        <i :class="{
+                            'fas fa-sort': props.sortConfig.column !== 'telefoon' || props.sortConfig.direction === 'none',
+                            'fas fa-sort-up': props.sortConfig.column === 'type' && props.sortConfig.direction === 'asc',
+                            'fas fa-sort-down': props.sortConfig.column === 'type' && props.sortConfig.direction === 'desc'
+                        }"></i>
+                    </button>
+                </div>
+            </th>
 
             <!-- Empty column header for action buttons, visible if editing or deleting is allowed -->
             <th v-if="props.canEditProduct || props.canDeleteProduct"

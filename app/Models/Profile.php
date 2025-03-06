@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Handles profile-related logic.
+ *
  */
 class Profile extends Model
 {

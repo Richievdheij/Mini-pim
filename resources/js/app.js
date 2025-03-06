@@ -7,7 +7,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { InertiaProgress } from '@inertiajs/progress';
 
-// Toastification
+// Sidebar configuration
 import Toast from 'vue-toastification';
 import 'vue-toastification/dist/index.css';
 import '../sass/components/pim-notification.scss'; // Custom Toast styles
@@ -15,9 +15,7 @@ import '../sass/components/pim-notification.scss'; // Custom Toast styles
 // FontAwesome CSS
 import '@fortawesome/fontawesome-free/css/all.css';
 
-// Sidebar Config
-import { sidebarConfig } from './Config/Sidebar/sidebarConfig.js';
-
+// Toast options
 const toastOptions = {
     timeout: 3000, // Default timeout for all toasts
     position: "top-right", // Default position
