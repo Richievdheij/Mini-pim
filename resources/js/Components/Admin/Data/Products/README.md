@@ -12,9 +12,7 @@ This section covers the **Create, Edit, and Delete** functionalities for managin
 ## Create a Product  
 Users can add new products by filling in the required details and submitting the form.  
 
-![Create Product](public/images/pim/Product/create-product.png)
-![Create Product](images/pim/Product/create-product.png)
-![Create Product](./images/pim/Product/create-product.png)
+![Create Product](public\images\pim\Product\create-product.png)  
 
 ---
 

@@ -12,7 +12,8 @@ This section explains the **Create, Edit, and Delete** functionalities for manag
 ## Create a Product Type  
 Users can define new types by assigning names and linked attributes.  
 
-![Create Product Type](public\images\pim\Types\create-type.png)  
+![Create Product Type](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Types/create-type.png?raw=true)
+
 
 ---
 
