@@ -12,21 +12,21 @@ This section covers the **Create, Edit, and Delete** functionalities for managin
 ## Create a Product  
 Users can add new products by filling in the required details and submitting the form.  
 
-![Create Product](public\images\pim\Product\create-product.png)  
+![Create Product](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Product/create-product.png?raw=true)  
 
 ---
 
 ## Edit a Product  
 Existing products can be updated by modifying the necessary fields and saving changes.  
 
-![Edit Product](public\images\pim\Product\edit-product.png)  
+![Edit Product](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Product/edit-product.png?raw=true)  
 
 ---
 
 ## Delete a Product  
 Users can remove products with a confirmation prompt to prevent accidental deletions.  
 
-![Delete Product](public\images\pim\Product\delete-product.png)  
+![Delete Product](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Product/delete-product.png?raw=true)  
 
 ---
 

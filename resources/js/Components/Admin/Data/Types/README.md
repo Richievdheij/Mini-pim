@@ -14,20 +14,19 @@ Users can define new types by assigning names and linked attributes.
 
 ![Create Product Type](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Types/create-type.png?raw=true)
 
-
 ---
 
 ## Edit a Product Type  
 Modify type details.
 
-![Edit Product Type](public\images\pim\Types\edit-type.png)  
+![Edit Product Type](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Types/edit-type.png?raw=true)  
 
 ---
 
 ## Delete a Product Type  
 Securely remove product types with a confirmation prompt.  
 
-![Delete Product Type](public\images\pim\Types\delete-type.png)  
+![Delete Product Type](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Types/delete-type.png?raw=true)  
 
 ---
 

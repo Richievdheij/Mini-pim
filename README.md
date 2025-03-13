@@ -5,36 +5,38 @@ During my internship, I developed a Product Information Management (PIM) system 
 **Technologies:**  
 Vue3/Vue.js • JavaScript • Inertia • PHP/Laravel • HTML • CSS/SASS • MVC • OOP • SPA • BEM
 
-## 📸 Images  
+## Images  
 
-### 🔑 Login  
-![Login](public\images\pim\Login-page.png)  
+### Login  
+![Login](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Login-page.png?raw=true)  
 
-### 🔑 Forgot-password  
-![Login](public\images\pim\Forgot-password-page.png)  
+### Forgot-password  
+![Forgot Password](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Forgot-password-page.png?raw=true)  
 
-### 📊 Dashboard  
-![Dashboard](public\images\pim\Dashboard-page.png)  
+### Dashboard  
+![Dashboard](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Dashboard-page.png?raw=true)  
 
-### 📊 Account settings
-![Dashboard](public\images\pim\Account-settings-page.png)  
+### Account settings
+![Account Settings](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Account-settings-page.png?raw=true)  
 
-### 👤 Users, Profiles & User-rights
-![Users](public\images\pim\Users-page.png)  
-![Profiles](public\images\pim\Profiles-page.png)  
-![User-rights](public\images\pim\User-rights-page.png)  
+### Users, Profiles & User-rights
+![Users](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Users-page.png?raw=true)  
+![Profiles](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Profiles-page.png?raw=true)  
+![User-rights](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/User-rights-page.png?raw=true)  
 
-### 🔒 User Rights  
-![User Rights](public\images\pim\User-rights-page.png)  
+### User Rights  
+![User Rights](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/User-rights-page.png?raw=true)  
 
-### 🛍️ Products  
-![Products](public\images\pim\Products-page.png)  
+### Products  
+![Products](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Products-page.png?raw=true)  
 
-### 🛍️ Types
-![Products](public\images\pim\Types-page.png)  
+### Types
+![Types](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Types-page.png?raw=true)  
 
-### 🛍️ Attributes
-![Products](public\images\pim\Attributes-page.png)  
+### Attributes
+![Attributes](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Attributes-page.png?raw=true)  
+
+---
 
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 

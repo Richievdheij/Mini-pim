@@ -18,7 +18,7 @@ Users can update their password by providing the current password and entering t
 ## Delete Account  
 Click on the **Delete Account** button to permanently remove your account from the system. This action is irreversible.  
 
-![Account Settings Page](public\images\pim\delete-account.png)  
+![Account Settings Page](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/delete-account.png?raw=true)  
 
 ---
 

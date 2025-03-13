@@ -12,21 +12,21 @@ This section covers the **Create, Edit, and Delete** functionalities for managin
 ## Create a Profile  
 Administrators can add new profiles by assigning a name and configuring permissions within User-rights.  
 
-![Create Profile](public\images\pim\Profiles\create-profile.png)  
+![Create Profile](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Profiles/create-profile.png?raw=true)  
 
 ---
 
 ## Edit a Profile  
 Modify profile details such as name, description, or access levels.  
 
-![Edit Profile](public\images\pim\Profiles\edit-profile.png)  
+![Edit Profile](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Profiles/edit-profile.png?raw=true)  
 
 ---
 
 ## Delete a Profile  
 Profiles can be removed securely with a confirmation prompt.  
 
-![Delete Profile](public\images\pim\Profiles\delete-profile.png)  
+![Delete Profile](https://github.com/Richievdheij/Mini-pim/blob/master/public/images/pim/Profiles/delete-profile.png?raw=true)  
 
 ---
 
