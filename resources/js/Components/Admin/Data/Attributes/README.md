@@ -12,7 +12,7 @@ This section covers the **Create, Edit, and Delete** functionalities for managin
 ## Create an Attribute  
 Users can add new attributes by specifying the name and type
 
-![Create Attribute](public\images\pim\Attributes\create-attribute.png)  
+![Create Attribute](.\images\pim\Attributes\create-attribute.png)  
 
 ---
 
