@@ -1,3 +1,41 @@
+# Mini-PIM
+
+During my internship, I developed a Product Information Management (PIM) system that allows businesses to efficiently manage and share product data. The application enables users to create, edit, and manage products with various specifications and features a user-friendly role and profile management system.
+
+**Technologies:**  
+Vue3/Vue.js • JavaScript • Inertia • PHP/Laravel • HTML • CSS/SASS • MVC • OOP • SPA • BEM
+
+## 📸 Images  
+
+### 🔑 Login  
+![Login](public\images\pim\Login-page.png)  
+
+### 🔑 Forgot-password  
+![Login](public\images\pim\Forgot-password-page.png)  
+
+### 📊 Dashboard  
+![Dashboard](public\images\pim\Dashboard-page.png)  
+
+### 📊 Account settings
+![Dashboard](public\images\pim\Account-settings-page.png)  
+
+### 👤 Users, Profiles & User-rights
+![Users](public\images\pim\Users-page.png)  
+![Profiles](public\images\pim\Profiles-page.png)  
+![User-rights](public\images\pim\User-rights-page.png)  
+
+### 🔒 User Rights  
+![User Rights](public\images\pim\User-rights-page.png)  
+
+### 🛍️ Products  
+![Products](public\images\pim\Products-page.png)  
+
+### 🛍️ Types
+![Products](public\images\pim\Types-page.png)  
+
+### 🛍️ Attributes
+![Products](public\images\pim\Attributes-page.png)  
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
